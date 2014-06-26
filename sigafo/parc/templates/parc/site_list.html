@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+  <div class="col-md-10">
+    <h3>{% trans "Sites" %}</h3>
+    {% include "pager.html" %}
+    <table class="table table-striped">
+      <thead>
+	<tr>
+	  <th>{% trans "Name" %}</th>
+	  <th>{% trans "Domain" %}</th>
+	  <th>{% trans "GeoZone" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for site in object_list %}
+	<tr>
+	  <td><a href="{{site.get_absolute_url}}">{{site.name}}</a></td>
+	  <td><a href="{{site.owner.get_absolute_url}}">{{site.owner}}</a></td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>      
+  </div>
+
+  <div class="col-md-2">
+    <div>
+          {% include "buttons.html" %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+

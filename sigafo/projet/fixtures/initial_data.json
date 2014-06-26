@@ -1,0 +1,17 @@
+[{"pk": 1, "model": "projet.projet", 
+  "fields": {"name": "Agripsol",
+             "date_debut": "2014-02-03",
+             "date_fin": "2015-02-09"}}, 
+{"pk": 2, "model": "projet.projet", 
+  "fields": {"name": "Agrotrait"}},
+{"pk": 3, "model": "projet.projet", 
+  "fields": {"name": "ScaOPest"}},
+{"pk": 4, "model": "projet.projet", 
+  "fields": {"name": "Abratatouille"}},
+{"pk": 5, "model": "projet.projet", 
+  "fields": {"name": "Auximore"}},
+{"pk": 6, "model": "projet.projet", 
+  "fields": {"name": "Dar parcours de volaille"}},
+{"pk": 7, "model": "projet.projet", 
+  "fields": {"name": "Biodiversité CA 2 Sèvres"}}
+]

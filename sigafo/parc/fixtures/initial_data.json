@@ -1,0 +1,2 @@
+[{"pk": 1, "model": "parc.site", "fields": {"owner": 1, "exploitant": 1, "name": "Kerlebik"}}, 
+ {"pk": 1, "model": "parc.champ", "fields": {"site": 1, "name": "Kerlebik"}}]
