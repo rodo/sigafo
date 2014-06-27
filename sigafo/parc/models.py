@@ -20,6 +20,8 @@ from django.contrib.gis.db import models
 from django.core.urlresolvers import reverse
 from sigafo.contact.models import Contact
 from sigafo.projet.models import Projet
+from django.contrib.gis.geos.point import Point
+from random import random
 import reversion
 
 
@@ -29,8 +31,10 @@ class Site(models.Model):
     Un site designe un lieu commune
     """
     name = models.CharField(max_length=300)
+    address = models.TextField(blank=True)
     owner = models.ForeignKey(Contact, related_name='owner')
     exploitant = models.ForeignKey(Contact, related_name='exploitant')
+    comment = models.TextField(blank=True)
 
     def __unicode__(self):
         """
@@ -49,7 +53,8 @@ class Champ(models.Model):
     """The client as consummer
     """
     site = models.ForeignKey(Site)
-    name = models.CharField(max_length=300)
+    name = models.CharField(max_length=50)
+    comment = models.TextField(blank=True)
 
     def __unicode__(self):
         """
@@ -75,13 +80,24 @@ class Parcel(models.Model):
     date_debut = models.DateField(blank=True, null=True)
     date_fin = models.DateField(blank=True, null=True)
     usage = models.CharField(max_length=300, blank=True) # referentiel
-    projet = models.ManyToManyField(Projet)
-
+    projet = models.ManyToManyField(Projet, blank=True)
+    comment = models.TextField(blank=True)
     objects = models.GeoManager()
 
     @property
     def approx_center(self):
-        return self.center
+        """
+        Fake coordinate based on real coordinate
+
+        Return : Point        
+        """
+        if self.center is None:
+            return None
+        else:
+            randx = (0.5 - random())/21
+            randy = (0.5 - random())/21
+            return Point(x=self.center.x + randx,
+                         y=self.center.y + randy)
 
     def __unicode__(self):
         """

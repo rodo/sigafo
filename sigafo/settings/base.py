@@ -78,6 +78,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
@@ -126,19 +127,18 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     # addons
+    'compressor',
     'leaflet',
     'djgeojson',
     'reversion',
     'django_extensions',
     'bootstrap3',
+    'haystack',
     # project apps
     'sigafo.contact',
     'sigafo.parc',
     'sigafo.projet',
     'sigafo.agrof',
-
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -187,3 +187,10 @@ LEAFLET_CONFIG = {
     }
     
 }
+#
+#
+# Compressor
+#
+COMPRESS_CSS_FILTERS = ['compressor.filters.csstidy.CSSTidyFilter']
+
+COMPRESS_JS_FILTERS = ['compressor.filters.template.TemplateFilter']

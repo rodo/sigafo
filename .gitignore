@@ -54,5 +54,6 @@ docs/_build/
 
 *~
 
-sipaf/settings/local.py
 venv/
+sipaf/settings/local.py
+sigafo/settings/local.py

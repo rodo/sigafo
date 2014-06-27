@@ -28,6 +28,7 @@ class Projet(models.Model):
     date_fin = models.DateField(blank=True, null=True)
     referent_interne = models.ForeignKey(Contact, blank=True, null=True)
     description = models.TextField(blank=True)
+    comments = models.TextField(blank=True)
 
     def __unicode__(self):
         """

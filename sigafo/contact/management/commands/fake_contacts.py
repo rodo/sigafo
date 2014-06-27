@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2013,2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import time
 from django.core.management.base import BaseCommand
 from sigafo.parc.models import Champ, Parcel, Site
 from sigafo.agrof.models import Essence, Peuplement
-from sigafo.contact.models import Contact
+from sigafo.contact.models import Contact, Activite
 from django.contrib.gis.geos.point import Point
 from optparse import make_option
 from faker import Faker
@@ -43,11 +43,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """
-        Make
+        Main
         """
         nbvalues = options['nbvalues']
         self.insert(nbvalues)
-
 
     def insert(self, nbvalues):
         """
@@ -55,24 +54,13 @@ class Command(BaseCommand):
         """
         f = Faker()
 
-        #peuplement = Peuplement.objects.create(name=f.name())
-        #peuplement.essences.add(Essence.objects.get(pk=1))
+        while Activite.objects.all().count() < nbvalues:
+            Activite.objects.create(name=f.word())
 
         for i in range(nbvalues):
-            site = Site.objects.create(name=f.word(),
-                                       owner=Contact.objects.get(pk=1),
-                                       exploitant=Contact.objects.get(pk=1),)
+            activite = Activite.objects.all()[i]
 
-            champ = Champ.objects.create(name=f.word(),
-                                         site=site)
-
-            parcel = Parcel.objects.create(name=f.word(),
-                                           champ=champ,
-                                           surface=f.pyfloat(),
-                                           date_debut=f.date_time(),
-                                           date_fin=f.date_time(),
-                                           usage=f.word(),
-                                           center=Point(x=float(f.longitude()),
-                                                        y=float(f.latitude())))
-                                          
+            site = Contact.objects.create(firstname=f.first_name(),
+                                          lastname=f.last_name(),
+                                          activite=activite)
 

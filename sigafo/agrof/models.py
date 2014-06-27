@@ -27,7 +27,7 @@ class Essence(models.Model):
     Essence de bois
     """
     name = models.CharField(max_length=300)
-    note = models.TextField(blank=True)
+    comment = models.TextField(blank=True)
 
     def __unicode__(self):
         """
@@ -48,8 +48,13 @@ class Peuplement(models.Model):
     """
     parcel = models.ForeignKey(Parcel)
     name = models.CharField(max_length=300)
-    essences = models.ManyToManyField(Essence)
-    note = models.TextField(blank=True)
+    essences = models.ManyToManyField(Essence, blank=True)
+    # distance entre les arbres sur la ligne
+    online_distance = models.FloatField(blank=True)
+    # distance entre les lignes
+    line_spacing = models.FloatField(blank=True)
+    # Commentaires divers
+    comment = models.TextField(blank=True)
 
     def __unicode__(self):
         """
@@ -71,7 +76,7 @@ class Indicator(models.Model):
     author = models.ForeignKey(User)
     name = models.CharField(max_length=300)
     description = models.TextField(blank=True)
-    note = models.TextField(blank=True)
+    comment = models.TextField(blank=True)
 
     def __unicode__(self):
         """
@@ -96,7 +101,7 @@ class Measure(models.Model):
     indicator = models.ForeignKey(Indicator)
     parcel = models.ForeignKey(Parcel)
     value = models.FloatField()
-    note = models.TextField(blank=True)
+    comment = models.TextField(blank=True)
 
     def __unicode__(self):
         """

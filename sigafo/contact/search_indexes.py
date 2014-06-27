@@ -15,36 +15,24 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from django.db import models
+"""
+Fulltext indexing with haystack
+"""
+from haystack import indexes
+from sigafo.contact.models import Contact
 
 
-class Activite(models.Model):
+class ContactIndex(indexes.SearchIndex, indexes.Indexable):
     """
-    Activite des contacts
-    agriculteurs, chercheurs
+    Fulltext indexing for objects Contact
     """
-    name = models.CharField(max_length=50)
-    comment = models.TextField(blank=True)
+    text = indexes.CharField(document=True, use_template=True)
+    firstname = indexes.CharField(model_attr='firstname')
+    lastname = indexes.CharField(model_attr='lastname')
 
+    def get_model(self):
+        return Contact
 
-class Contact(models.Model):
-    """
-    Contact générique
-    """
-    firstname = models.CharField(max_length=50)
-    lastname = models.CharField(max_length=50)
-    email = models.EmailField()
-    activite = models.ForeignKey(Activite)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """
-        The unicode method
-        """
-        return u"{} {}".format(self.lastname, self.firstname)
-
-    def __str__(self):
-        """
-        The string method
-        """
-        return "{} {}".format(self.lastname, self.firstname)
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()

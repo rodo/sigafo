@@ -1,4 +1,4 @@
-{% load i18n %}{% load leaflet_tags %}
+{% load i18n %}{% load leaflet_tags %}{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -22,18 +22,18 @@
       #rssicon {margin-top: 8px;}
       #formnavsearch {margin-right:10px;}
     </style>
-    {% leaflet_css plugins="forms" %}
-    <link href="{{STATIC_URL}}css/ortcfront.css" rel="stylesheet">
+    {% compress css %}{% leaflet_css plugins="forms" %}
+    <link href="{{STATIC_URL}}css/sigafo.css" rel="stylesheet">{% endcompress %}
     {% block cssheaders %}{% endblock %}
     <!-- jsheaders -->
     <script src="{{STATIC_URL}}vendor/jquery-1.11.0.min.js"></script>
     <script src="{{STATIC_URL}}vendor/d3.v3.min.js"></script>
     <script src="{{STATIC_URL}}vendor/mustache.js"></script>
-    {% leaflet_js plugins="forms" %}
+    {% compress js %}{% leaflet_js plugins="forms" %}{% endcompress %}
     {% block jsvendors %}{% endblock %}
-
+    {% compress js %}
     <script src="{{STATIC_URL}}js/colors.js"></script>
-    <script src="{{STATIC_URL}}js/mainmap.js"></script>
+    <script src="{{STATIC_URL}}js/mainmap.js"></script>{% endcompress %}
     {% block jsheaders %}
     {% endblock %}
 
