@@ -16,7 +16,9 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 from django.db import transaction
+from django.contrib.auth.models import User
 from django.contrib.gis.db import models
+from django_hstore import hstore
 from django.core.urlresolvers import reverse
 from sigafo.contact.models import Contact
 from sigafo.projet.models import Projet
@@ -24,16 +26,19 @@ from django.contrib.gis.geos.point import Point
 from random import random
 import reversion
 
-
+class MonManager(models.GeoManager, hstore.HStoreManager):
+    pass
+    
 # Site
+
 class Site(models.Model):
     """
     Un site designe un lieu commune
     """
     name = models.CharField(max_length=300)
     address = models.TextField(blank=True)
-    owner = models.ForeignKey(Contact, related_name='owner')
-    exploitant = models.ForeignKey(Contact, related_name='exploitant')
+    owner = models.ForeignKey(Contact, related_name='owner', blank=True, null=True)
+    exploitant = models.ForeignKey(Contact, related_name='exploitant', blank=True, null=True)
     comment = models.TextField(blank=True)
 
     def __unicode__(self):
@@ -47,6 +52,19 @@ class Site(models.Model):
         The string method
         """
         return "{}".format(self.name)
+
+    def get_absolute_url(self):
+        """
+        Absolute url
+        """
+        return reverse('site_detail', args=[self.id])
+
+    def get_parcels(self):
+        return Parcel.objects.filter(champ__site=self)
+
+    def get_champs(self):
+        return Champ.objects.filter(site=self)
+
 
 # Emplacements
 class Champ(models.Model):
@@ -68,6 +86,15 @@ class Champ(models.Model):
         """
         return "{}".format(self.name)
 
+    def get_absolute_url(self):
+        """Absolute url
+        """
+        return reverse('champ_detail', args=[self.id])
+
+    def get_parcels(self):
+        return Parcel.objects.filter(champ=self).only('name')
+
+
 # Parcelles
 class Parcel(models.Model):
     """
@@ -76,13 +103,17 @@ class Parcel(models.Model):
     champ = models.ForeignKey(Champ)
     name = models.CharField(max_length=50)
     surface = models.FloatField(blank=True, null=True)
+
     center = models.PointField(blank=True, null=True)
     date_debut = models.DateField(blank=True, null=True)
     date_fin = models.DateField(blank=True, null=True)
     usage = models.CharField(max_length=300, blank=True) # referentiel
     projet = models.ManyToManyField(Projet, blank=True)
     comment = models.TextField(blank=True)
-    objects = models.GeoManager()
+    variables = hstore.DictionaryField(db_index=True)
+    import_initial = hstore.DictionaryField(db_index=True)
+    objects = MonManager()
+
 
     @property
     def approx_center(self):
@@ -112,15 +143,46 @@ class Parcel(models.Model):
         return "{}".format(self.name)
 
     def get_absolute_url(self):
-        """
-        Absolute url
+        """Absolute url
         """
         return reverse('parcel_detail', args=[self.id])
+
+    def get_observations(self):
+        return Observation.objects.filter(parcel=self).order_by('-date_observation')
 
     def save(self, *args, **kwargs):
         #check if the row with this hash already exists.
         with transaction.atomic(), reversion.create_revision():
             super(Parcel, self).save(*args, **kwargs)
 
+
+class Observation(models.Model):
+    """Observation
+    """
+    author = models.ForeignKey(User)
+    parcel = models.ForeignKey(Parcel)
+    date_observation = models.DateField(auto_now=True)
+    observation = models.TextField(blank=True)
+    comment = models.TextField(blank=True)
+    private = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        """
+        The unicode method
+        """
+        return "observation {}".format(self.id)
+
+    def __str__(self):
+        """
+        The string method
+        """
+        return "observation {}".format(self.id)
+
+    def get_absolute_url(self):
+        """Absolute url
+
+        We display the related parcel
+        """
+        return reverse('parcel_detail', args=[self.parcel.id])
 
 reversion.register(Parcel)

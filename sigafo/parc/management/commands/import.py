@@ -76,9 +76,10 @@ def clean_all():
     Site.objects.all().delete()
     Contact.objects.all().delete()
     Peuplement.objects.all().delete()
+    Projet.objects.all().delete()
 
 def iline(row, i):
-
+    agroof_users = [1,2,3,4]
     res = 1
     bloc_center = None
     projets = []
@@ -90,7 +91,9 @@ def iline(row, i):
         
         # coord 49° 7' 3.529" N     1° 43' 44.987" E 
         coord = row[9]
-        projets = [proj.strip() for proj in row[27].split(';')]
+        for proj in row[27].strip().split(';'):
+            if len(proj):
+                projets.append(proj.strip())
     except:
         print "Parsing error line %d : %s"% (i, row[0])
 
@@ -109,7 +112,6 @@ def iline(row, i):
         except:
             print 'bad coord'
 
-
     try:        
         site = Site.objects.create(name=parcel_name)
 
@@ -122,15 +124,18 @@ def iline(row, i):
         #                                   surface=f.pyfloat(),
         #                                   date_debut=f.date_time(),
         #                                   date_fin=f.date_time(),
-        #                                   usage=f.word())
-
-        for projname in projets:
-            print projname
-
-        
+        #                                   usage=f.word())    
         res = 0
     except:
         print "error line %d"% (i)
-    
+
+    if res == 0:
+        for projname in projets:
+            p, created = Projet.objects.get_or_create(name=projname)
+            if created:
+                p.users.add(1)
+                p.save()
+            parcel.projet.add(p)
+            parcel.save()
 
     return res

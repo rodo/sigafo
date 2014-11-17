@@ -15,8 +15,12 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+# sigafo/parc
+#
 from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
-from .models import Parcel
+from .models import Champ, Parcel, Site
 
+admin.site.register(Champ, LeafletGeoAdmin)
 admin.site.register(Parcel, LeafletGeoAdmin)
+admin.site.register(Site, LeafletGeoAdmin)

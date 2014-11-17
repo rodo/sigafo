@@ -73,6 +73,8 @@ class Command(BaseCommand):
                                            date_fin=f.date_time(),
                                            usage=f.word(),
                                            center=Point(x=float(f.longitude()),
-                                                        y=float(f.latitude())))
+                                                        y=float(f.latitude())),
+                                           comment=" ".join(f.words(18000)))
                                           
 
+        print 'Parcelles {}'.format(Parcel.objects.all().count())

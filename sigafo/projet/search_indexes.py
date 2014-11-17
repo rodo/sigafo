@@ -15,10 +15,24 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# sigafo/contact
-from django.contrib import admin
-from .models import Activite, Contact
+"""
+Fulltext indexing with haystack
+"""
+from haystack import indexes
+from sigafo.projet.models import Projet
 
 
-admin.site.register(Activite, admin.ModelAdmin)
-admin.site.register(Contact, admin.ModelAdmin)
+class ProjetIndex(indexes.SearchIndex, indexes.Indexable):
+    """
+    Fulltext indexing for objects Projet
+    """
+    text = indexes.CharField(document=True, use_template=True)
+    name = indexes.CharField(model_attr='name')
+    description = indexes.CharField(model_attr='description')
+
+    def get_model(self):
+        return Projet
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()

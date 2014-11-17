@@ -50,9 +50,9 @@ class Peuplement(models.Model):
     name = models.CharField(max_length=300)
     essences = models.ManyToManyField(Essence, blank=True)
     # distance entre les arbres sur la ligne
-    online_distance = models.FloatField(blank=True)
+    online_distance = models.FloatField(blank=True, null=True)
     # distance entre les lignes
-    line_spacing = models.FloatField(blank=True)
+    line_spacing = models.FloatField(blank=True, null=True)
     # Commentaires divers
     comment = models.TextField(blank=True)
 
@@ -77,6 +77,7 @@ class Indicator(models.Model):
     name = models.CharField(max_length=300)
     description = models.TextField(blank=True)
     comment = models.TextField(blank=True)
+    note = models.TextField(blank=True)
 
     def __unicode__(self):
         """
@@ -89,8 +90,6 @@ class Indicator(models.Model):
         The string method
         """
         return "{}".format(self.name)
-
-    note = models.TextField(blank=True)
 
 
 class Measure(models.Model):

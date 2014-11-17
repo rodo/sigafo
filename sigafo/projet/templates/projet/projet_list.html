@@ -4,32 +4,30 @@
 {% block content %}
 <div class="row">
   <div class="col-md-10">
-    <h3>{% trans "Parcels" %}</h3>
+    <h3>{% trans "Projects" %}</h3>
     {% include "pager.html" %}
     <table class="table table-striped">
       <thead>
 	<tr>
-	  <th>{% trans "Name" %}</th>      <th>{% trans "Site" %}</th>
-
-	  <th>{% trans "Surface" %}</th>
+	  <th>{% trans "Name" %}</th>
+      <th>{% trans "Type" %}</th>
 	</tr>
       </thead>
       <tbody>
-	{% for parcel in object_list %}
-	<tr>
-	  <td><a href="{{parcel.get_absolute_url}}">{{parcel.name}}</a></td>
-      <td><a href="{{parcel.champ.site.get_absolute_url}}">{{parcel.champ.site.name}}</a></td>
-	  <td>{{parcel.surface}}</a></td>
-	</tr>
-	{% endfor %}
+        {% for projet in object_list %}
+        <tr>
+          <td><a href="{{projet.get_absolute_url}}">{{projet.name}}</a></td>
+          <td>
+            {% if projet.research %}{% trans "Research" %}{% endif %}
+            {% if projet.territory %}{% trans "Territory" %}{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>      
   </div>
-
+  
   <div class="col-md-2">
-    <div>
-      {% include "buttons.html" %}
-    </div>
     
   </div>
 </div>

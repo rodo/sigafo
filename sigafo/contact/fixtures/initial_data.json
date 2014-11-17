@@ -2,7 +2,15 @@
  {"pk": 2, "model": "contact.activite", "fields": {"name": "Chercheur"}}, 
  {"pk": 3, "model": "contact.activite", "fields": {"name": "Institutionnel"}}, 
  {"pk": 1, "model": "contact.contact", "fields": {"activite": 1, 
-                                                  "firstname": "Kerlebik",
-                                                  "lastname": "Kerlebik",
-                                                  "email": "foo@example.com"}
- }]
+                                                  "firstname": "Gustav",
+                                                  "lastname": "Schuppe",
+                                                  "email": "foo@example.com"}},
+ {"pk": 2, "model": "contact.contact", "fields": {"activite": 2, 
+                                                  "firstname": "Kerrie",
+                                                  "lastname": "Wolf",
+                                                  "email": "foo@example.com"}},
+ {"pk": 3, "model": "contact.contact", "fields": {"activite": 1,
+                                                  "firstname": "Françis",
+                                                  "lastname": "Chauve",
+                                                  "email": "foo@example.com"}}
+]

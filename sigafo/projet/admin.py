@@ -19,6 +19,6 @@ from django.contrib import admin
 from .models import Projet
 
 class ProjetAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'date_debut']
 
 admin.site.register(Projet, ProjetAdmin)

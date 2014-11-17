@@ -1,2 +1,23 @@
 [{"pk": 1, "model": "parc.site", "fields": {"owner": 1, "exploitant": 1, "name": "Kerlebik"}}, 
- {"pk": 1, "model": "parc.champ", "fields": {"site": 1, "name": "Kerlebik"}}]
+ {"pk": 2, "model": "parc.site", "fields": {"owner": 1, "exploitant": 1, "name": "Val brumeux"}}, 
+ {"pk": 1, "model": "parc.champ", "fields": {"site": 1, "name": "Champ du haut"}},
+ {"pk": 2, "model": "parc.champ", "fields": {"site": 1, "name": "Champ du bas"}},
+ {"pk": 3, "model": "parc.champ", "fields": {"site": 1, "name": "Champ du milieu"}},
+ {"pk": 4, "model": "parc.champ", "fields": {"site": 2, "name": "Champ du grand chauve"}},
+ {"pk": 1, "model": "parc.parcel", "fields": {"champ": 1, 
+                                              "name": "Haut du bois",
+                                              "surface": 1454.5,
+                                              "date_debut": "2014-06-01",
+                                              "projet": [1,2,3]}},
+ {"pk": 2, "model": "parc.parcel", "fields": {"champ": 2, "name": "Basse humide",
+                                              "surface": 2400,
+                                              "date_debut": "2012-01-15",
+                                              "projet": [4,5]}},
+ {"pk": 3, "model": "parc.parcel", "fields": {"champ": 4, "name": "Parcelle chauve",
+                                              "surface": 2400,
+                                              "date_debut": "2012-01-15",
+                                              "projet": [4,5]}},
+ {"pk": 1, "model": "parc.observation", "fields": {"author": 1, "parcel": 1, "date_observation": "2013-12-12", "observation": "On croise souvent des sangliers chauves sur cette parcelles, il faudrait relier celle-ci à un plan de recherche" }},
+ {"pk": 2, "model": "parc.observation", "fields": {"author": 2, "parcel": 1, "date_observation": "2013-12-02", "observation": "Le sol est humide" }}
+                                              
+]

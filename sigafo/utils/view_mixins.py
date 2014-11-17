@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-  pylint: disable-msg=R0801
 #
-# Copyright (c) 2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2013 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -15,10 +15,14 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# sigafo/contact
-from django.contrib import admin
-from .models import Activite, Contact
 
+"""
+A set of usefull mixins usable in all the project
+"""
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
-admin.site.register(Activite, admin.ModelAdmin)
-admin.site.register(Contact, admin.ModelAdmin)
+class ProtectedMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ProtectedMixin, self).dispatch(*args, **kwargs)

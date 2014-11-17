@@ -16,11 +16,19 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 from django.contrib import admin
-from .models import Essence, Peuplement
+from .models import Essence, Indicator, Measure, Peuplement
 
 
 class EssenceAdmin(admin.ModelAdmin):
     pass
+
+
+class IndicatorAdmin(admin.ModelAdmin):
+    fields = ('name', 'description', 'comment')
+
+
+class MeasureAdmin(admin.ModelAdmin):
+    list_filter = ('indicator',)
 
 
 class PeuplementAdmin(admin.ModelAdmin):
@@ -28,4 +36,6 @@ class PeuplementAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Essence, EssenceAdmin)
+admin.site.register(Indicator, IndicatorAdmin)
+admin.site.register(Measure, MeasureAdmin)
 admin.site.register(Peuplement, PeuplementAdmin)

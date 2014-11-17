@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% load leaflet_tags %}{% load geojson_tags %}
+{% load i18n %}{% load compress %}
+{% block title %} : {{object.name}}{% endblock %}
+{% block pagetitle %}{% trans "Alert" %} : {{object.name}}{% endblock %}
+{% block rssnavbar %}<a href="events/feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
+{% block content %}
+<div class="row">
+<div class="col-md-4">
+  <h3>{{object.name}}</h3>
+{% if object.description %}  
+<div class="alert alert-info">
+        {{object.description}}
+      </div>
+    {% endif %}
+      </div>
+    
+    <div class="col-md-6">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>{% trans "Parcels" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for parcel in parcels %}
+          <tr>
+            <td><a href="{{parcel.get_absolute_url}}">{{parcel.name}}</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+  </div>
+  
+  </div>
+  
+{% endblock %}
+  

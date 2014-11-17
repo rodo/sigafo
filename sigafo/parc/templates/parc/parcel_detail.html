@@ -5,67 +5,62 @@
 {% block rssnavbar %}<a href="events/feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
 {% block content %}
 <div class="row">
-  <div class="col-md-5">
+  <div class="col-md-4">
     <h3>{{object.name}}</h3>
-    <div class="well">
-      <ul>
-	<li>
-	  {% trans "Usage" %} : <a href="{{object.domain.get_absolute_url}}">{{object.usage}}</a>
-	</li>
-	<li>
-	  {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
-	</li>
-	<li>
-	  {% trans "Created by" %} {{object.create_by.username}}
-	</li>
-	<li>
-	  {% trans "Created on" %} {{object.create_on}}
-	</li>
-	<li>Subscribers : <span class="badge">{{object.nb_subscribers}}</span></li>
-	<li>Notifications : {{object.nb_notifications}}</li>
-      </ul>
+  <div class="well">
+    <ul>
+        <li>
+        {% trans "Site" %} : <a href="{{object.champ.site.get_absolute_url}}">{{object.champ.site.name}}</a>
+        </li>
+        <li>
+        {% trans "Champ" %} : <a href="{{object.champ.get_absolute_url}}">{{object.champ.name}}</a>
+        </li>
+        <li>
+        {% trans "Exploitant" %} : <a href="{{object.champ.site.exploitant.get_absolute_url}}">{{object.champ.site.exploitant}}</a>
+        </li>
+        <li>
+        {% trans "Usage" %} : <a href="{{object.domain.get_absolute_url}}">{{object.usage}}</a>
+        </li>
+        <li>
+        {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
+        </li>
+        <li>
+        {% trans "Start on" %} : {{object.date_debut}}
+        </li>
     </div>
 
     {% leaflet_map "alert_detail" callback="main_map_init" %}
     {% if object.description %}
     <hr/>
-    
+
     <div>
       <div class="alert alert-info">
 	{{object.description}}
       </div>
     </div>
-	 {% endif %}       
+	 {% endif %}
   </div>
 
-  <div class="col-md-5">
-    {% trans "Last 20 events" %}
+  <div class="col-md-6">
     <table class="table table-condensed">
       <thead>
 	<tr>
-	  <th></th>
-	  <th>{% trans "Action" %}</th>
+	  <th>{% trans "Observations" %}</th>
 	</tr>
       </thead>
       <tbody>
-	{% for event in object.last_events %}
-	<tr>
-	  <td><a class="btn btn-default" href="{{event.get_absolute_url}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
-	  <td> {{event.action_str}}</td>
-	  <td><img src="{{STATIC_URL}}img/{{event.get_osmid_img}}" /></td>
-	  <td><a target="_blank" href="{{event.get_osmid_url}}">{{event.osmid}}</a></td>
-	  <td><a target="_blank" href="{{event.get_changeset_url}}">{{event.changeset}}</a></td>
-	  <td>
-	    <span class="glyphicon glyphicon-{{event.status_icon}}-sign"></span>
-	  </td>
-
-	</tr>
+        {% for obs in object.get_observations %}
+        <tr>
+          <td>
+            <span class="badge">{{obs.author}}</span> {{obs.observation}}        
+          </td>
+        </tr>
 	{% endfor %}
       </tbody>
     </table>
 
   </div>
-  
+
   <div class="col-md-2">
     <div>
       <table class="table table-striped">
@@ -74,9 +69,9 @@
 	    <th>{% trans "Projets" %}</th>
 	  </tr>
 	</thead>
-	<tbody>
-	  {% for projet in object.projet.all %}
-	  <tr>
+    <tbody>
+      {% for projet in object.projet.all %}
+      <tr>
 	    <td><a href="{% url 'projet_detail' pk=projet.id %}">{{projet.name}}</a></td>
 	  </tr>
 	  {% endfor %}
@@ -84,24 +79,6 @@
       </table>
     </div>
 
-    <div>
-      <table class="table table-condensed">
-	<thead>
-	  <tr>
-	    <th>{% trans "Subscribers" %}</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  {% for subscriber in object.get_subscribers %}
-	  <tr>
-	    <td>{{subscriber.user.username}}</td>
-	  </tr>
-	  {% endfor %}
-	</tbody>
-      </table>
-    </div>
-
-    
   </div>
 </div>
 

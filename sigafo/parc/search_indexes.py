@@ -19,7 +19,7 @@
 Fulltext indexing with haystack
 """
 from haystack import indexes
-from sigafo.parc.models import Site, Champ, Parcel
+from sigafo.parc.models import Site, Champ, Parcel, Observation
 
 
 class ParcelIndex(indexes.SearchIndex, indexes.Indexable):
@@ -61,6 +61,22 @@ class ChampIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Champ
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()
+
+
+class ObservationIndex(indexes.SearchIndex, indexes.Indexable):
+    """
+    Fulltext indexing for objects Observation
+    """
+    text = indexes.CharField(document=True, use_template=True)
+    observation = indexes.CharField(model_attr='observation')
+    comment = indexes.CharField(model_attr='comment')
+
+    def get_model(self):
+        return Observation
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
