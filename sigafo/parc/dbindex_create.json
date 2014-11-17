@@ -1,0 +1,11 @@
+[{"name": "parc_site_foo",
+  "table": "parc_site",
+  "columns": ["name","address"],
+  "database": "foopaf"
+},
+ {"name": "parc_site_foofoo",
+  "table": "parc_site",
+  "columns": ["name","address"],
+  "database": "default"
+}]
+
