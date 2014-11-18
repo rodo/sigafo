@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block rssnavbar %}<a href="feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-10">
+    <h3>{% trans "Maps" %}</h3>
+    {% include "pager.html" %}
+    <table class="table table-striped">
+      <thead>
+	<tr>
+	  <th>{% trans "Title" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+        {% for map in object_list %}
+        <tr>
+          <td><a href="{{map.get_absolute_url}}">{{map.title}}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>      
+  </div>
+
+  <div class="col-md-2">
+    <div>
+      {% include "buttons.html" %}
+    </div>
+    
+  </div>
+</div>
+{% endblock %}

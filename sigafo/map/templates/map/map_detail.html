@@ -1,0 +1,52 @@
+{% extends "base.html" %}{% load leaflet_tags %}{% load geojson_tags %}
+{% load i18n %}{% load compress %}
+{% block title %} : {{object.title}}{% endblock %}
+{% block pagetitle %}{% trans "Alert" %} : {{object.name}}{% endblock %}
+{% block rssnavbar %}<a href="events/feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
+{% block content %}
+<div class="row">
+<div class="col-md-4">
+  <h3>{{object.title}}</h3>
+<div class="well">
+  <ul>
+    <li>
+    {% trans "Created by" %} : {{object.creator}}
+    </li>
+    <li>{% trans "Project" %} : <ul>
+      {% for projet in object.projets.all %}
+      <li>{{projet.name}}</li>
+      {% endfor %}
+    </ul></li>
+    <li>
+    {% trans "Published" %} : {{object.published}}
+    </li>
+    
+    </div><!-- class well -->
+    <div>
+        {% for key,val in object.properties %}
+        <tr>
+          <td>{{key}}</td><td>{{val}}</td>
+        </tr>
+        {% endfor %}
+        </div>
+    
+
+    </div><!-- div col -->
+    
+    <div class="col-md-6">
+      {% leaflet_map "homemap" callback="map_detail_init" %}
+
+      <script type="text/javascript">
+      function map_detail_init (map, options) {
+        var dataurl = '{% url "map_geojson" object.id %}';
+        var center = '{% url "map_geojson" object.id %}';
+        map_init_data (map, options, dataurl)
+      }
+      </script>
+
+    </div>
+  
+  </div>
+  
+  {% endblock %}
+  
