@@ -18,13 +18,13 @@
       <table class="table table-condensed">
         <thead>
           <tr>
-            <th>{% trans "Parcels" %}</th>
+            <th>{% trans "Blocks" %}</th>
           </tr>
         </thead>
         <tbody>
-          {% for parcel in parcels %}
+          {% for block in blocks %}
           <tr>
-            <td><a href="{{parcel.get_absolute_url}}">{{parcel.name}}</a></td>
+            <td><a href="{{block.get_absolute_url}}">{{block.name}}</a></td>
           </tr>
           {% endfor %}
         </tbody>

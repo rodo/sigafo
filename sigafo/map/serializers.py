@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2014 Agroof <http://www.agroof.net/>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -15,27 +16,15 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from django.contrib import admin
-from .models import Essence, Indicator, Measure, Amenagement
+from rest_framework import serializers
+from .models import Map
 
 
-class EssenceAdmin(admin.ModelAdmin):
-    pass
+class MapSerializer(serializers.ModelSerializer):
 
+    center_lat = serializers.CharField(source='center_lat', read_only=True)
+    center_lon = serializers.CharField(source='center_lon', read_only=True)
 
-class IndicatorAdmin(admin.ModelAdmin):
-    fields = ('name', 'description', 'comment')
-
-
-class MeasureAdmin(admin.ModelAdmin):
-    list_filter = ('indicator',)
-
-
-class AmenagementAdmin(admin.ModelAdmin):
-    pass
-
-
-admin.site.register(Essence, EssenceAdmin)
-admin.site.register(Indicator, IndicatorAdmin)
-admin.site.register(Measure, MeasureAdmin)
-admin.site.register(Amenagement, AmenagementAdmin)
+    class Meta:
+        model = Map
+        fields = ('id', 'title', 'center_lat', 'center_lon')

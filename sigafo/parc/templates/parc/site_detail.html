@@ -12,15 +12,8 @@
     <li>
     {% trans "Exploitant" %} : <a href="{{object.exploitant.get_absolute_url}}">{{object.exploitant}}</a>
     </li>
-    <li>
-    {% trans "Usage" %} : <a href="{{object.domain.get_absolute_url}}">{{object.usage}}</a>
-    </li>
-    <li>
-    {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
-    </li>
-    <li>
-    {% trans "Start on" %} : {{object.date_debut}}
-    </li>
+    <li>{% trans "Parcels" %} : {{object.nb_parcel}}</li>
+    <li>{% trans "Blocks" %} : {{object.nb_block}}</li>
     </div>
     
     {% leaflet_map "alert_detail" callback="main_map_init" %}
@@ -39,13 +32,13 @@
       <table class="table table-condensed">
         <thead>
           <tr>
-            <th>{% trans "Parcels" %}</th>
+            <th>{% trans "Blocks" %}</th>
           </tr>
         </thead>
         <tbody>
-          {% for parcel in object.get_parcels %}
+          {% for block in object.get_blocks %}
           <tr>
-            <td><a href="{{parcel.get_absolute_url}}">{{parcel.name}}</a></td>
+            <td><a href="{{block.get_absolute_url}}">{{block.name}}</a></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -54,13 +47,13 @@
       <table class="table table-condensed">
         <thead>
           <tr>
-            <th>{% trans "Fields" %}</th>
+            <th>{% trans "Parcels" %}</th>
           </tr>
         </thead>
         <tbody>
-          {% for champ in object.get_champs %}
+          {% for parcel in object.get_parcels %}
           <tr>
-            <td><a href="{{champ.get_absolute_url}}">{{champ.name}}</a></td>
+            <td><a href="{{parcel.get_absolute_url}}">{{parcel.name}}</a></td>
           </tr>
           {% endfor %}
         </tbody>

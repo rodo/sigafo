@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2014 Agroof <http://www.agroof.net/>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -21,6 +22,7 @@ from django.contrib.gis.db import models
 from django_hstore import hstore
 from django.core.urlresolvers import reverse
 from sigafo.contact.models import Contact
+from sigafo.ressources.models import Url
 from sigafo.projet.models import Projet
 from django.contrib.gis.geos.point import Point
 from random import random
@@ -39,7 +41,16 @@ class Site(models.Model):
     address = models.TextField(blank=True)
     owner = models.ForeignKey(Contact, related_name='owner', blank=True, null=True)
     exploitant = models.ForeignKey(Contact, related_name='exploitant', blank=True, null=True)
+    urls = models.ManyToManyField(Url, blank=True)
     comment = models.TextField(blank=True)
+
+    # updated by trigger
+    nb_parcel = models.IntegerField(default=0)
+    # updated by trigger
+    nb_block = models.IntegerField(default=0)
+
+    center = models.PointField(blank=True, null=True)
+    objects = models.GeoManager()
 
     def __unicode__(self):
         """
@@ -60,23 +71,38 @@ class Site(models.Model):
         return reverse('site_detail', args=[self.id])
 
     def get_parcels(self):
-        return Parcel.objects.filter(champ__site=self)
+        return Parcel.objects.filter(site=self)
 
-    def get_champs(self):
-        return Champ.objects.filter(site=self)
+    def get_blocks(self):
+        return Block.objects.filter(parcel__site=self)
 
 
 # Emplacements
-class Champ(models.Model):
+class Parcel(models.Model):
     """The client as consummer
     """
     site = models.ForeignKey(Site)
     name = models.CharField(max_length=50)
     comment = models.TextField(blank=True)
 
+    # updated by trigger
+    nb_block = models.IntegerField(default=0)
+    
+    center = models.PointField(blank=True, null=True)
+
+    urls = models.ManyToManyField(Url, blank=True)
+
+    objects = models.GeoManager()
+    
     def __unicode__(self):
         """
         The unicode method
+        """
+        return u"{}".format(self.name)
+
+    @property
+    def title(self):
+        """The title
         """
         return u"{}".format(self.name)
 
@@ -86,32 +112,63 @@ class Champ(models.Model):
         """
         return "{}".format(self.name)
 
+    @property
+    def approx_center(self):
+        """
+        Fake coordinate based on real coordinate
+
+        Return : Point        
+        """
+        if self.center is None:
+            return None
+        else:
+            randx = (0.5 - random())/21
+            randy = (0.5 - random())/21
+            return Point(x=self.center.x + randx,
+                         y=self.center.y + randy)
+
     def get_absolute_url(self):
         """Absolute url
         """
-        return reverse('champ_detail', args=[self.id])
+        return reverse('parcel_detail', args=[self.id])
 
-    def get_parcels(self):
-        return Parcel.objects.filter(champ=self).only('name')
+    def get_blocks(self):
+        return Block.objects.filter(parcel=self).only('name')
+
+    @property
+    def center_lat(self):
+        if self.center:
+            return self.center.y
+
+    @property
+    def center_lon(self):
+        if self.center:
+            return self.center.x
 
 
-# Parcelles
-class Parcel(models.Model):
+
+# Block, sous-ensemble de la parcelle
+class Block(models.Model):
     """
-    Une parcelle est un emplacement geographique avec une activité
+    Un block est un emplacement geographique avec une activité
     """
-    champ = models.ForeignKey(Champ)
+    parcel = models.ForeignKey(Parcel)
     name = models.CharField(max_length=50)
     surface = models.FloatField(blank=True, null=True)
 
     center = models.PointField(blank=True, null=True)
+
     date_debut = models.DateField(blank=True, null=True)
     date_fin = models.DateField(blank=True, null=True)
     usage = models.CharField(max_length=300, blank=True) # referentiel
-    projet = models.ManyToManyField(Projet, blank=True)
+
+    projets = models.ManyToManyField(Projet, blank=True)
+
+    urls = models.ManyToManyField(Url, blank=True)
+
     comment = models.TextField(blank=True)
-    variables = hstore.DictionaryField(db_index=True)
-    import_initial = hstore.DictionaryField(db_index=True)
+    variables = hstore.DictionaryField(db_index=True, blank=True, null=True)
+    import_initial = hstore.DictionaryField(db_index=True, blank=True, null=True)
     objects = MonManager()
 
 
@@ -145,26 +202,27 @@ class Parcel(models.Model):
     def get_absolute_url(self):
         """Absolute url
         """
-        return reverse('parcel_detail', args=[self.id])
+        return reverse('block_detail', args=[self.id])
 
     def get_observations(self):
-        return Observation.objects.filter(parcel=self).order_by('-date_observation')
+        return Observation.objects.filter(block=self).order_by('-date_observation')
 
     def save(self, *args, **kwargs):
         #check if the row with this hash already exists.
         with transaction.atomic(), reversion.create_revision():
-            super(Parcel, self).save(*args, **kwargs)
+            super(Block, self).save(*args, **kwargs)
 
 
 class Observation(models.Model):
     """Observation
     """
     author = models.ForeignKey(User)
-    parcel = models.ForeignKey(Parcel)
+    block = models.ForeignKey(Block)
     date_observation = models.DateField(auto_now=True)
     observation = models.TextField(blank=True)
     comment = models.TextField(blank=True)
     private = models.BooleanField(default=True)
+
 
     def __unicode__(self):
         """
@@ -181,8 +239,10 @@ class Observation(models.Model):
     def get_absolute_url(self):
         """Absolute url
 
-        We display the related parcel
+        We display the related block
         """
-        return reverse('parcel_detail', args=[self.parcel.id])
+        return reverse('block_detail', args=[self.block.id])
 
 reversion.register(Parcel)
+reversion.register(Block)
+

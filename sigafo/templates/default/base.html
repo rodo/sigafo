@@ -22,7 +22,7 @@
       #rssicon {margin-top: 8px;}
       #formnavsearch {margin-right:10px;}
     </style>
-    {% compress css %}{% leaflet_css plugins="forms" %}
+    {% compress css %}{% leaflet_css plugins="forms" %}{% leaflet_css plugins="markercluster"%}
     <link href="{{STATIC_URL}}css/sigafo.css" rel="stylesheet">{% endcompress %}
     {% block cssheaders %}{% endblock %}
     <!-- jsheaders -->
@@ -30,16 +30,14 @@
     <script src="{{STATIC_URL}}vendor/d3.v3.min.js"></script>
     <script src="{{STATIC_URL}}vendor/mustache.js"></script>
     {% compress js %}{% leaflet_js plugins="forms" %}{% endcompress %}
+    {% leaflet_js plugins="markercluster" %}
     {% block jsvendors %}{% endblock %}
     {% compress js %}
     <script src="{{STATIC_URL}}js/colors.js"></script>
     <script src="{{STATIC_URL}}js/mainmap.js"></script>{% endcompress %}
-    {% block jsheaders %}
-    {% endblock %}
-
+    {% block jsheaders %}{% endblock %}
     <!-- /jsheaders -->
-    {% block headers %}
-    {% endblock %}
+    {% block headers %}{% endblock %}
   </head>
   {% block body %}<body>{% endblock %}
     <div id="wrap">
@@ -62,7 +60,12 @@
           <li><a href="{% url 'projet_list' %}">{% trans "Projects" %}</a></li>
           <li><a href="{% url 'site_list' %}">{% trans "Sites" %}</a></li>
           <li><a href="{% url 'parcel_list' %}">{% trans "Parcels" %}</a></li>
-	    </ul>
+          <li><a href="{% url 'block_list' %}">{% trans "Blocks" %}</a></li>
+	      {% if user.is_staff %}
+          <li><a href="{% url 'map_list' %}">{% trans "Maps" %}</a></li>
+          <li><a href="{% url 'contact_list' %}">{% trans "Contacts" %}</a></li>
+          {% endif %}
+        </ul>
 
 	    <ul class="nav navbar-nav navbar-right">
 	      {% if user.is_authenticated %}

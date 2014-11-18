@@ -19,8 +19,8 @@
 #
 from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
-from .models import Champ, Parcel, Site
+from .models import Parcel, Block, Site
 
-admin.site.register(Champ, LeafletGeoAdmin)
 admin.site.register(Parcel, LeafletGeoAdmin)
+admin.site.register(Block, LeafletGeoAdmin)
 admin.site.register(Site, LeafletGeoAdmin)

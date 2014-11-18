@@ -1,8 +1,8 @@
 /*
  * Main map
- * 
- * 
- * 
+ *
+ *
+ *
  */
 function map_move(lon, lat) {
     map.panTo([lat, lon]);
@@ -12,26 +12,54 @@ function map_move(lon, lat) {
 *
 */
 function map_init_basic (map, options) {
-    
+
     var layer = L.geoJson();
     var markers = new L.MarkerClusterGroup();
 
-    $.getJSON("/parcel/geojson", function (data) {
+    var dataurl = '/parcel/geojson';
+
+    $.getJSON(dataurl, function (data) {
         /* layer.addData(data); */
         datas = data.features;
-        
+
         datas.forEach(function(parcel) {
-            var title = "title";
+
             if (parcel.geometry != null ){
                 var marker = L.marker(new L.LatLng(parcel.geometry.coordinates[1],
-                                                   parcel.geometry.coordinates[0]), { title: title });
-                marker.bindPopup(title);
+                                                   parcel.geometry.coordinates[0]), { title: parcel.properties.title });
+                marker.bindPopup(parcel.properties.title);
                 markers.addLayer(marker);
             }
         })
-        
+
     });
 
+    map.addLayer(markers);
+}
+//
+function map_init_data (map, options, mapurl, dataurl) {
+
+    var layer = L.geoJson();
+    var markers = new L.MarkerClusterGroup();
+
+    $.getJSON(mapurl, function (data) {
+        map.panTo([data.center_lat, data.center_lon]);
+    });
+
+    $.getJSON(dataurl, function (data) {
+        /* layer.addData(data); */
+        datas = data.features;
+
+        datas.forEach(function(parcel) {
+
+            if (parcel.geometry != null ){
+                var marker = L.marker(new L.LatLng(parcel.geometry.coordinates[1],
+                                                   parcel.geometry.coordinates[0]), { title: parcel.properties.title });
+                marker.bindPopup(parcel.properties.title);
+                markers.addLayer(marker);
+            }
+        })
+    });
 
     map.addLayer(markers);
 }

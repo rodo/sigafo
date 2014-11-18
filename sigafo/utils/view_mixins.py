@@ -26,3 +26,9 @@ class ProtectedMixin(object):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ProtectedMixin, self).dispatch(*args, **kwargs)
+
+
+class StaffOnlyMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StaffOnlyMixin, self).dispatch(*args, **kwargs)

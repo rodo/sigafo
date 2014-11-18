@@ -22,6 +22,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django_hstore import hstore
 
+
 class MapManager(models.GeoManager, hstore.HStoreManager):
     pass
 
@@ -34,6 +35,11 @@ class Map(models.Model):
     projets = models.ManyToManyField(Projet, blank=True)
     # properties available/displayed on map
     properties = hstore.DictionaryField(db_index=True, blank=True, null=True)
+
+    model = models.CharField(max_length=10,
+                             choices=(('Parcel', 'Parcel'),
+                                      ('Block', 'Block'),
+                                      ('Site', 'Site')))
 
     center = models.PointField(blank=True, null=True)
 
@@ -60,3 +66,25 @@ class Map(models.Model):
         """
         return reverse('map_detail', args=[self.id])
 
+
+    @property
+    def center_lat(self):
+        return self.center.y
+
+    @property
+    def center_lon(self):
+        return self.center.x
+
+
+class MapProperty(models.Model):
+    """Map property
+    """
+    wmap = models.ForeignKey(Map)
+    prop = models.CharField(max_length=100)
+
+
+class ModelProperty(models.Model):
+    """Map property
+    """
+    model = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)

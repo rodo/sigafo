@@ -1,36 +1,36 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block rssnavbar %}<a href="feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
 {% block content %}
 <div class="row">
   <div class="col-md-10">
-    <h3>{% trans "Parcels" %}</h3>
     {% include "pager.html" %}
     <table class="table table-striped">
       <thead>
 	<tr>
-	  <th>{% trans "Name" %}</th>      <th>{% trans "Site" %}</th>
-
-	  <th>{% trans "Surface" %}</th>
+      <th>{% trans "Site" %}</th>
+      <th>{% trans "Name" %}</th>
+	  <th>{% trans "Blocks" %}</th>            
 	</tr>
       </thead>
       <tbody>
-	{% for parcel in object_list %}
-	<tr>
-	  <td><a href="{{parcel.get_absolute_url}}">{{parcel.name}}</a></td>
-      <td><a href="{{parcel.champ.site.get_absolute_url}}">{{parcel.champ.site.name}}</a></td>
-	  <td>{{parcel.surface}}</a></td>
-	</tr>
-	{% endfor %}
+        {% for parcel in object_list %}
+        <tr>
+          <td><a href="{{parcel.site.get_absolute_url}}">{{parcel.site.name}}</a></td>
+          <td><a href="{{parcel.get_absolute_url}}">{{parcel.name}}</a></td>
+          <td>{% if parcel.nb_block > 0 %}{{parcel.nb_block}}{% endif %}</a></td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>      
   </div>
 
   <div class="col-md-2">
     <div>
+      <h3>{% trans "Parcels" %}</h3>
       {% include "buttons.html" %}
     </div>
-    
+
   </div>
 </div>
 {% endblock %}
+

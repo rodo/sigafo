@@ -23,9 +23,11 @@ import time
 import csv
 import re
 from django.contrib.gis.geos import Point
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-from sigafo.parc.models import Champ, Parcel, Site
-from sigafo.agrof.models import Essence, Peuplement
+from sigafo.map.models import Map
+from sigafo.parc.models import Parcel, Block, Site, Observation
+from sigafo.agrof.models import Essence, Amenagement
 from sigafo.contact.models import Contact
 from sigafo.projet.models import Projet
 from optparse import make_option
@@ -71,31 +73,44 @@ class Command(BaseCommand):
 def clean_all():
     """
     """
+    Map.objects.all().delete()
+    Block.objects.all().delete()
     Parcel.objects.all().delete()
-    Champ.objects.all().delete()
     Site.objects.all().delete()
     Contact.objects.all().delete()
-    Peuplement.objects.all().delete()
+    Amenagement.objects.all().delete()
     Projet.objects.all().delete()
 
 def iline(row, i):
     agroof_users = [1,2,3,4]
     res = 1
-    bloc_center = None
-    projets = []
-
+    block_center = None
+    projets = []    
+    data_imports = {}
+    r = 0
+    for data in row:
+        data_imports['col%d' % (r)] = data
+        r = r + 1
+    
     try:
         name = row[0].split(' ')
         (firstname, lastname) = (name[0], name[1])
-        parcel_name = row[3]
-        
-        # coord 49° 7' 3.529" N     1° 43' 44.987" E 
+        block_name = row[3]
+
+        # coord 49° 7' 3.529" N     1° 43' 44.987" E
         coord = row[9]
         for proj in row[27].strip().split(';'):
             if len(proj):
                 projets.append(proj.strip())
     except:
         print "Parsing error line %d : %s"% (i, row[0])
+
+    try:
+        surface = float(row[5])
+    except:
+        surface = None
+
+    comment = row[30].strip()
 
     matchObj = re.match(r'^(\d+).*(\d+)..(\d+\.\d+).\s(\w).*(\d+).*(\d+)..(\d+\.\d+).\s(\w)', row[9])
     if matchObj:
@@ -107,24 +122,33 @@ def iline(row, i):
             if matchObj.group(8) == "W":
                 lon = 0 - lon
 
-            bloc_center = Point(12.4604, 43.9420)
+            block_center = Point(12.4604, 43.9420)
             print "latitude : %s lon %s " % (str(lat), str(lon))
         except:
             print 'bad coord'
 
-    try:        
-        site = Site.objects.create(name=parcel_name)
 
-        champ = Champ.objects.create(site=site,
-                                     name=parcel_name)
+    try:
+        site, created = Site.objects.get_or_create(name=block_name)
+
     
-        parcel = Parcel.objects.create(name=parcel_name,
-                                       champ=champ,
-                                       center=bloc_center)
-        #                                   surface=f.pyfloat(),
-        #                                   date_debut=f.date_time(),
-        #                                   date_fin=f.date_time(),
-        #                                   usage=f.word())    
+        parcel, created = Parcel.objects.get_or_create(site=site,
+                                                       name=block_name,
+                                                       center=block_center)
+
+        block = Block.objects.create(name=block_name,
+                                     parcel=parcel,
+                                     center=block_center,
+                                     surface=surface,
+                                     import_initial=data_imports)
+
+        if len(comment) > 0:
+            Observation.objects.create(author=User.objects.get(pk=1),
+                                       date_observation='1970-01-01',
+                                       block=block,
+                                       observation=comment,
+                                       comment="commentaire présent dans le fichier excel")
+        
         res = 0
     except:
         print "error line %d"% (i)
@@ -135,7 +159,7 @@ def iline(row, i):
             if created:
                 p.users.add(1)
                 p.save()
-            parcel.projet.add(p)
-            parcel.save()
+            block.projets.add(p)
+            block.save()
 
     return res

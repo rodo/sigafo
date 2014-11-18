@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2014 Agroof <http://www.agroof.net/>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -27,6 +28,16 @@ class Activite(models.Model):
     name = models.CharField(max_length=50)
     comment = models.TextField(blank=True)
 
+    def __unicode__(self):
+        """The unicode method
+        """
+        return u"{}".format(self.name)
+
+    def __str__(self):
+        """The string method
+        """
+        return "{}".format(self.name)
+
 
 class Contact(models.Model):
     """
@@ -41,7 +52,7 @@ class Contact(models.Model):
     lastname = models.CharField(max_length=50)
     address = models.CharField(max_length=150, blank=True)
     phonenumber = models.CharField(max_length=50, blank=True)
-    sex = models.PositiveSmallIntegerField(blank=True, 
+    sex = models.PositiveSmallIntegerField(blank=True,
                                            null=True,
                                            choices=SEX)
     birthdate = models.DateField(blank=True, null=True)

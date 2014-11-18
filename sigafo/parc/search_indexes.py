@@ -19,18 +19,18 @@
 Fulltext indexing with haystack
 """
 from haystack import indexes
-from sigafo.parc.models import Site, Champ, Parcel, Observation
+from sigafo.parc.models import Site, Parcel, Block, Observation
 
 
-class ParcelIndex(indexes.SearchIndex, indexes.Indexable):
+class BlockIndex(indexes.SearchIndex, indexes.Indexable):
     """
-    Fulltext indexing for objects Parcel
+    Fulltext indexing for objects Block
     """
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name')
 
     def get_model(self):
-        return Parcel
+        return Block
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
@@ -52,15 +52,15 @@ class SiteIndex(indexes.SearchIndex, indexes.Indexable):
         return self.get_model().objects.all()
 
 
-class ChampIndex(indexes.SearchIndex, indexes.Indexable):
+class ParcelIndex(indexes.SearchIndex, indexes.Indexable):
     """
-    Fulltext indexing for objects Champ
+    Fulltext indexing for objects Parcel
     """
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name')
 
     def get_model(self):
-        return Champ
+        return Parcel
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""

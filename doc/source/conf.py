@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Sipaf documentation build configuration file, created by
+# Sigafo documentation build configuration file, created by
 # sphinx-quickstart on Thu Jun 26 09:07:49 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -59,7 +59,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Sipaf'
+project = u'Sigafo'
 copyright = u'2014, Rodolphe Quiédeville'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -192,7 +192,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Sipafdoc'
+htmlhelp_basename = 'Sigafodoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -212,7 +212,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'Sipaf.tex', u'Sipaf Documentation',
+  ('index', 'Sigafo.tex', u'Sigafo Documentation',
    u'Rodolphe Quiédeville', 'manual'),
 ]
 
@@ -242,7 +242,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'sigafo', u'Sipaf Documentation',
+    ('index', 'sigafo', u'Sigafo Documentation',
      [u'Rodolphe Quiédeville'], 1)
 ]
 
@@ -256,8 +256,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Sipaf', u'Sipaf Documentation',
-   u'Rodolphe Quiédeville', 'Sipaf', 'One line description of project.',
+  ('index', 'Sigafo', u'Sigafo Documentation',
+   u'Rodolphe Quiédeville', 'Sigafo', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -277,13 +277,13 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'Sipaf'
+epub_title = u'Sigafo'
 epub_author = u'Rodolphe Quiédeville'
 epub_publisher = u'Rodolphe Quiédeville'
 epub_copyright = u'2014, Rodolphe Quiédeville'
 
 # The basename for the epub file. It defaults to the project name.
-#epub_basename = u'Sipaf'
+#epub_basename = u'Sigafo'
 
 # The HTML theme for the epub output. Since the default themes are not optimized
 # for small screen space, using the same theme for HTML and epub output is

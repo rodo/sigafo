@@ -20,14 +20,18 @@
 import sys
 import os
 import time
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-from sigafo.parc.models import Champ, Parcel, Site
-from sigafo.agrof.models import Essence, Peuplement
-from sigafo.contact.models import Contact
+from sigafo.ressources.models import Url
+from sigafo.projet.models import Projet
+from sigafo.parc.models import Parcel, Block, Site
+from sigafo.agrof.models import Essence, Amenagement
+from sigafo.contact.models import Contact, Activite
 from django.contrib.gis.geos.point import Point
 from optparse import make_option
 from faker import Faker
 from django.db import connection
+from random import randrange
 
 
 class Command(BaseCommand):
@@ -58,23 +62,46 @@ class Command(BaseCommand):
         #peuplement = Peuplement.objects.create(name=f.name())
         #peuplement.essences.add(Essence.objects.get(pk=1))
 
+        projet = Projet.objects.create(name=f.company())
+        projet.users.add(User.objects.get(pk=1))
+        projet.save()
+        
+        Contact.objects.create(firstname=f.first_name(),
+                               lastname=f.last_name(),
+                               activite=Activite.objects.all().last())
+
         for i in range(nbvalues):
             site = Site.objects.create(name=f.word(),
-                                       owner=Contact.objects.get(pk=1),
-                                       exploitant=Contact.objects.get(pk=1),)
+                                       owner=Contact.objects.all().last(),
+                                       exploitant=Contact.objects.all().first(),)
 
-            champ = Champ.objects.create(name=f.word(),
-                                         site=site)
+            for p in range(randrange(2)):
 
-            parcel = Parcel.objects.create(name=f.word(),
-                                           champ=champ,
-                                           surface=f.pyfloat(),
-                                           date_debut=f.date_time(),
-                                           date_fin=f.date_time(),
-                                           usage=f.word(),
-                                           center=Point(x=float(f.longitude()),
-                                                        y=float(f.latitude())),
-                                           comment=" ".join(f.words(18000)))
-                                          
+                url = Url.objects.create(title=f.word(), url=f.url())
 
-        print 'Parcelles {}'.format(Parcel.objects.all().count())
+                center = Point(x=float(f.longitude()),
+                               y=float(f.latitude()))
+
+                parcel = Parcel.objects.create(name=f.word(),
+                                               center=center,
+                                               site=site)
+
+                parcel.urls.add(url)
+                parcel.save()
+
+                for b in range(randrange(3)):
+                    block = Block.objects.create(name=f.word(),
+                                                 parcel=parcel,
+                                                 surface=f.pyfloat(),
+                                                 date_debut=f.date_time(),
+                                                 date_fin=f.date_time(),
+                                                 usage=f.word(),
+                                                 center=Point(x=float(f.longitude()),
+                                                              y=float(f.latitude())),
+                                                 comment=" ".join(f.words(18000)))
+
+                    block.projets.add(projet)
+                    block.save()
+
+
+        print 'Blocks {}'.format(Block.objects.all().count())

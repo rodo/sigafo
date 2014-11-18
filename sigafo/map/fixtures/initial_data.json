@@ -1,0 +1,6 @@
+[{"pk": 1, "model": "map.modelproperty", "fields": {"model": "Parcel", "name": "nb_block"}},
+ {"pk": 2, "model": "map.modelproperty", "fields": {"model": "Parcel", "name": "title"}},
+ {"pk": 3, "model": "map.modelproperty", "fields": {"model": "Site", "name": "nb_block"}},
+ {"pk": 4, "model": "map.modelproperty", "fields": {"model": "Site", "name": "nb_parcel"}},
+ {"pk": 5, "model": "map.modelproperty", "fields": {"model": "Site", "name": "name"}}
+]

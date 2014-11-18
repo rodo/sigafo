@@ -5,81 +5,58 @@
 {% block rssnavbar %}<a href="events/feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
 {% block content %}
 <div class="row">
-  <div class="col-md-4">
-    <h3>{{object.name}}</h3>
-  <div class="well">
-    <ul>
-        <li>
-        {% trans "Site" %} : <a href="{{object.champ.site.get_absolute_url}}">{{object.champ.site.name}}</a>
-        </li>
-        <li>
-        {% trans "Champ" %} : <a href="{{object.champ.get_absolute_url}}">{{object.champ.name}}</a>
-        </li>
-        <li>
-        {% trans "Exploitant" %} : <a href="{{object.champ.site.exploitant.get_absolute_url}}">{{object.champ.site.exploitant}}</a>
-        </li>
-        <li>
-        {% trans "Usage" %} : <a href="{{object.domain.get_absolute_url}}">{{object.usage}}</a>
-        </li>
-        <li>
-        {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
-        </li>
-        <li>
-        {% trans "Start on" %} : {{object.date_debut}}
-        </li>
+<div class="col-md-4">
+  <h3>{{object.name}}</h3>
+<div class="well">
+  <ul>
+    <li>
+    {% trans "Site" %} : <a href="{{object.site.get_absolute_url}}">{{object.site}}</a>
+    </li>
+    <li>
+    {% trans "Exploitant" %} : <a href="{{object.exploitant.get_absolute_url}}">{{object.exploitant}}</a>
+    </li>
+    <li>
+    {% trans "Usage" %} : <a href="{{object.domain.get_absolute_url}}">{{object.usage}}</a>
+    </li>
+    <li>
+    {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
+    </li>
+    <li>
+    {% trans "Start on" %} : {{object.date_debut}}
+    </li>
     </div>
-
+    
     {% leaflet_map "alert_detail" callback="main_map_init" %}
     {% if object.description %}
     <hr/>
-
+    
     <div>
-      <div class="alert alert-info">
-	{{object.description}}
-      </div>
+    <div class="alert alert-info">
+      {{object.description}}
     </div>
-	 {% endif %}
-  </div>
-
-  <div class="col-md-6">
-    <table class="table table-condensed">
-      <thead>
-	<tr>
-	  <th>{% trans "Observations" %}</th>
-	</tr>
-      </thead>
-      <tbody>
-        {% for obs in object.get_observations %}
-        <tr>
-          <td>
-            <span class="badge">{{obs.author}}</span> {{obs.observation}}        
-          </td>
-        </tr>
-	{% endfor %}
-      </tbody>
-    </table>
-
-  </div>
-
-  <div class="col-md-2">
-    <div>
-      <table class="table table-striped">
-	<thead>
-	  <tr>
-	    <th>{% trans "Projets" %}</th>
-	  </tr>
-	</thead>
-    <tbody>
-      {% for projet in object.projet.all %}
-      <tr>
-	    <td><a href="{% url 'projet_detail' pk=projet.id %}">{{projet.name}}</a></td>
-	  </tr>
-	  {% endfor %}
-	</tbody>
+    </div>
+    {% endif %}
+    </div>
+    
+    <div class="col-md-6">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>{% trans "Blocks" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in object.get_blocks %}
+          <tr>
+            <td><a href="{{block.get_absolute_url}}">{{block.name}}</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
-    </div>
 
   </div>
-</div>
-
+  
+  </div>
+  
 {% endblock %}
+  

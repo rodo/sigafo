@@ -46,6 +46,16 @@ class MapForm(forms.ModelForm):
 
     projets = forms.ModelMultipleChoiceField(queryset=Projet.objects.all().order_by('name'))
 
+    model = forms.ChoiceField(required=True,
+                              label="Objets",
+                              choices=(('Parcel', 'Parcel'),
+                                       ('Block', 'Block'),
+                                       ('Site', 'Site')),
+                              widget = RadioSelect(),
+                              initial = 'Parcel',
+                              )
+    
+
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.label_class = 'col-lg-2'
@@ -53,6 +63,7 @@ class MapForm(forms.ModelForm):
     helper.layout = layout.Layout(
         layout.Field('title'),
         layout.Field('projets'),
+        layout.Field('model'),
         FormActions(
             layout.Submit('save_changes', 'Enregistrer', css_class="btn-primary"),
             layout.Submit('cancel', 'Annuler', css_class="btn-danger"),

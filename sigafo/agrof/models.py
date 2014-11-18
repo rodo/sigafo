@@ -19,12 +19,11 @@
 #
 from django.db import models, transaction
 from django.contrib.auth.models import User
-from sigafo.parc.models import Parcel
+from sigafo.parc.models import Block
 
 
 class Essence(models.Model):
-    """
-    Essence de bois
+    """Essence d'arbre
     """
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
@@ -42,17 +41,22 @@ class Essence(models.Model):
         return "{}".format(self.name)
 
 
-class Peuplement(models.Model):
+class Amenagement(models.Model):
     """
+    """
+    blocks = models.ManyToManyField(Block)
 
-    """
-    parcel = models.ForeignKey(Parcel)
+    essences = models.ManyToManyField(Essence, blank=True)
+    
     name = models.CharField(max_length=300)
     essences = models.ManyToManyField(Essence, blank=True)
+
     # distance entre les arbres sur la ligne
     online_distance = models.FloatField(blank=True, null=True)
+
     # distance entre les lignes
     line_spacing = models.FloatField(blank=True, null=True)
+
     # Commentaires divers
     comment = models.TextField(blank=True)
 
@@ -98,7 +102,7 @@ class Measure(models.Model):
     """
     author = models.ForeignKey(User)
     indicator = models.ForeignKey(Indicator)
-    parcel = models.ForeignKey(Parcel)
+    block = models.ForeignKey(Block)
     value = models.FloatField()
     comment = models.TextField(blank=True)
 

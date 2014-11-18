@@ -17,10 +17,8 @@
       <li>{{projet.name}}</li>
       {% endfor %}
     </ul></li>
-    <li>
-    {% trans "Published" %} : {{object.published}}
-    </li>
-    
+    <li>{% trans "Published" %} : {{object.published}}</li>
+    <li>{% trans "Objects" %} : {{object.model}}</li>    
     </div><!-- class well -->
     <div>
         {% for key,val in object.properties %}
@@ -28,9 +26,7 @@
           <td>{{key}}</td><td>{{val}}</td>
         </tr>
         {% endfor %}
-        </div>
-    
-
+        </div>    
     </div><!-- div col -->
     
     <div class="col-md-6">
@@ -38,14 +34,20 @@
 
       <script type="text/javascript">
       function map_detail_init (map, options) {
+        var mapurl = '{% url "map_json" object.id %}';
         var dataurl = '{% url "map_geojson" object.id %}';
         var center = '{% url "map_geojson" object.id %}';
-        map_init_data (map, options, dataurl)
+        map_init_data (map, options, mapurl, dataurl)
       }
       </script>
 
     </div>
-  
+
+    <div class="col-md-2">
+      
+      <a href="{% url 'map_edit' object.id %}" class="btn btn-primary btn-block">{% trans "Edit" %}</a>
+    </div>
+    
   </div>
   
   {% endblock %}

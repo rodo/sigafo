@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from sigafo.parc.models import Champ, Parcel, Site
+from sigafo.parc.models import Parcel, Block, Site
 from sigafo.projet.models import Projet
 from sigafo.utils.view_mixins import ProtectedMixin
 
@@ -29,10 +29,7 @@ class ProjetDetailView(ProtectedMixin, DetailView):
             return redirect(reverse('projet_list'))
         return super(ProjetDetailView, self).get(*args, **kwargs)
 
-
     def get_context_data(self, **kwargs):
         context = super(ProjetDetailView, self).get_context_data(**kwargs)
-        context['parcels'] = Parcel.objects.filter(projet__in=[self.object.pk]).only('name')
+        context['blocks'] = Block.objects.filter(projets__in=[self.object.pk]).only('name')
         return context
-
-

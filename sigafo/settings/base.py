@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'djgeojson',
     'reversion',
     'django_extensions',
+    'rest_framework',
     'bootstrap3',
     'haystack',
     'json_dbindex',

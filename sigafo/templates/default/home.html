@@ -31,12 +31,10 @@
     {% block jsvendors %}{% endblock %}
     <script src="{{STATIC_URL}}js/colors.js"></script>
     <script src="{{STATIC_URL}}js/mainmap.js"></script>
-    {% block jsheaders %}
-    {% endblock %}
+    {% block jsheaders %}{% endblock %}
 
     <!-- /jsheaders -->
-    {% block headers %}
-    {% endblock %}
+    {% block headers %}{% endblock %}
   </head>
   {% block body %}<body>{% endblock %}
     <div id="wrap">
@@ -55,9 +53,11 @@
 	  </div>
 
 	  <div class="collapse navbar-collapse">
+
 	    <ul class="nav navbar-nav">
+          
           <li><a href="{% url 'site_list' %}">{% trans "Sites" %}</a></li>
-          <li><a href="{% url 'parcel_list' %}">{% trans "Parcels" %}</a></li>
+          <li><a href="{% url 'block_list' %}">{% trans "Blocks" %}</a></li>
 	    </ul>
 
 	    <ul class="nav navbar-nav navbar-right">
@@ -83,22 +83,22 @@
 	      <li><a href="/p/contact/">{% trans "Contact" %}</a></li>
 	    </ul>
 	    <div class="nav navbar-nav navbar-right" >{% block rssnavbar %}{% endblock %}</div>
-	  </div><!--/.nav-collapse -->
-	</div><!--/.container -->
-      </div><!--/.navbar -->
+        </div><!--/.nav-collapse -->
+      </div><!--/.container -->
+    </div><!--/.navbar -->
 
 
-<div id="container" class="container">
-
-	<div class="row">
-	  <div class="col-md-12">
+      <div id="container" class="container">
+        
+      <div class="row">
+      <div class="col-md-12">
         {% leaflet_map "homemap" callback="window.map_init_basic" %}
-	  </div>
-	</div><!--/row-->
-
+      </div>
+      </div><!--/row-->
+      
       </div><!--/.container-->
-
-    </div><!--/ .wrap -->
+      
+      </div><!--/ .wrap -->
 
     {% block footer %}{% endblock %}
     {% block jsfooter %}{% endblock %}
