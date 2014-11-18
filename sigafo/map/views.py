@@ -2,24 +2,15 @@
 # Sigafo map views
 #
 #
-import json
-from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView, CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView
 from djgeojson.views import GeoJSONLayerView
-from djgeojson.serializers import Serializer as GeoJSONSerializer
-
-from sigafo.parc.models import Parcel, Block
+from sigafo.parc.models import Parcel
 from sigafo.map.models import Map, MapProperty
 from sigafo.utils.view_mixins import ProtectedMixin
 from sigafo.map import forms
-from django import http
-from django.http import HttpResponse
-from django.views.generic.detail import BaseDetailView
-
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
 from serializers import MapSerializer
 
 
@@ -39,9 +30,9 @@ class MapDetail(GeoJSONLayerView):
     properties = ['title']
 
     def get_queryset(self):
-        qs = super(MapDetail, self).get_queryset()
-        qsp = MapProperty.objects.filter(wmap_id=self.kwargs['pk']).values_list('prop')
-        self.properties = [str(prop[0]) for prop in qsp]
+        super(MapDetail, self).get_queryset()
+        qsp = MapProperty.objects.filter(wmap_id=self.kwargs['pk'])
+        self.properties = [str(prop[0]) for prop in qsp.values_list('prop')]
         sql = """WITH projets AS (
         SELECT projet_id FROM map_map_projets
         WHERE map_id = {0}
@@ -52,15 +43,7 @@ class MapDetail(GeoJSONLayerView):
         """.format(self.kwargs['pk'])
         ids = [p.id for p in Parcel.objects.raw(sql)]
         features = Parcel.objects.filter(pk__in=ids)
-        print self.properties
         return features
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(MapDetail, self).get_context_data(**kwargs)
-    #     qsp = MapProperty.objects.filter(wmap_id=self.kwargs['pk']).values_list('prop')
-    #     context['properties'] = [str(prop[0]) for prop in qsp]
-
-    #     return context
 
 
 class MapNew(ProtectedMixin, CreateView):

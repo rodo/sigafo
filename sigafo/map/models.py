@@ -44,11 +44,11 @@ class Map(models.Model):
     center = models.PointField(blank=True, null=True)
 
     published = models.BooleanField(default=False)
-    # public_map : the geojson is open to everybody    
+    # public_map : the geojson is open to everybody
     public_map = models.BooleanField(default=False)
 
     objects = MapManager()
-    
+
     def __unicode__(self):
         """
         The unicode method
@@ -65,7 +65,6 @@ class Map(models.Model):
         """Absolute url
         """
         return reverse('map_detail', args=[self.id])
-
 
     @property
     def center_lat(self):
