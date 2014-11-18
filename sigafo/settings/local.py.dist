@@ -1,0 +1,36 @@
+#
+#
+#
+#
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'sipaf',                      # Or path to database file if using sqlite3.
+        'USER': 'sipaf',                      # Not used with sqlite3.
+        'PASSWORD': 'CHANGEME',
+        'HOST': 'localhost',                  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '5433',                       # Set to empty string for default. Not used with sqlite3.
+    }
+
+
+}
+#
+#
+#
+import os
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        },
+ }
+
+# Generation de documentation automatique des modeles
+# avec django-extensions
+#
+GRAPH_MODELS = {
+  'all_applications': False,
+  'group_models': False,
+}
+#
+COMPRESS_ENABLED = False
