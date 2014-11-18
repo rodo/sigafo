@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}{% load compress %}
+{% block title %} : {{object.name}}{% endblock %}
+{% block pagetitle %}{% trans "Alert" %} : {{object.name}}{% endblock %}
+{% block rssnavbar %}<a href="events/feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-2">
+    <h3>{{object.name}}</h3>
+  <div class="well">
+    <ul>
+        <li>
+        {% trans "Site" %} : <a href="{{object.parcel.site.get_absolute_url}}">{{object.parcel.site.name}}</a>
+        </li>
+        <li>
+        {% trans "Parcel" %} : <a href="{{object.parcel.get_absolute_url}}">{{object.parcel.name}}</a>
+        </li>
+        <li>
+        {% trans "Exploitant" %} : <a href="{{object.parcel.site.exploitant.get_absolute_url}}">{{object.parcel.site.exploitant}}</a>
+        </li>
+        <li>
+        {% trans "Usage" %} : <a href="{{object.domain.get_absolute_url}}">{{object.usage}}</a>
+        </li>
+        <li>
+        {% trans "Start on" %} : {{object.date_debut}}
+        </li>
+    </div>
+
+  </div>
+
+  <div class="col-md-10">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th></th>
+          <th>{% trans "Initial datas" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key,val in object.import_initial.items %}
+        <tr>
+          <td>{{key}}</td><td>{{val}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>        
+  </div>
+  
+  </div>
+  </div>
+
+{% endblock %}

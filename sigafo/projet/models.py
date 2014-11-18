@@ -46,6 +46,7 @@ class Projet(models.Model):
     data = hstore.DictionaryField(db_index=True)
     objects = hstore.HStoreManager()
 
+    url = models.URLField()
 
     def __unicode__(self):
         """The unicode method

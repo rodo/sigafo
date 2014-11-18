@@ -127,6 +127,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     # addons
+    'django_hstore',
+    'crispy_forms',
     'compressor',
     'leaflet',
     'djgeojson',
@@ -140,6 +142,8 @@ INSTALLED_APPS = (
     'sigafo.parc',
     'sigafo.projet',
     'sigafo.agrof',
+    'sigafo.map',
+    'sigafo.ressources',
     'debug_toolbar'
     
 )
@@ -193,8 +197,8 @@ LOGGING = {
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (44.03, 3.59),
     'DEFAULT_ZOOM': 6,
-    'MIN_ZOOM': 2,
-    'MAX_ZOOM': 12,
+    'MIN_ZOOM': 4,
+    'MAX_ZOOM': 15,
     'RESET_VIEW': False,
     'PLUGINS': {
         'markercluster': {
@@ -213,3 +217,5 @@ LEAFLET_CONFIG = {
 COMPRESS_CSS_FILTERS = ['compressor.filters.csstidy.CSSTidyFilter']
 
 COMPRESS_JS_FILTERS = ['compressor.filters.template.TemplateFilter']
+# Crispy Forms
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
