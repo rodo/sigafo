@@ -29,6 +29,7 @@ class ProjetIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name')
     description = indexes.CharField(model_attr='description')
+    objectifs = indexes.CharField(model_attr='objectifs')
 
     def get_model(self):
         return Projet

@@ -18,6 +18,7 @@
 #
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 
 class Activite(models.Model):
@@ -56,13 +57,14 @@ class Contact(models.Model):
                                            null=True,
                                            choices=SEX)
     birthdate = models.DateField(blank=True, null=True)
-    email = models.EmailField()
-    activite = models.ForeignKey(Activite)
+    email = models.EmailField(blank=True, null=True)
+    activite = models.ForeignKey(Activite, blank=True, null=True)
     comment = models.TextField(blank=True)
 
+    user = models.ForeignKey(User, blank=True, null=True)
+
     def __unicode__(self):
-        """
-        The unicode method
+        """The unicode method
         """
         return "%s %s" % (self.lastname, self.firstname)
 
@@ -72,6 +74,11 @@ class Contact(models.Model):
         """
         return reverse('contact_detail', args=[self.id])
 
+    def name(self):
+        """Name
+        """
+        return "%s %s" % (self.lastname, self.firstname)
+
 
 class Organisme(models.Model):
     """Organisme
@@ -79,7 +86,7 @@ class Organisme(models.Model):
     name = models.CharField(max_length=50)
     address = models.TextField(blank=True, null=True)
     phonenumber = models.CharField(max_length=50, blank=True)
-    email = models.EmailField()
+    url = models.URLField(blank=True, null=True)
     contacts = models.ManyToManyField(Contact, blank=True)
 
     comment = models.TextField(blank=True)

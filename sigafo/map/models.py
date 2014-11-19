@@ -43,6 +43,8 @@ class Map(models.Model):
 
     center = models.PointField(blank=True, null=True)
 
+    lang = models.CharField(max_length=10)
+
     published = models.BooleanField(default=False)
     # public_map : the geojson is open to everybody
     public_map = models.BooleanField(default=False)

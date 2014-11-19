@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2014 Agroof <http://www.agroof.net/>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -15,21 +16,26 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from django.contrib import admin
-from .models import Projet, Thematique, Comment
+from rest_framework import serializers
+from sigafo.referentiel import models
 
 
-class ProjetAdmin(admin.ModelAdmin):
-    list_display = ['name', 'annee_debut', 'annee_fin']
+class TopographySerializer(serializers.ModelSerializer):
 
-class ThematiqueAdmin(admin.ModelAdmin):
-    ordering = ['name']
-
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ['author', 'creation', 'abstract']
-    ordering = ['-creation']
+    class Meta:
+        model = models.Topography
+        fields = ('uuid', 'name')
 
 
-admin.site.register(Projet, ProjetAdmin)
-admin.site.register(Thematique, ThematiqueAdmin)
-admin.site.register(Comment, CommentAdmin)
+class AnimalProductionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.AnimalProduction
+        fields = ('uuid', 'name')
+
+
+class VegetalProductionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.VegetalProduction
+        fields = ('uuid', 'name')

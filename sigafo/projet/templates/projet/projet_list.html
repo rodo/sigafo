@@ -4,7 +4,6 @@
 {% block content %}
 <div class="row">
   <div class="col-md-10">
-    <h3>{% trans "Projects" %}</h3>
     {% include "pager.html" %}
     <table class="table table-striped">
       <thead>
@@ -17,10 +16,7 @@
         {% for projet in object_list %}
         <tr>
           <td><a href="{{projet.get_absolute_url}}">{{projet.name}}</a></td>
-          <td>
-            {% if projet.research %}{% trans "Research" %}{% endif %}
-            {% if projet.territory %}{% trans "Territory" %}{% endif %}
-          </td>
+          <td>{{projet.taxon_str}}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -28,7 +24,7 @@
   </div>
   
   <div class="col-md-2">
-    
+    <h3>{% trans "Projects" %}</h3>
   </div>
 </div>
 {% endblock %}

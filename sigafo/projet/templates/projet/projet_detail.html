@@ -6,13 +6,38 @@
 {% block content %}
 <div class="row">
 <div class="col-md-4">
+  
   <h3>{{object.name}}</h3>
-{% if object.description %}  
-<div class="alert alert-info">
-        {{object.description}}
-      </div>
-    {% endif %}
-      </div>
+
+<div class="well">
+  <span class="badge">{{object.taxon_str}}</span>
+  <ul>
+    <li>
+    {% trans "Period" %} : {{object.annee_debut}} - {{object.annee_fin}}
+    </li>
+    <li>Coordinator:
+    <ul>{% for coordinator in object.coordinators.all %}
+    <li><a href="{{coordinator.get_absolute_url}}">{{coordinator.name}}</a></li>
+    {% endfor %}</ul>
+    </li>
+
+    <li>{% trans "Referent" %} : {{object.referent_interne.username}}</li>
+    
+    <li>Partenaires : <ul>{% for partenaire in object.partenaires.all %}
+      <li>{{partenaire.name}}</li>
+    {% endfor %}</ul>
+    </li>
+
+    <li>Financeur:
+    <ul>{% for financeur in object.financeurs.all %}
+    <li>{{financeur.name}}</li>
+    {% endfor %}</ul>
+    </li>
+    {% if object.url %}
+        <li><a href="{{object.url}}">Site web</a></li>{% endif %}
+    </div>
+<div>{{object.objectifs}}</div>
+    </div>
     
     <div class="col-md-6">
       <table class="table table-condensed">
@@ -30,6 +55,14 @@
         </tbody>
       </table>
 
+      {% if user.is_staff %}
+      {% for comment in comments %}
+    <div class="well alert">{{comment.author}} : {{comment.comment}}</div>
+    {% endfor %}
+
+
+      {% endif %}
+      
   </div>
   
   </div>

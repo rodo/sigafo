@@ -30,6 +30,7 @@ from sigafo.parc.models import Parcel, Block, Site, Observation
 from sigafo.agrof.models import Essence, Amenagement
 from sigafo.contact.models import Contact
 from sigafo.projet.models import Projet
+from sigafo.referentiel import models
 from optparse import make_option
 from faker import Faker
 from django.db import connection
@@ -62,12 +63,17 @@ class Command(BaseCommand):
                 reader = csv.reader(f)
                 for row in reader:
                     i = i + 1
-                    if i > 1:
+                    if i > 3:
                         res = iline(row, i)
                         if res == 0:
                             ok = ok + 1
 
         print "%s on %s lines imported" % (ok, i)
+
+        for model in [Map, Block, Parcel, Site]:
+            print "%s %d" % (model, model.objects.all().count())
+
+
 
 
 def clean_all():
@@ -77,12 +83,10 @@ def clean_all():
     Block.objects.all().delete()
     Parcel.objects.all().delete()
     Site.objects.all().delete()
-    Contact.objects.all().delete()
     Amenagement.objects.all().delete()
-    Projet.objects.all().delete()
+
 
 def iline(row, i):
-    agroof_users = [1,2,3,4]
     res = 1
     block_center = None
     projets = []    
@@ -91,26 +95,31 @@ def iline(row, i):
     for data in row:
         data_imports['col%d' % (r)] = data
         r = r + 1
+
+    site_nom = row[0].strip()
+
     
     try:
-        name = row[0].split(' ')
+        name = row[2].split(' ')
         (firstname, lastname) = (name[0], name[1])
         block_name = row[3]
 
         # coord 49° 7' 3.529" N     1° 43' 44.987" E
-        coord = row[9]
-        for proj in row[27].strip().split(';'):
-            if len(proj):
-                projets.append(proj.strip())
+        coord = row[1]
+
     except:
         print "Parsing error line %d : %s"% (i, row[0])
+
+
+    for proj in row[27].strip().split(';'):
+        if len(proj):
+            projets.append(proj.strip())
 
     try:
         surface = float(row[5])
     except:
         surface = None
 
-    comment = row[30].strip()
 
     matchObj = re.match(r'^(\d+).*(\d+)..(\d+\.\d+).\s(\w).*(\d+).*(\d+)..(\d+\.\d+).\s(\w)', row[9])
     if matchObj:
@@ -122,44 +131,61 @@ def iline(row, i):
             if matchObj.group(8) == "W":
                 lon = 0 - lon
 
-            block_center = Point(12.4604, 43.9420)
             print "latitude : %s lon %s " % (str(lat), str(lon))
         except:
             print 'bad coord'
 
 
-    try:
-        site, created = Site.objects.get_or_create(name=block_name)
+    site, created = Site.objects.get_or_create(name=site_nom)
+
+    # parcel
+    #
+    parcel_name = row[6].strip()
+    system = row[11].strip()
+
+    system, created = models.SystemProd.objects.get_or_create(name=system)
+    
+    parcel, created = Parcel.objects.get_or_create(site=site,
+                                                   systemprod=system,
+                                                   name=parcel_name,
+                                                   center=block_center)
+
+    #
+    #
+    block_name = row[17].strip()
+    r_topo = row[24].strip()
+    comment = row[30].strip()
+    projets = row[39]
+    #
+
+    topo, created = models.Topography.objects.get_or_create(name=r_topo)
 
     
-        parcel, created = Parcel.objects.get_or_create(site=site,
-                                                       name=block_name,
-                                                       center=block_center)
+    block = Block.objects.create(name=block_name,
+                                 parcel=parcel,
+                                 center=block_center,
+                                 surface=surface,
+                                 import_initial=data_imports)
 
-        block = Block.objects.create(name=block_name,
-                                     parcel=parcel,
-                                     center=block_center,
-                                     surface=surface,
-                                     import_initial=data_imports)
+    for p in projets.split(';'):
+        projet = None
+        try:
+            projet, created = Projet.objects.get_or_create(name=p.strip())
+        except:
+            print "erreur projet inconnu '%s'" % (p.strip())
 
-        if len(comment) > 0:
-            Observation.objects.create(author=User.objects.get(pk=1),
-                                       date_observation='1970-01-01',
-                                       block=block,
-                                       observation=comment,
-                                       comment="commentaire présent dans le fichier excel")
+    if projet:
+        block.projets.add(projet)
+
+
+    if len(comment) > 0:
+        Observation.objects.create(author=User.objects.get(pk=1),
+                                   date_observation='1970-01-01',
+                                   block=block,
+                                   observation=comment,
+                                   comment="commentaire présent dans le fichier excel")
         
-        res = 0
-    except:
-        print "error line %d"% (i)
-
-    if res == 0:
-        for projname in projets:
-            p, created = Projet.objects.get_or_create(name=projname)
-            if created:
-                p.users.add(1)
-                p.save()
-            block.projets.add(p)
-            block.save()
+    print "error line %d"% (i)
+        
 
     return res

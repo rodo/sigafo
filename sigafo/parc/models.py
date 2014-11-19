@@ -92,7 +92,7 @@ class Parcel(models.Model):
     nb_block = models.IntegerField(default=0)
     
     center = models.PointField(blank=True, null=True)
-    polygon = models.PointField(blank=True, null=True)
+    polygon = models.PolygonField(blank=True, null=True)
 
     urls = models.ManyToManyField(Url, blank=True)
 
@@ -202,13 +202,8 @@ class Block(models.Model):
         """
         The unicode method
         """
-        return u"{}".format(self.name)
+        return "%s" % (self.name)
 
-    def __str__(self):
-        """
-        The string method
-        """
-        return "{}".format(self.name)
 
     def get_absolute_url(self):
         """Absolute url

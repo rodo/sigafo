@@ -51,10 +51,7 @@ class MapForm(forms.ModelForm):
                               choices=(('Parcel', 'Parcel'),
                                        ('Block', 'Block'),
                                        ('Site', 'Site')),
-                              widget = RadioSelect(),
-                              initial = 'Parcel',
-                              )
-    
+                              initial = 'Parcel')    
 
     helper = FormHelper()
     helper.form_class = 'form-horizontal'

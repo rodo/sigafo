@@ -153,14 +153,14 @@ INSTALLED_APPS = (
     'haystack',
     'json_dbindex',
     # project apps
+    'sigafo.agrof',
     'sigafo.contact',
     'sigafo.parc',
     'sigafo.projet',
-    'sigafo.agrof',
     'sigafo.map',
-    'sigafo.utils',
     'sigafo.referentiel',
-    'sigafo.ressources'
+    'sigafo.ressources',
+    'sigafo.utils',    
 )
 
 

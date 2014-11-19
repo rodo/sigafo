@@ -23,6 +23,18 @@ class SiteList(ProtectedMixin, ListView):
         return sites
 
 
+class ParcelList(ProtectedMixin, ListView):
+    def get_queryset(self):
+        parcels = Parcel.objects.filter(block__projets__users__in=[self.request.user.id]).only('name').distinct()
+        return parcels
+
+
+class BlockList(ProtectedMixin, ListView):
+    def get_queryset(self):
+        blocks = Block.objects.filter(projets__users__in=[self.request.user.id]).only('name').distinct()
+        return blocks
+
+
 class HomepageView(TemplateView):
     template_name = "newhome.html"
 

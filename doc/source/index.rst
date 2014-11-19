@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    modelisation.rst
+   api.rst
 
 
 Indices and tables

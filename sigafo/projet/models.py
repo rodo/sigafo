@@ -21,6 +21,20 @@ from sigafo.contact.models import Contact, Organisme
 from django.core.urlresolvers import reverse
 from django_hstore import hstore
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+
+
+class Thematique(models.Model):
+    """Thematique projet
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
 
 
 class Projet(models.Model):
@@ -29,23 +43,33 @@ class Projet(models.Model):
     name = models.CharField(max_length=50)
 
     # est-ce un projet de recherche
-    research = models.BooleanField(default=True)
-    # est-ce un projet territoire
-    territory = models.BooleanField(default=False)
+    taxon = models.IntegerField(choices=((1,'Research'), (2, 'Territory'), (3, 'Formation')))
 
-    date_debut = models.DateField(blank=True, null=True)
-    date_fin = models.DateField(blank=True, null=True)
+    annee_debut = models.IntegerField(blank=True, null=True)
+    annee_fin = models.IntegerField(blank=True, null=True)
 
-    referent_interne = models.ForeignKey(Contact, blank=True, null=True)
+    referent_interne = models.ForeignKey(User, blank=True, null=True)
 
+    objectifs = models.TextField(blank=True)
     description = models.TextField(blank=True)
-    comments = models.TextField(blank=True)
 
     # personnes incluses dans le projet
-    users = models.ManyToManyField(User, blank=True)
+    coordinators = models.ManyToManyField(Contact,
+                                          related_name='coordinator',
+                                          blank=True)
 
     # personnes incluses dans le projet
-    partenaires = models.ManyToManyField(Organisme, blank=True)
+    users = models.ManyToManyField(User, related_name='user', blank=True)
+
+    # personnes incluses dans le projet
+    partenaires = models.ManyToManyField(Organisme, related_name='partenaire', blank=True)
+
+    # financeurs du projets
+    financeurs = models.ManyToManyField(Organisme, related_name='financeur', blank=True)
+
+    # thematiques projet
+    thematiques = models.ManyToManyField(Thematique, blank=True)
+
 
     data = hstore.DictionaryField(db_index=True, blank=True)
 
@@ -63,3 +87,41 @@ class Projet(models.Model):
         """Absolute url
         """
         return reverse('projet_detail', args=[self.id])
+
+    def taxon_str(self):
+        return ('Research', 'Territory', 'Formation')[self.taxon]
+
+
+class Comment(models.Model):
+    """Commentaire sur le projet
+    """
+    projet = models.ForeignKey(Projet)
+    creation = models.DateField(auto_now=True)
+    author = models.ForeignKey(User, blank=True, null=True)
+    private = models.BooleanField(default=True)
+    comment = models.TextField(blank=True)
+
+    @property
+    def abstract(self):
+        if len(self.comment) > 60:
+            return "%s..." % (self.comment[:60])
+        else:
+            return "%s" % (self.comment)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        if len(self.comment) > 30:
+            return "%s..." % (self.comment[:30])
+        else:
+            return "%s" % (self.comment)
+
+
+def projet_add_all_staff(sender, instance, created, **kwargs):
+    """All staff members in project
+    """
+    if created:
+        for user in User.objects.filter(is_staff=True):
+            instance.users.add(user)
+
+post_save.connect(projet_add_all_staff, sender=Projet)

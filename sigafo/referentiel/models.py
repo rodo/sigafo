@@ -15,15 +15,54 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# App : agrof
+# App : referentiel
 #
-from django.db import models, transaction
-from django.contrib.auth.models import User
+from django.db import models
+from uuidfield import UUIDField
 
 
 class SystemProd(models.Model):
     """Systeme de production agroforestier
     """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+
+
+class AnimalProduction(models.Model):
+    """Systeme de production agroforestier
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class VegetalProduction(models.Model):
+    """Systeme de production agroforestier
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class Topography(models.Model):
+    """Systeme de production agroforestier
+    """
+    uuid = UUIDField(auto=True)
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
