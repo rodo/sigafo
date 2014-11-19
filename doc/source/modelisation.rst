@@ -8,7 +8,7 @@ Modelisation
    user.rst
    site.rst
    parcel.rst
+   map.rst
    block.rst
    indicateur.rst
    amenagement.rst
-

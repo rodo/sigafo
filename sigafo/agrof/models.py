@@ -53,6 +53,8 @@ class Amenagement(models.Model):
                                                  2, 'périphérique')))
 
     nature= models.ManyToManyField(Essence, blank=True)
+
+    proportion_bloc = models.IntegerField(blank=True, null=True)
     
     name = models.CharField(max_length=300)
     essences = models.ManyToManyField(Essence, blank=True)
