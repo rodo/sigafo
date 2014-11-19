@@ -49,10 +49,10 @@ class Amenagement(models.Model):
     annee_debut = models.IntegerField(blank=True, null=True)
     annee_fin = models.IntegerField(blank=True, null=True)
 
-    localisation = models.IntegerField(choices=((1, 'intraparcellaire',
-                                                 2, 'périphérique')))
+    localisation = models.IntegerField(choices=((1, 'intraparcellaire'),
+                                                 (2, 'périphérique')))
 
-    nature= models.ManyToManyField(Essence, blank=True)
+    #nature= models.ManyToManyField(Essence, blank=True)
 
     proportion_bloc = models.IntegerField(blank=True, null=True)
     

@@ -67,7 +67,7 @@
 	  </tr>
 	</thead>
     <tbody>
-      {% for projet in object.projet.all %}
+      {% for projet in object.projets.all %}
       <tr>
 	    <td><a href="{% url 'projet_detail' pk=projet.id %}">{{projet.name}}</a></td>
 	  </tr>
