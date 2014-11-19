@@ -187,9 +187,9 @@ LEAFLET_CONFIG = {
     'RESET_VIEW': False,
     'PLUGINS': {
         'markercluster': {
-            'css': ['/static/leaflet-plugins/dist/MarkerCluster.css', 
-                    '/static/leaflet-plugins/dist/MarkerCluster.Default.css'],
-            'js': '/static/leaflet-plugins/dist/leaflet.markercluster.js',
+            'css': ['/static/leaflet-plugins/vendor/MarkerCluster.css', 
+                    '/static/leaflet-plugins/vendor/MarkerCluster.Default.css'],
+            'js': '/static/leaflet-plugins/vendor/leaflet.markercluster.js',
             'auto-include': True,
             },
     }
