@@ -19,6 +19,8 @@
 """
 A set of usefull mixins usable in all the project
 """
+from django.views.generic.detail import DetailView
+from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
@@ -32,3 +34,11 @@ class StaffOnlyMixin(object):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(StaffOnlyMixin, self).dispatch(*args, **kwargs)
+
+
+class DetailProtected(ProtectedMixin, DetailView):
+    pass
+
+class ListProtected(ProtectedMixin, ListView):
+    pass
+
