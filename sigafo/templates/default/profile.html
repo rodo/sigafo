@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}{% load compress %}
+{% block content %}
+
+<div class="row">
+  <div class="col-md-5">
+    <div>
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>{% trans "My projects" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+      {% for project in my_projects %}
+      <tr>
+        <td><a href="{{project.get_absolute_url}}">{{project.name}}</a></td>
+	  </tr>
+      {% endfor %}
+	</tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div>
+      <ul>
+        <li>login {{user.username}}</li>
+        <li>Nom : {{user.firstname}} {{uuser.lastname}}</li>
+        <li>Email : {{user.email}}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-2">
+
+    <p>
+    <h4>{% trans "Create your own !" %}</h4>
+    </p>
+    <hr/>
+    <p>
+    <a href="{% url 'block_new' %}" class="btn btn-primary btn-block">{% trans "New block" %}</a>
+    <a href="{% url 'map_new' %}" class="btn btn-primary btn-block">{% trans "New map" %}</a>
+    </p>
+
+  </div>
+</div>
+{% endblock %}

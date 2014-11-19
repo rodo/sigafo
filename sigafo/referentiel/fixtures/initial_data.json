@@ -1,0 +1,8 @@
+[{"pk": 1, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie viticole"}},
+ {"pk": 2, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie maraîchère"}},
+ {"pk": 3, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie grandes cultures"}},
+ {"pk": 4, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie élevage"}},
+ {"pk": 5, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie plantes aromatiques et médicinales"}},
+ {"pk": 6, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie fruitière"}},
+ {"pk": 7, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie industrielle"}}
+]
