@@ -9,7 +9,7 @@ BEGIN
 IF TG_OP = 'INSERT' then
 WITH all_points AS (
     SELECT pb.center
-    FROM parc_block_projet pbp, parc_block pb
+    FROM parc_block_projets pbp, parc_block pb
     WHERE projet_id IN
      (
     SELECT projet_id FROM map_map_projets WHERE map_id = NEW.map_id
@@ -23,7 +23,7 @@ UPDATE map_map SET center= (SELECT ST_Centroid(ST_Union(center)) FROM all_points
 ELSIF TG_OP = 'DELETE' then
 WITH all_points AS (
     SELECT pb.center
-    FROM parc_block_projet pbp, parc_block pb
+    FROM parc_block_projets pbp, parc_block pb
     WHERE projet_id IN
      (
     SELECT projet_id FROM map_map_projets WHERE map_id = OLD.map_id
