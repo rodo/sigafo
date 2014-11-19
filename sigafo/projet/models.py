@@ -17,12 +17,12 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 from django.db import models
-from sigafo.contact.models import Contact
+from sigafo.contact.models import Contact, Organisme
 from django.core.urlresolvers import reverse
 from django_hstore import hstore
 from django.contrib.auth.models import User
 
-    
+
 class Projet(models.Model):
     """Projet
     """
@@ -44,24 +44,22 @@ class Projet(models.Model):
     # personnes incluses dans le projet
     users = models.ManyToManyField(User, blank=True)
 
-    data = hstore.DictionaryField(db_index=True)
-    objects = hstore.HStoreManager()
+    # personnes incluses dans le projet
+    partenaires = models.ManyToManyField(Organisme, blank=True)
+
+    data = hstore.DictionaryField(db_index=True, blank=True)
 
     url = models.URLField(blank=True, null=True)
+
+    objects = hstore.HStoreManager()
+
 
     def __unicode__(self):
         """The unicode method
         """
-        return u"{}".format(self.name)
-
-    def __str__(self):
-        """The string method
-        """
-        return "{}".format(self.name)
+        return "%s" % (self.name)
 
     def get_absolute_url(self):
         """Absolute url
         """
         return reverse('projet_detail', args=[self.id])
-
-

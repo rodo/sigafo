@@ -27,7 +27,7 @@ from sigafo.projet.models import Projet
 from sigafo.referentiel.models import SystemProd
 from sigafo.parc.models import Parcel, Block, Site
 from sigafo.agrof.models import Essence, Amenagement
-from sigafo.contact.models import Contact, Activite
+from sigafo.contact.models import Contact, Activite, Organisme
 from django.contrib.gis.geos.point import Point
 from optparse import make_option
 from faker import Faker
@@ -70,6 +70,8 @@ class Command(BaseCommand):
         Contact.objects.create(firstname=f.first_name(),
                                lastname=f.last_name(),
                                activite=Activite.objects.all().last())
+
+        Organisme.objects.create(name=f.company())
 
         syp = SystemProd.objects.all().last()
 

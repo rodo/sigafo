@@ -19,7 +19,7 @@
 Fulltext indexing with haystack
 """
 from haystack import indexes
-from sigafo.contact.models import Contact
+from sigafo.contact.models import Contact, Organisme
 
 
 class ContactIndex(indexes.SearchIndex, indexes.Indexable):
@@ -32,6 +32,21 @@ class ContactIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Contact
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()
+
+
+class OrganismeIndex(indexes.SearchIndex, indexes.Indexable):
+    """
+    Fulltext indexing for objects Organisme
+    """
+    text = indexes.CharField(document=True, use_template=True)
+    name = indexes.CharField(model_attr='name')
+
+    def get_model(self):
+        return Organisme
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""

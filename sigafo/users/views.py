@@ -15,7 +15,6 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
 import logging
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -29,7 +28,7 @@ logger = logging.getLogger(__name__)
 def profile(request):
     """The home page
     """
-    projets = Projet.objects.all()    
+    projets = Projet.objects.filter(users__in=[request.user.id])    
 
     return render(request,
                   'profile.html',

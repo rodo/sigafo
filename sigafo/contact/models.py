@@ -50,7 +50,7 @@ class Contact(models.Model):
 
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
-    address = models.CharField(max_length=150, blank=True)
+    address = models.TextField(blank=True, null=True)
     phonenumber = models.CharField(max_length=50, blank=True)
     sex = models.PositiveSmallIntegerField(blank=True,
                                            null=True,
@@ -64,16 +64,32 @@ class Contact(models.Model):
         """
         The unicode method
         """
-        return u"{} {}".format(self.lastname, self.firstname)
-
-    def __str__(self):
-        """
-        The string method
-        """
-        return "{} {}".format(self.lastname, self.firstname)
+        return "%s %s" % (self.lastname, self.firstname)
 
     def get_absolute_url(self):
         """
         Absolute url
+        """
+        return reverse('contact_detail', args=[self.id])
+
+
+class Organisme(models.Model):
+    """Organisme
+    """
+    name = models.CharField(max_length=50)
+    address = models.TextField(blank=True, null=True)
+    phonenumber = models.CharField(max_length=50, blank=True)
+    email = models.EmailField()
+    contacts = models.ManyToManyField(Contact, blank=True)
+
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+    def get_absolute_url(self):
+        """Absolute url
         """
         return reverse('contact_detail', args=[self.id])

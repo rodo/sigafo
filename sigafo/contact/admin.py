@@ -17,8 +17,9 @@
 #
 # sigafo/contact
 from django.contrib import admin
-from .models import Activite, Contact
+from .models import Activite, Contact, Organisme
 
 
 admin.site.register(Activite, admin.ModelAdmin)
 admin.site.register(Contact, admin.ModelAdmin)
+admin.site.register(Organisme)
