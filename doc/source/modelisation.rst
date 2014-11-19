@@ -10,4 +10,5 @@ Modelisation
    parcel.rst
    block.rst
    indicateur.rst
+   amenagement.rst
 

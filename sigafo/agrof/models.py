@@ -46,7 +46,13 @@ class Amenagement(models.Model):
     """
     blocks = models.ManyToManyField(Block)
 
-    essences = models.ManyToManyField(Essence, blank=True)
+    annee_debut = models.IntegerField(blank=True, null=True)
+    annee_fin = models.IntegerField(blank=True, null=True)
+
+    localisation = models.IntegerField(choices=((1, 'intraparcellaire',
+                                                 2, 'périphérique')))
+
+    nature= models.ManyToManyField(Essence, blank=True)
     
     name = models.CharField(max_length=300)
     essences = models.ManyToManyField(Essence, blank=True)
