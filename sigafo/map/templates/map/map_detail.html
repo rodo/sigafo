@@ -43,12 +43,15 @@
 
     </div>
 
-    <div class="col-md-2">
-      
+    <div class="col-md-2">      
       <a href="{% url 'map_edit' object.id %}" class="btn btn-primary btn-block">{% trans "Edit" %}</a>
     </div>
     
   </div>
-  
+<div class="row">
+<div class="col-md-12 well">
+  url des données en geojson : <a href="{{ BASE_URL}}{% url 'map_geojson' object.id %}">{{BASE_URL}}{% url 'map_geojson' object.id %}</a>
+  </div >
+</div>
   {% endblock %}
   
