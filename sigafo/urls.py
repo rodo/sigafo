@@ -34,6 +34,7 @@ urlpatterns = patterns('',
                        url(r'^map/(?P<pk>\d+)$', DetailProtected.as_view(model=Map), name='map_detail'),
                        url(r'^map/(?P<pk>\d+)/edit$', mapviews.MapEdit.as_view(model=Map), name='map_edit'),
                        url(r'^map/(?P<pk>\d+)/json$', mapviews.map_json, name='map_json'),
+                       url(r'^map/(?P<pk>\d+)/kml21$', mapviews.map_kml, name='map_kml21'),
                        url(r'^map/(?P<pk>\d+)/geojson$', mapviews.MapDetail.as_view(model=Parcel), name='map_geojson'),
 
                        url(r'^parcel/(?P<pk>\d+)$', DetailProtected.as_view(model=Parcel), name='parcel_detail'),

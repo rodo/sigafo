@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from serializers import MapSerializer
+from django.contrib.gis.shortcuts import render_to_kml
 
 
 class JSONResponse(HttpResponse):
@@ -84,3 +85,10 @@ def map_json(request, pk):
     if request.method == 'GET':
         serializer = MapSerializer(map)
         return JSONResponse(serializer.data)
+
+
+@csrf_exempt
+def map_kml(request, pk):
+    qs = Parcel.objects.kml()
+    
+    return render_to_kml("map_parcel.kml", {'places': qs})

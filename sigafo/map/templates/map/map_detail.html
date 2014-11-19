@@ -50,8 +50,12 @@
   </div>
 <div class="row">
 <div class="col-md-12 well">
-  url des données en geojson : <a href="{{ BASE_URL}}{% url 'map_geojson' object.id %}">{{BASE_URL}}{% url 'map_geojson' object.id %}</a>
+  url des données
+  <ul>
+    <li>geojson : <a href="{{ BASE_URL}}{% url 'map_geojson' object.id %}">{{BASE_URL}}{% url 'map_geojson' object.id %}</a></li>
+    <li>KML 2.1 : <a href="{{ BASE_URL}}{% url 'map_kml21' object.id %}">{{BASE_URL}}{% url 'map_kml21' object.id %}</a></li>
+  </ul>
   </div >
 </div>
-  {% endblock %}
+{% endblock %}
   
