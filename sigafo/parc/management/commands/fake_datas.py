@@ -24,6 +24,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from sigafo.ressources.models import Url
 from sigafo.projet.models import Projet
+from sigafo.referentiel.models import SystemProd
 from sigafo.parc.models import Parcel, Block, Site
 from sigafo.agrof.models import Essence, Amenagement
 from sigafo.contact.models import Contact, Activite
@@ -31,7 +32,7 @@ from django.contrib.gis.geos.point import Point
 from optparse import make_option
 from faker import Faker
 from django.db import connection
-from random import randrange
+from random import randrange, random
 
 
 class Command(BaseCommand):
@@ -70,6 +71,8 @@ class Command(BaseCommand):
                                lastname=f.last_name(),
                                activite=Activite.objects.all().last())
 
+        syp = SystemProd.objects.all().last()
+
         for i in range(nbvalues):
             site = Site.objects.create(name=f.word(),
                                        owner=Contact.objects.all().last(),
@@ -79,12 +82,13 @@ class Command(BaseCommand):
 
                 url = Url.objects.create(title=f.word(), url=f.url())
 
-                center = Point(x=float(f.longitude()),
-                               y=float(f.latitude()))
+                center = Point(x=float(5 - randrange(8) + random()),
+                               y=float(50 - randrange(8) + random()))
 
                 parcel = Parcel.objects.create(name=f.word(),
                                                center=center,
-                                               site=site)
+                                               site=site,
+                                               systemprod=syp)
 
                 parcel.urls.add(url)
                 parcel.save()
@@ -92,13 +96,12 @@ class Command(BaseCommand):
                 for b in range(randrange(3)):
                     block = Block.objects.create(name=f.word(),
                                                  parcel=parcel,
-                                                 surface=f.pyfloat(),
+                                                 surface=randrange(20),
                                                  date_debut=f.date_time(),
                                                  date_fin=f.date_time(),
                                                  usage=f.word(),
-                                                 center=Point(x=float(f.longitude()),
-                                                              y=float(f.latitude())),
-                                                 comment=" ".join(f.words(18000)))
+                                                 center=center,
+                                                 comment=" ".join(f.words(180)))
 
                     block.projets.add(projet)
                     block.save()

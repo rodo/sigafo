@@ -23,6 +23,7 @@ from django_hstore import hstore
 from django.core.urlresolvers import reverse
 from sigafo.contact.models import Contact
 from sigafo.ressources.models import Url
+from sigafo.referentiel.models import SystemProd
 from sigafo.projet.models import Projet
 from django.contrib.gis.geos.point import Point
 from random import random
@@ -56,7 +57,7 @@ class Site(models.Model):
         """
         The unicode method
         """
-        return u"{}".format(self.name)
+        return "%s" % (self.name)
 
     def __str__(self):
         """
@@ -85,10 +86,13 @@ class Parcel(models.Model):
     name = models.CharField(max_length=50)
     comment = models.TextField(blank=True)
 
+    systemprod = models.ForeignKey(SystemProd, blank=True)
+
     # updated by trigger
     nb_block = models.IntegerField(default=0)
     
     center = models.PointField(blank=True, null=True)
+    polygon = models.PointField(blank=True, null=True)
 
     urls = models.ManyToManyField(Url, blank=True)
 
@@ -105,6 +109,13 @@ class Parcel(models.Model):
         """The title
         """
         return u"{}".format(self.name)
+
+    @property
+    def anonymous_title(self):
+        """An anonymous title
+        """
+        return u"parcel_{}".format(self.id)
+
 
     def __str__(self):
         """

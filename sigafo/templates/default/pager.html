@@ -1,4 +1,5 @@
 {% load i18n %}
+{% if page_obj.has_previous or page_obj.has_next %}
 <div class="pager">
   <ul>
     {% if page_obj.has_previous %}
@@ -21,3 +22,4 @@
     {% endif %}
   </ul>
 </div>
+{% endif %}

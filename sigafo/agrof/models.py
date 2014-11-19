@@ -32,13 +32,7 @@ class Essence(models.Model):
         """
         The unicode method
         """
-        return u"{}".format(self.name)
-
-    def __str__(self):
-        """
-        The string method
-        """
-        return "{}".format(self.name)
+        return "%s" % (self.name)
 
 
 class Amenagement(models.Model):
@@ -72,13 +66,7 @@ class Amenagement(models.Model):
         """
         The unicode method
         """
-        return u"{}".format(self.name)
-
-    def __str__(self):
-        """
-        The string method
-        """
-        return "{}".format(self.name)
+        return "%s" % (self.name)
 
 
 class Indicator(models.Model):

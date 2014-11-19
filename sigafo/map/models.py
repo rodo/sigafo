@@ -53,13 +53,7 @@ class Map(models.Model):
         """
         The unicode method
         """
-        return u"{}".format(self.title)
-
-    def __str__(self):
-        """
-        The string method
-        """
-        return "{}".format(self.title)
+        return "%s" % (self.title)
 
     def get_absolute_url(self):
         """Absolute url

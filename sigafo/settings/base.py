@@ -103,6 +103,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     # context processors for 'myproject'
     "sigafo.utils.context_processors.baseurl",
+    "sigafo.utils.context_processors.sitetitle",
     )
 
 MIDDLEWARE_CLASSES = (
@@ -158,6 +159,7 @@ INSTALLED_APPS = (
     'sigafo.agrof',
     'sigafo.map',
     'sigafo.utils',
+    'sigafo.referentiel',
     'sigafo.ressources'
 )
 

@@ -92,7 +92,22 @@
         
       <div class="row">
       <div class="col-md-12">
-        {% leaflet_map "homemap" callback="window.map_init_basic" %}
+<h3>{% trans "Sign in" %}</h3>
+
+<div class="page-header well">
+  <form class="form-signin" role="form" method="post" action="">
+    {% csrf_token %}
+    <input name="username" type="text" class="form-control" placeholder="Login" required autofocus>
+    <input name="password" type="password" class="form-control" placeholder="Password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "Sign in" %}</button>
+    <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+  <p>{% trans "Forgot password" %} ?
+    <a href="/accounts/password/reset">{% trans "Reset it" %}</a>!</p>
+</div>
+
+
+       
       </div>
       </div><!--/row-->
       

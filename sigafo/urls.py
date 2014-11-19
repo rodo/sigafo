@@ -57,4 +57,6 @@ urlpatterns = patterns('',
                        url(r'^project/(?P<pk>\d+)$', views.ProjetDetailView.as_view(), name='projet_detail'),
                        url(r'^project/new$', ListProtected.as_view(model=Projet), name='projet_new'),
                        url(r'^site/$', ListProtected.as_view(model=Site), name='site_list'),
+                       url(r'^accounts/profile/$', 'sigafo.users.views.profile', name='profile'),
+                       url(r'^accounts/', include('registration.backends.default.urls')),
 )
