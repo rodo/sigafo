@@ -18,11 +18,8 @@
 #
 
 import sys
-import os
-import time
 import csv
 import re
-from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from sigafo.map.models import Map
@@ -32,8 +29,6 @@ from sigafo.contact.models import Contact
 from sigafo.projet.models import Projet
 from sigafo.referentiel import models
 from optparse import make_option
-from faker import Faker
-from django.db import connection
 
 
 class Command(BaseCommand):
@@ -70,26 +65,30 @@ class Command(BaseCommand):
 
         print "%s on %s lines imported" % (ok, i)
 
-        for model in [Map, Block, Parcel, Site]:
+        for model in [Map, Block, Parcel, Site, Amenagement]:
             print "%s %d" % (model, model.objects.all().count())
-
-
-
 
 def clean_all():
     """
     """
-    Map.objects.all().delete()
-    Block.objects.all().delete()
-    Parcel.objects.all().delete()
-    Site.objects.all().delete()
-    Amenagement.objects.all().delete()
+    for model in [Map, Block, Parcel, Site, Amenagement]:
+        model.objects.all().delete()
 
+def clean(value):
+
+    value = value.strip()
+    if value == 'NR' or value == 'NC':
+        value = None
+
+    if value == 'Aucun' or value == 'Aucune':
+        value = None
+
+    return value
 
 def iline(row, i):
     res = 1
     block_center = None
-    projets = []    
+    projets = []
     data_imports = {}
     r = 0
     for data in row:
@@ -98,7 +97,6 @@ def iline(row, i):
 
     site_nom = row[0].strip()
 
-    
     try:
         name = row[2].split(' ')
         (firstname, lastname) = (name[0], name[1])
@@ -137,6 +135,30 @@ def iline(row, i):
 
 
     site, created = Site.objects.get_or_create(name=site_nom)
+    #
+    models.ClasseProfondeur.objects.all().delete()
+    models.ClasseProfondeur.objects.get_or_create(name='Hétérogène')
+    models.ClasseProfondeur.objects.get_or_create(name='0 - 50 cm')
+    models.ClasseProfondeur.objects.get_or_create(name='50 - 100 cm')
+    models.ClasseProfondeur.objects.get_or_create(name='> 100 cm')
+    models.ClasseHumidity.objects.all().delete()
+    models.ClasseHumidity.objects.get_or_create(name='Humide')
+    models.ClasseHumidity.objects.get_or_create(name='Très humide')
+    models.ClasseHumidity.objects.get_or_create(name='Sèche')
+    models.ClassePH.objects.all().delete()
+    models.ClassePH.objects.get_or_create(name='4 - 4,5')
+    models.ClassePH.objects.get_or_create(name='4,5 - 5')
+    models.ClassePH.objects.get_or_create(name='5 - 5,5')
+    models.ClassePH.objects.get_or_create(name='5,5 - 6')
+    models.ClassePH.objects.get_or_create(name='6 - 6,5')
+    models.ClassePH.objects.get_or_create(name='6,5 - 6')
+    models.ClassePH.objects.get_or_create(name='7 - 7,5')
+    models.ClassePH.objects.get_or_create(name='7,5 - 8')
+    models.ClassePH.objects.get_or_create(name='8 - 8,5')
+    models.ClassePH.objects.get_or_create(name='8,5 - 9')
+    models.ClassePH.objects.get_or_create(name='9 - 9,5')
+    models.ClassePH.objects.get_or_create(name='9,5 - 10')
+    models.ClassePH.objects.get_or_create(name='10 - 10,5')
 
     # parcel
     #
@@ -144,48 +166,77 @@ def iline(row, i):
     system = row[11].strip()
 
     system, created = models.SystemProd.objects.get_or_create(name=system)
-    
+
     parcel, created = Parcel.objects.get_or_create(site=site,
                                                    systemprod=system,
                                                    name=parcel_name,
                                                    center=block_center)
-
     #
     #
     block_name = row[17].strip()
+    r_surface = clean(row[20])
     r_topo = row[24].strip()
+    r_classph = clean(row[26])
+    r_classprof = clean(row[27])
+    r_classhumid = clean(row[28])
     comment = row[30].strip()
     projets = row[39]
     #
-
     topo, created = models.Topography.objects.get_or_create(name=r_topo)
 
-    
+    try:
+        surface=float('.'.join(r_surface.split(',')))
+    except:
+        surface = None
+
+    # classe de PH
+    classph = None
+    classprof = None
+    classhumid = None
+    if r_classph:
+        classph, created = models.ClassePH.objects.get_or_create(name=r_classph)
+
+    if r_classprof:
+        classprof, created = models.ClasseProfondeur.objects.get_or_create(name=r_classprof)
+
+    if r_classhumid:
+        classhumid, created = models.ClasseHumidity.objects.get_or_create(name=r_classhumid)
+
+    #classph = None
+    #classprof = None
+    #classhumid = None
+
+    print "%d %s" % (Block.objects.all().count(), classph)
+
     block = Block.objects.create(name=block_name,
                                  parcel=parcel,
+                                 topography=topo,
+                                 classph=classph,
+                                 classprof=classprof,
                                  center=block_center,
-                                 surface=surface,
-                                 import_initial=data_imports)
+                                 import_initial=None)#data_imports)
+
+    if surface:
+        block.surface = surface
+        block.save()
+
+    print "block %d ok" % (block.id)
 
     for p in projets.split(';'):
         projet = None
         try:
-            projet, created = Projet.objects.get_or_create(name=p.strip())
+            projet = Projet.objects.get(name=p.strip())
         except:
             print "erreur projet inconnu '%s'" % (p.strip())
 
     if projet:
         block.projets.add(projet)
 
-
-    if len(comment) > 0:
+    if len(comment) > 1000:
         Observation.objects.create(author=User.objects.get(pk=1),
                                    date_observation='1970-01-01',
                                    block=block,
                                    observation=comment,
                                    comment="commentaire présent dans le fichier excel")
-        
-    print "error line %d"% (i)
-        
 
     return res
