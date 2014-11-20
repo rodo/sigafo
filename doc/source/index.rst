@@ -11,6 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   permissions.rst
+   referentiels.rst
    modelisation.rst
    api.rst
 
