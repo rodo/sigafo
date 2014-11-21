@@ -15,3 +15,12 @@ Un **non membre** de l'équipe lui ne pourra accèder qu'aux parcelles,
 blocks et sites qui sont reliés à l'un des projets dont il est membre.
 
 Edition / Modification
+----------------------
+
+Les permissions d'éditions des objets sont définis dans des groupes,
+le groupe 'Agroof' a les permissions d'éditions globales.
+
+Le groupe *réferentiels* a les permissions d'éditions sur les
+référentiels.
+
+Le groupe *Editeurs projets* a les permissions d'editions sur les projets.

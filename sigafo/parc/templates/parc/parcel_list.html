@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% block jsheaders %}<script src="{{STATIC_URL}}js/api.js"></script>{% endblock %}
+{% block body %}<body onload="parcel_list({% url "parcel_json" %}>{% endblock %}
 {% block content %}
 <div class="row">
   <div class="col-md-10">
-    {% include "pager.html" %}
+    {% include "pager-api.html" %}
     <table class="table table-striped">
       <thead>
 	<tr>

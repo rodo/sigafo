@@ -23,6 +23,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
+
 
 class ProtectedMixin(object):
     @method_decorator(login_required)
@@ -42,3 +44,23 @@ class DetailProtected(ProtectedMixin, DetailView):
 class ListProtected(ProtectedMixin, ListView):
     pass
 
+
+class APICacheMixin(object):
+    cache_timeout = 300
+    
+    def get_cache_timeout(self):
+        return self.cache_timeout
+
+    def dispatch(self, *args, **kwargs):
+        return cache_page(self.get_cache_timeout())(super(APICacheMixin, self).dispatch)(*args, **kwargs)
+     
+
+class APIPCacheMixin(ProtectedMixin):
+    cache_timeout = 300
+    
+    def get_cache_timeout(self):
+        return self.cache_timeout
+
+    def dispatch(self, *args, **kwargs):
+        return cache_page(self.get_cache_timeout())(super(APIPCacheMixin, self).dispatch)(*args, **kwargs)
+     

@@ -47,7 +47,6 @@ class BlockForm(forms.ModelForm):
 
     projets = forms.ModelMultipleChoiceField(required=False,
                                              queryset=Projet.objects.all().order_by('name'))
-
     
     helper = FormHelper()
     helper.form_class = 'form-horizontal'

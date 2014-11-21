@@ -58,35 +58,35 @@
           
           <li><a href="{% url 'site_list' %}">{% trans "Sites" %}</a></li>
           <li><a href="{% url 'block_list' %}">{% trans "Blocks" %}</a></li>
-	    </ul>
-
-	    <ul class="nav navbar-nav navbar-right">
-	      {% if user.is_authenticated %}
-
-                <li class="dropdown">
-		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }} <b class="caret"></b></a>
-
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="/accounts/profile/"><i class="fa fa-user fa-fw"></i> {% trans "User Profile" %}</a>
-                        </li>
-                        <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>-->
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="/accounts/logout/"><i class="fa fa-sign-out fa-fw"></i> {% trans "Logout" %}</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-	      {% else %}
-	      <li><a href="/accounts/login/">{% trans "Sign in" %}</a></li>
-	      {% endif %}
-	      <li><a href="/p/contact/">{% trans "Contact" %}</a></li>
-	    </ul>
-	    <div class="nav navbar-nav navbar-right" >{% block rssnavbar %}{% endblock %}</div>
-        </div><!--/.nav-collapse -->
-      </div><!--/.container -->
+        </ul>
+        
+        <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+          
+          <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }} <b class="caret"></b></a>
+          
+          <ul class="dropdown-menu dropdown-user">
+            <li><a href="/accounts/profile/"><i class="fa fa-user fa-fw"></i> {% trans "User Profile" %}</a>
+            </li>
+            <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>-->
+            </li>
+            <li class="divider"></li>
+            <li><a href="/accounts/logout/"><i class="fa fa-sign-out fa-fw"></i> {% trans "Logout" %}</a>
+            </li>
+          </ul>
+          <!-- /.dropdown-user -->
+        </li>
+        {% else %}
+        <li><a href="/accounts/login/">{% trans "Sign in" %}</a></li>
+        {% endif %}
+        <li><a href="/p/contact/">{% trans "Contact" %}</a></li>
+      </ul>
+    <div class="nav navbar-nav navbar-right" >{% block rssnavbar %}{% endblock %}</div>
+    </div><!--/.nav-collapse -->
+    </div><!--/.container -->
     </div><!--/.navbar -->
-
+    
 
       <div id="container" class="container">
         

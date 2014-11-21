@@ -168,17 +168,17 @@ def iline(row, i):
     system, created = models.SystemProd.objects.get_or_create(name=system)
 
     parcel, created = Parcel.objects.get_or_create(site=site,
-                                                   systemprod=system,
                                                    name=parcel_name,
+                                                   systemprod=system,                                                   
                                                    center=block_center)
     #
     #
     block_name = row[17].strip()
     r_surface = clean(row[20])
     r_topo = row[24].strip()
-    r_classph = clean(row[26])
-    r_classprof = clean(row[27])
-    r_classhumid = clean(row[28])
+    r_klassph = clean(row[26])
+    r_klassprof = clean(row[27])
+    r_klasshumid = clean(row[28])
     comment = row[30].strip()
     projets = row[39]
     #
@@ -189,36 +189,41 @@ def iline(row, i):
     except:
         surface = None
 
-    # classe de PH
-    classph = None
-    classprof = None
-    classhumid = None
-    if r_classph:
-        classph, created = models.ClassePH.objects.get_or_create(name=r_classph)
+    # klasse de PH
+    klassph = None
+    klassprof = None
+    klasshumid = None
+    if r_klassph:
+        klassph, created = models.ClassePH.objects.get_or_create(name=r_klassph)
 
-    if r_classprof:
-        classprof, created = models.ClasseProfondeur.objects.get_or_create(name=r_classprof)
+    if r_klassprof:
+        klassprof, created = models.ClasseProfondeur.objects.get_or_create(name=r_klassprof)
 
-    if r_classhumid:
-        classhumid, created = models.ClasseHumidity.objects.get_or_create(name=r_classhumid)
+    if r_klasshumid:
+        klasshumid, created = models.ClasseHumidity.objects.get_or_create(name=r_klasshumid)
 
-    #classph = None
-    #classprof = None
-    #classhumid = None
+    #klassph = None
+    #klassprof = None
+    #klasshumid = None
 
-    print "%d %s" % (Block.objects.all().count(), classph)
+    print "%d %s" % (Block.objects.all().count(), klassph)
+    print "%s %s %s" % (klassph, klassprof, klasshumid)
 
     block = Block.objects.create(name=block_name,
                                  parcel=parcel,
                                  topography=topo,
-                                 classph=classph,
-                                 classprof=classprof,
                                  center=block_center,
-                                 import_initial=None)#data_imports)
+                                 import_initial=data_imports)
+
+
+    block.classph=klassph
+#    block.save()
+
 
     if surface:
         block.surface = surface
         block.save()
+
 
     print "block %d ok" % (block.id)
 

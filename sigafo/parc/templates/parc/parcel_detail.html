@@ -53,10 +53,16 @@
           {% endfor %}
         </tbody>
       </table>
+  </div>
 
+  <div class="col-md-2">
+    {% if perms.parc.add_block %}
+    <p>
+    <a href="{% url 'block_new' %}" class="btn btn-primary btn-block">{% trans "Add block" %}</a>
+    </p>
+    {% endif %}
   </div>
   
-  </div>
-  
+</div>  
 {% endblock %}
   

@@ -22,6 +22,31 @@ from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
 from .models import Parcel, Block, Site
 
-admin.site.register(Parcel, LeafletGeoAdmin)
-admin.site.register(Block, LeafletGeoAdmin)
-admin.site.register(Site, LeafletGeoAdmin)
+class ParcelAdmin(LeafletGeoAdmin):
+    """Custom Admin for parcels
+    """
+    readonly_fields = ('nb_block',)
+    list_display = ('name', 'site', 'nb_block')
+    list_filter = ('site', 'systemprod')
+    ordering = ['site', 'name']
+
+class SiteAdmin(LeafletGeoAdmin):
+    """Custom Admin for sites
+    """
+    search_fields = ('name',)
+    readonly_fields = ('nb_block','nb_parcel')
+    list_display = ('name', 'address')
+    ordering = ['name']
+
+
+class BlockAdmin(LeafletGeoAdmin):
+    """Custom Admin for blocks
+    """
+    search_fields = ('name',)
+    readonly_fields = ('import_initial',)
+    list_display = ('name', 'parcel')
+    ordering = ['parcel']
+
+admin.site.register(Parcel, ParcelAdmin)
+admin.site.register(Block, BlockAdmin)
+admin.site.register(Site, SiteAdmin)

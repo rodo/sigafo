@@ -1,7 +1,5 @@
 --
 --
---
---
 -- Functions appelées par les triggers
 --
 CREATE OR REPLACE FUNCTION map_update() RETURNS TRIGGER AS $BODY$

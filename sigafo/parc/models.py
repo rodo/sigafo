@@ -21,22 +21,20 @@ from django.contrib.auth.models import User
 from django.contrib.gis.db import models
 from django_hstore import hstore
 from django.core.urlresolvers import reverse
+from django.contrib.gis.geos.point import Point
 from sigafo.contact.models import Contact
 from sigafo.ressources.models import Url
-from sigafo.referentiel.models import SystemProd
+from sigafo.referentiel import models as refs
 from sigafo.projet.models import Projet
-from django.contrib.gis.geos.point import Point
+from sigafo.utils.models import GeoHStoreManager
 from random import random
 import reversion
 
-class MonManager(models.GeoManager, hstore.HStoreManager):
-    pass
-    
+
 # Site
 
 class Site(models.Model):
-    """
-    Un site designe un lieu commune
+    """Un site designe un lieu commun
     """
     name = models.CharField(max_length=300)
     address = models.TextField(blank=True)
@@ -86,18 +84,22 @@ class Parcel(models.Model):
     name = models.CharField(max_length=50)
     comment = models.TextField(blank=True)
 
-    systemprod = models.ForeignKey(SystemProd, blank=True)
+    systemprod = models.ForeignKey(refs.SystemProd, blank=True)
 
     # updated by trigger
     nb_block = models.IntegerField(default=0)
-    
+
     center = models.PointField(blank=True, null=True)
     polygon = models.PolygonField(blank=True, null=True)
 
     urls = models.ManyToManyField(Url, blank=True)
 
-    objects = models.GeoManager()
-    
+    # updated by triggers
+    variables = hstore.DictionaryField(db_index=True, blank=True, null=True)
+
+    objects = GeoHStoreManager()
+
+
     def __unicode__(self):
         """
         The unicode method
@@ -128,7 +130,7 @@ class Parcel(models.Model):
         """
         Fake coordinate based on real coordinate
 
-        Return : Point        
+        Return : Point
         """
         if self.center is None:
             return None
@@ -180,7 +182,14 @@ class Block(models.Model):
     comment = models.TextField(blank=True)
     variables = hstore.DictionaryField(db_index=True, blank=True, null=True)
     import_initial = hstore.DictionaryField(db_index=True, blank=True, null=True)
-    objects = MonManager()
+
+    #
+    topography    = models.ForeignKey(refs.Topography, blank=True, null=True)
+    classph    = models.ForeignKey(refs.ClassePH, blank=True, null=True)
+    classprof  = models.ForeignKey(refs.ClasseProfondeur, blank=True, null=True)
+    classhumid = models.ForeignKey(refs.ClasseHumidity, blank=True, null=True)
+
+    objects = GeoHStoreManager()
 
 
     @property
@@ -188,7 +197,7 @@ class Block(models.Model):
         """
         Fake coordinate based on real coordinate
 
-        Return : Point        
+        Return : Point
         """
         if self.center is None:
             return None
@@ -213,10 +222,10 @@ class Block(models.Model):
     def get_observations(self):
         return Observation.objects.filter(block=self).order_by('-date_observation')
 
-    def save(self, *args, **kwargs):
-        #check if the row with this hash already exists.
-        with transaction.atomic(), reversion.create_revision():
-            super(Block, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     #check if the row with this hash already exists.
+    #     with transaction.atomic(), reversion.create_revision():
+    #         super(Block, self).save(*args, **kwargs)
 
 
 class Observation(models.Model):
@@ -249,6 +258,5 @@ class Observation(models.Model):
         """
         return reverse('block_detail', args=[self.block.id])
 
-reversion.register(Parcel)
-reversion.register(Block)
-
+#reversion.register(Parcel)
+#reversion.register(Block)

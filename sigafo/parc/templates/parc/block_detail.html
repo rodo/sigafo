@@ -5,81 +5,84 @@
 {% block rssnavbar %}<a href="events/feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
 {% block content %}
 <div class="row">
-  <div class="col-md-4">
-    <h3>{{object.name}}</h3>
+<div class="col-md-3">
+  <h3>{{object.name}}</h3>
   <div class="well">
     <ul>
-        <li>
+      <li>
         {% trans "Site" %} : <a href="{{object.parcel.site.get_absolute_url}}">{{object.parcel.site.name}}</a>
-        </li>
-        <li>
+      </li>
+      <li>
         {% trans "Parcel" %} : <a href="{{object.parcel.get_absolute_url}}">{{object.parcel.name}}</a>
-        </li>
-        <li>
+      </li>
+      <li>
         {% trans "Exploitant" %} : <a href="{{object.parcel.site.exploitant.get_absolute_url}}">{{object.parcel.site.exploitant}}</a>
-        </li>
-        <li>
-        {% trans "Usage" %} : <a href="{{object.domain.get_absolute_url}}">{{object.usage}}</a>
-        </li>
-        <li>
-        {% trans "Start on" %} : {{object.date_debut}}
-        </li>
-    </div>
-    {% trans "Site" %} : <a href="{{object.get_absolute_url}}/import">import</a>
-
-    {% if object.description %}
-    <hr/>
-
-    <div>
-      <div class="alert alert-info">
-	{{object.description}}
-      </div>
-    </div>
-	 {% endif %}
+      </li>
+      <li>{% trans "Surface" %} : {{object.surface}}</li>
+    </ul>
+  </div>
+  <div>
+    <ul>
+      <li>
+        {% trans "Start on" %} : {{object.annee_debut}}
+      </li>
+    </ul>
+  </div>
+  <div class="well wellul">
+    <ul>
+      <li>{% trans "PH" %} : {{object.classph}}</li>
+      <li>{% trans "Humidity" %} : {{object.classhumid}}</li>
+      <li>{% trans "Profondeur" %} : {{object.classprof}}</li>
+      <li>{% trans "Texture" %} : {{object.texture}}</li>
+    </ul>
   </div>
 
-  <div class="col-md-6">
-    <table class="table table-condensed">
-      <thead>
-	<tr>
-	  <th>{% trans "Observations" %}</th>
-	</tr>
-      </thead>
+  {% if user.is_staff %}
+  <hr />
+  {% trans "Données imports" %} : <a href="{{object.get_absolute_url}}/import">import</a>
+  {% endif %}
+
+</div>
+
+<div class="col-md-7">
+  <table class="table table-condensed">
+    <thead>
+	  <tr>
+	    <th>{% trans "Observations" %}</th>
+	  </tr>
+    </thead>
+    <tbody>
+      {% for obs in object.get_observations %}
+      <tr>
+        <td>
+          <span class="badge">{{obs.author}}</span> {{obs.observation}}        
+        </td>
+      </tr>
+	  {% endfor %}
+    </tbody>
+  </table>
+  
+</div>
+
+<div class="col-md-2">
+  <div>
+    <table class="table table-striped">
+	  <thead>
+	    <tr>
+	      <th>{% trans "Projects" %}</th>
+	    </tr>
+	  </thead>
       <tbody>
-        {% for obs in object.get_observations %}
+        {% for projet in object.projets.all %}
         <tr>
-          <td>
-            <span class="badge">{{obs.author}}</span> {{obs.observation}}        
-          </td>
-        </tr>
-	{% endfor %}
+	      <td><a href="{% url 'projet_detail' pk=projet.id %}">{{projet.name}}</a></td>
+	    </tr>
+	    {% endfor %}
       </tbody>
     </table>
 
-  </div>
-
-  <div class="col-md-2">
-    <div>
-      <table class="table table-striped">
-	<thead>
-	  <tr>
-	    <th>{% trans "Projects" %}</th>
-	  </tr>
-	</thead>
-    <tbody>
-      {% for projet in object.projets.all %}
-      <tr>
-	    <td><a href="{% url 'projet_detail' pk=projet.id %}">{{projet.name}}</a></td>
-	  </tr>
-	  {% endfor %}
-    </tbody>
-      </table>
-
-      {{ import_initial }}
-      
-    </div>
 
   </div>
+  
 </div>
-
 {% endblock %}
