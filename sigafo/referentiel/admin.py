@@ -22,3 +22,11 @@ from django.contrib import admin
 from sigafo.referentiel import models
 
 admin.site.register(models.SystemProd)
+admin.site.register(models.AnimalProduction)
+admin.site.register(models.VegetalProductionAnnual)
+admin.site.register(models.VegetalProductionPerennial)
+admin.site.register(models.Topography)
+admin.site.register(models.Texture)
+admin.site.register(models.ClassePH)
+admin.site.register(models.ClasseProfondeur)
+admin.site.register(models.ClasseHumidity)

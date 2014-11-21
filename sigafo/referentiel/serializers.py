@@ -34,8 +34,8 @@ class AnimalProductionSerializer(serializers.ModelSerializer):
         fields = ('uuid', 'name')
 
 
-class VegetalProductionSerializer(serializers.ModelSerializer):
+class VegetalProductionAnnualSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.VegetalProduction
+        model = models.VegetalProductionAnnual
         fields = ('uuid', 'name')

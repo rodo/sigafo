@@ -18,18 +18,14 @@
 # Sigafo views for app : referentiel
 #
 #
-from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-from rest_framework.renderers import JSONRenderer
-from django.contrib.auth.models import User
 from rest_framework import generics
-
 from sigafo.referentiel import models
 from sigafo.referentiel import serializers
+from sigafo.utils.view_mixins import APICacheMixin
 
 
-class TopographyList(generics.ListAPIView):
+class TopographyList(APICacheMixin, generics.ListAPIView):
     queryset = models.Topography.objects.all()
     serializer_class = serializers.TopographySerializer
     paginate_by = 100

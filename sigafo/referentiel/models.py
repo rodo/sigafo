@@ -33,11 +33,10 @@ class SystemProd(models.Model):
         return "%s" % (self.name)
 
 
-
-
 class AnimalProduction(models.Model):
     """Systeme de production agroforestier
     """
+    uuid = UUIDField(auto=True)
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -47,9 +46,10 @@ class AnimalProduction(models.Model):
         return "%s" % (self.name)
 
 
-class VegetalProduction(models.Model):
+class VegetalProductionAnnual(models.Model):
     """Systeme de production agroforestier
     """
+    uuid = UUIDField(auto=True)
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -57,10 +57,128 @@ class VegetalProduction(models.Model):
         """The unicode method
         """
         return "%s" % (self.name)
+
+
+class VegetalProductionPerennial(models.Model):
+    """Systeme de production agroforestier
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class Tillage(models.Model):
+    """Façon culturales
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
 
 
 class Topography(models.Model):
     """Systeme de production agroforestier
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class Texture(models.Model):
+    """
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class ClassePH(models.Model):
+    """
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class ClasseProfondeur(models.Model):
+    """
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class ClasseHumidity(models.Model):
+    """
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class ExperimentalSubjects(models.Model):
+    """Thèmes experimentaux
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class NatureBlock(models.Model):
+    """Nature du bloc
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class ElmtsPaysage(models.Model):
+    """Elèments paysagers environnants
     """
     uuid = UUIDField(auto=True)
     name = models.CharField(max_length=300)
