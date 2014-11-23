@@ -34,14 +34,15 @@ import reversion
 
 
 # Block, sous-ensemble de la parcelle
-class Block(models.Model):
+class Departement(models.Model):
     """
     Un block est un emplacement geographique avec une activité
     """
     name = models.CharField(max_length=50)
+    nuts3 = models.CharField(max_length=50)
+    code_insee = models.CharField(max_length=50)
 
-    center = models.PointField(blank=True, null=True)
-    polygon = models.PolygonField(blank=True, null=True)
+    polygon = models.MultiPolygonField(blank=True, null=True)
 
 
     def __unicode__(self):
