@@ -23,6 +23,7 @@ from django_hstore import hstore
 from django.core.urlresolvers import reverse
 from django.contrib.gis.geos.point import Point
 from sigafo.contact.models import Contact
+from sigafo.osmboundary.models import Departement
 from sigafo.ressources.models import Url
 from sigafo.referentiel import models as refs
 from sigafo.projet.models import Projet
@@ -82,21 +83,40 @@ class Parcel(models.Model):
     """
     site = models.ForeignKey(Site)
     name = models.CharField(max_length=50)
-    comment = models.TextField(blank=True)
 
+    # who owned the parcel
+    owner = models.ForeignKey(Contact, related_name='powner', blank=True, null=True)
+
+    # who works on the parcel
+    exploitant = models.ForeignKey(Contact, related_name='pexploit', blank=True, null=True)
+
+    # in ha
+    surface = models.FloatField(blank=True, null=True)
+
+    # 
     systemprod = models.ForeignKey(refs.SystemProd, blank=True)
 
-    # updated by trigger
-    nb_block = models.IntegerField(default=0)
+    # in ha
+    altitude = models.FloatField(blank=True, null=True)
+
+    # in ha
+    experimental = models.BooleanField(default=False)
+
 
     center = models.PointField(blank=True, null=True)
     polygon = models.PolygonField(blank=True, null=True)
 
     urls = models.ManyToManyField(Url, blank=True)
 
+    # updated by trigger
+    nb_block = models.IntegerField(default=0)
     # updated by triggers
     variables = hstore.DictionaryField(db_index=True, blank=True, null=True)
 
+    # who create the map
+    creator = models.ForeignKey(User)
+    
+    comment = models.TextField(blank=True)
     objects = GeoHStoreManager()
 
 
@@ -104,13 +124,20 @@ class Parcel(models.Model):
         """
         The unicode method
         """
-        return u"{}".format(self.name)
+        return "%s" % (self.name)
+
+    @property
+    def departement(self):
+        """The title
+        """
+        return Departement.objects.filter(polygon__contains=self.center)
+
 
     @property
     def title(self):
         """The title
         """
-        return u"{}".format(self.name)
+        return "%s" % (self.name)
 
     @property
     def anonymous_title(self):
@@ -118,12 +145,6 @@ class Parcel(models.Model):
         """
         return u"parcel_{}".format(self.id)
 
-
-    def __str__(self):
-        """
-        The string method
-        """
-        return "{}".format(self.name)
 
     @property
     def approx_center(self):
