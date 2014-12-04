@@ -9,9 +9,6 @@
   <h3>{{object.title}}</h3>
 <div class="well">
   <ul>
-    <li>
-    {% trans "Created by" %} : {{object.creator}}
-    </li>
     <li>{% trans "Project" %} : <ul>
       {% for projet in object.projets.all %}
       <li>{{projet.name}}</li>
@@ -21,13 +18,13 @@
     <li>{% trans "Objects" %} : {{object.model}}</li>    
     </div><!-- class well -->
     <div>
-        {% for key,val in object.properties %}
-        <tr>
-          <td>{{key}}</td><td>{{val}}</td>
-        </tr>
-        {% endfor %}
-        </div>    
-    </div><!-- div col -->
+      <ul>
+        {% for prop in object.properties.all %}
+        <li>{{prop.name}}</li>
+        {% endfor %}</ul>
+      </div><ul>
+      <li>{% trans "Created by" %} : {{object.creator}}</li></ul>
+      </div><!-- div col -->
     
     <div class="col-md-6">
       {% leaflet_map "homemap" callback="map_detail_init" %}

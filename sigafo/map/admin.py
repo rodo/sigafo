@@ -16,9 +16,12 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 from django.contrib import admin
+from leaflet.admin import LeafletGeoAdmin
 from .models import Map
 
-class MapAdmin(admin.ModelAdmin):
+
+class MapAdmin(LeafletGeoAdmin):
+    readonly_fields = ('center',)
     list_display = ['title']
 
 admin.site.register(Map, MapAdmin)

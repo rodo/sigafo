@@ -20,6 +20,7 @@
 import sys
 import csv
 import re
+from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from sigafo.map.models import Map
@@ -118,8 +119,9 @@ def iline(row, i):
     except:
         surface = None
 
-
-    matchObj = re.match(r'^(\d+).*(\d+)..(\d+\.\d+).\s(\w).*(\d+).*(\d+)..(\d+\.\d+).\s(\w)', row[9])
+    lat = None
+    lon = None
+    matchObj = re.match(r'^(\d+).*(\d+)..(\d+\.\d+).\s?(\w).*(\d+).*(\d+)..(\d+\.\d+).\s?(\w)', row[12])
     if matchObj:
         try:
             lat = float(matchObj.group(1)) + float(matchObj.group(2))/60 + float(matchObj.group(3))/3600
@@ -164,6 +166,7 @@ def iline(row, i):
     #
     parcel_name = row[6].strip()
     system = row[11].strip()
+    coord = row[12].strip()
 
     system, created = models.SystemProd.objects.get_or_create(name=system)
 
@@ -171,6 +174,11 @@ def iline(row, i):
                                                    name=parcel_name,
                                                    systemprod=system,                                                   
                                                    center=block_center)
+
+    if lat and lon:
+        parcel.center = Point(lon, lat)
+        parcel.save()
+
     #
     #
     block_name = row[17].strip()

@@ -21,35 +21,60 @@ from sigafo.projet.models import Projet
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django_hstore import hstore
+from sigafo.utils.models import GeoHStoreManager
 
 
-class MapManager(models.GeoManager, hstore.HStoreManager):
-    pass
+class ModelProperty(models.Model):
+    """Model property
+    """
+    model = models.CharField(max_length=50)
+    key = models.CharField(max_length=50)
+    name = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        """
+        The unicode method
+        """
+        return "%s" % (self.name)
 
 
 class Map(models.Model):
     """Map
     """
+    # the title map
     title = models.CharField(max_length=50)
-    creator = models.ForeignKey(User)
+    # Projects which the map is belong to
     projets = models.ManyToManyField(Projet, blank=True)
-    # properties available/displayed on map
-    properties = hstore.DictionaryField(db_index=True, blank=True, null=True)
 
+    # which model the map is related to
     model = models.CharField(max_length=10,
                              choices=(('Parcel', 'Parcel'),
                                       ('Block', 'Block'),
                                       ('Site', 'Site')))
 
+    # center of the map, automatically filled with database trigger
     center = models.PointField(blank=True, null=True)
 
+    # lang of the map
     lang = models.CharField(max_length=10)
 
+    # is the map published or not
     published = models.BooleanField(default=False)
+    
     # public_map : the geojson is open to everybody
     public_map = models.BooleanField(default=False)
 
-    objects = MapManager()
+    # Projects which the map is belong to
+    properties = models.ManyToManyField(ModelProperty, blank=True)
+
+    # properties available/displayed on map
+    static_properties = hstore.DictionaryField(db_index=True, blank=True, null=True)
+
+    # who create the map
+    creator = models.ForeignKey(User)
+
+
+    objects = GeoHStoreManager()
 
     def __unicode__(self):
         """
@@ -70,16 +95,3 @@ class Map(models.Model):
     def center_lon(self):
         return self.center.x
 
-
-class MapProperty(models.Model):
-    """Map property
-    """
-    wmap = models.ForeignKey(Map)
-    prop = models.CharField(max_length=100)
-
-
-class ModelProperty(models.Model):
-    """Map property
-    """
-    model = models.CharField(max_length=100)
-    name = models.CharField(max_length=100)

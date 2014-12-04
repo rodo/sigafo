@@ -16,67 +16,53 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
+# Import shapefiles from https://www.data.gouv.fr/fr/datasets/contours-des-departements-francais-issus-d-openstreetmap/
+#
+#
 import sys
 import os
 import time
-import requests
+
 from tempfile import NamedTemporaryFile
 from django.core.management.base import BaseCommand
 from optparse import make_option
 from faker import Faker
 from django.db import connection
+from django.contrib.gis.utils import LayerMapping
+from sigafo.osmboundary.models import Departement
 
 
 class Command(BaseCommand):
     help = 'Import datas'
     option_list = BaseCommand.option_list + (
-        make_option("-n",
-                    "--nbvalues",
-                    dest="nbvalues",
-                    type="int",
-                    help="number of values to input",
-                    default=10),
+        make_option("-f",
+                    "--fpath",
+                    dest="fpath",
+                    type="string",
+                    help="filepath to import",
+                    default=None),
         )
 
     def handle(self, *args, **options):
         """
         Make
         """
-        url = "http://oapi-fr.openstreetmap.fr/oapi/interpreter?data=[out:json];relation[%22ref:NUTS%22~%22^FR.*%22][%22admin_level%22=%226%22];out;%3E%3E;out%20skel;"
+        from django.contrib.gis.gdal import DataSource
+        ds = DataSource(options['fpath'])
+        print(ds)
+        if len(ds) == 1:
+            lyr = ds[0]
+        print lyr.geom_type, lyr.fields
 
-        fpath = NamedTemporaryFile(delete=False)
-        print fpath.name
-        print download(url, fpath)
+        world_mapping = {
+            'code_insee' : 'code_insee',
+            'nuts3' : 'nuts3',
+            'name' : 'nom',
+            'polygon' : 'polygon',
+            }
 
-def download(url, fpath, verbose=False):
-    """Download a file
 
-    url (string) : URL
-    fpath (string) : file path where to store the file
-    """
-    result = None
-    try:
-        r = requests.get(url, timeout=10, headers=readheader())
-        if r.status_code == 200:
-            if verbose:
-                msg = "size %d\n" % (int(r.headers['content-length']))
-                sys.stdout.write(msg)
-            f = fpath
-            for chunk in r.iter_content(chunk_size=512 * 1024):
-                if chunk:  # filter out keep-alive new chunks
-                    f.write(chunk)
-            f.close()
-        result = r.status_code
-    except:
-        pass
-    return result, fpath
+        lm = LayerMapping(Departement, options['fpath'], world_mapping,
+                          transform=False, encoding='iso-8859-1')
 
-def readheader():
-    try:
-        trouble = 'In case of trouble contact {}'.format(environ['DEBEMAIL'])
-        headers = {'User-Agent': trouble}
-    except:
-        headers = {'User-Agent': 'python/requests'}
-
-    return headers
+        lm.save(strict=True, verbose=True)

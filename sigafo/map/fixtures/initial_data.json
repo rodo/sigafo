@@ -1,7 +1,7 @@
-[{"pk": 1, "model": "map.modelproperty", "fields": {"model": "Parcel", "name": "nb_block"}},
- {"pk": 2, "model": "map.modelproperty", "fields": {"model": "Parcel", "name": "title"}},
- {"pk": 3, "model": "map.modelproperty", "fields": {"model": "Site", "name": "nb_block"}},
- {"pk": 4, "model": "map.modelproperty", "fields": {"model": "Site", "name": "nb_parcel"}},
- {"pk": 5, "model": "map.modelproperty", "fields": {"model": "Site", "name": "name"}},
- {"pk": 6, "model": "map.modelproperty", "fields": {"model": "Parcel", "name": "anonymous_title"}}
+[{"pk": 1, "model": "map.modelproperty", "fields": {"model": "Parcel", "key": "nb_block", "name": "Nb of blocks"}},
+ {"pk": 2, "model": "map.modelproperty", "fields": {"model": "Parcel", "key": "title", "name": "Title"}},
+ {"pk": 3, "model": "map.modelproperty", "fields": {"model": "Site", "key": "nb_block", "name": "Nb of blocks"}},
+ {"pk": 4, "model": "map.modelproperty", "fields": {"model": "Site", "key": "nb_parcel", "name": "Nb of parcels"}},
+ {"pk": 5, "model": "map.modelproperty", "fields": {"model": "Site", "key": "name", "name": "name"}},
+ {"pk": 6, "model": "map.modelproperty", "fields": {"model": "Parcel", "key": "anonymous_title", "name": "anonymous title"}}
 ]

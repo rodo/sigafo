@@ -160,7 +160,8 @@ INSTALLED_APPS = (
     'sigafo.map',
     'sigafo.referentiel',
     'sigafo.ressources',
-    'sigafo.utils',    
+    'sigafo.utils',
+    'sigafo.osmboundary'
 )
 
 
@@ -219,3 +220,8 @@ COMPRESS_CSS_FILTERS = ['compressor.filters.csstidy.CSSTidyFilter']
 COMPRESS_JS_FILTERS = ['compressor.filters.template.TemplateFilter']
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+#
+#
+#
+LANGUAGES = (('en', 'English'),
+             ('fr', 'French'))

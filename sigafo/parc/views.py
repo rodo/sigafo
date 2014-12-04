@@ -18,6 +18,25 @@ from sigafo.parc.serializers import ParcelSerializer
 from sigafo.utils.view_mixins import APICacheMixin, APIPCacheMixin
 
 
+class ParcelNew(ProtectedMixin, CreateView):
+    model = Parcel
+    form_class = forms.ParcelForm
+    template_name = 'parc/parcel_new.html'
+
+    def get_initial(self):
+        initial = super(ParcelNew, self).get_initial()
+        initial.update({'creator': self.request.user.id})
+        return initial
+
+    def form_valid(self, form):
+        """Force the user to request.user"""
+        self.object = form.save(commit=False)
+        self.object.creator_id = self.request.user.id
+        self.object.save()
+
+        return super(MapNew, self).form_valid(form)
+
+
 class ParcelJSONList(APIPCacheMixin, generics.ListAPIView):
     #queryset = Parcel.objects.all()
     serializer_class = ParcelSerializer

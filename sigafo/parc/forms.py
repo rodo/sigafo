@@ -62,3 +62,34 @@ class BlockForm(forms.ModelForm):
             layout.Submit('cancel', 'Annuler', css_class="btn-danger"),
             )
         )
+
+
+class ParcelForm(forms.ModelForm):
+    """
+    Use to edit a Parcel
+    """
+    class Meta(object):
+        model = models.Parcel
+        # user will be set in views.ResumeNew
+        # other fields will be set as model default
+        exclude = ('nb_block', 'variables', 'center', 'polygon')
+      
+    name = forms.CharField(max_length=50,
+                           required=True,
+                           label=u"Name",
+                           widget=TextInput(attrs=xlarge))
+
+
+    
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.label_class = 'col-lg-2'
+    helper.field_class = 'col-lg-10'
+    helper.layout = layout.Layout(
+        layout.Field('name'),
+
+        FormActions(
+            layout.Submit('save_changes', 'Enregistrer', css_class="btn-primary"),
+            layout.Submit('cancel', 'Annuler', css_class="btn-danger"),
+            )
+        )

@@ -37,7 +37,7 @@ class MapForm(forms.ModelForm):
         model = models.Map
         # user will be set in views.ResumeNew
         # other fields will be set as model default
-        exclude = ('creator', 'properties', 'center')
+        exclude = ('creator', 'static_properties', 'center')
       
     title = forms.CharField(max_length=50,
                             required=True,
@@ -45,6 +45,16 @@ class MapForm(forms.ModelForm):
                             widget=TextInput(attrs=xlarge))
 
     projets = forms.ModelMultipleChoiceField(queryset=Projet.objects.all().order_by('name'))
+
+    props = models.ModelProperty.objects.all().order_by('name')
+    properties = forms.ModelMultipleChoiceField(queryset=props)
+    
+    lang = forms.ChoiceField(required=True,
+                             label="Language",
+                             choices=(('fr-fr', 'French'),
+                                      ('en', 'English')),
+                             initial = 'fr-fr')    
+    
 
     model = forms.ChoiceField(required=True,
                               label="Objets",
@@ -59,8 +69,10 @@ class MapForm(forms.ModelForm):
     helper.field_class = 'col-lg-10'
     helper.layout = layout.Layout(
         layout.Field('title'),
-        layout.Field('projets'),
         layout.Field('model'),
+        layout.Field('projets'),
+        layout.Field('properties'),
+        layout.Field('lang'),
         FormActions(
             layout.Submit('save_changes', 'Enregistrer', css_class="btn-primary"),
             layout.Submit('cancel', 'Annuler', css_class="btn-danger"),
