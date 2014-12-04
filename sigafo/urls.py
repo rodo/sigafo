@@ -20,6 +20,7 @@ from sigafo.referentiel import views as refviews
 
 admin.autodiscover()
 
+
 urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^$', HomepageView.as_view()),
@@ -28,7 +29,7 @@ urlpatterns = patterns('',
                        url(r'^site/(?P<pk>\d+)$', DetailProtected.as_view(model=Site), name='site_detail'),
                        url(r'^contact/$', ListProtected.as_view(model=Contact), name='contact_list'),
                        url(r'^contact/(?P<pk>\d+)$', DetailProtected.as_view(model=Contact), name='contact_detail'),
-
+                       #url(r'^contact/json/$', contactviews.ContactJSONList.as_view(), name='contact_json'),
                        url(r'^map/$', ListProtected.as_view(model=Map,
                                                        queryset=Map.objects.order_by("-pk").only('title'),
                                                        ), name='map_list'),
@@ -38,6 +39,7 @@ urlpatterns = patterns('',
                        url(r'^map/(?P<pk>\d+)/json$', mapviews.map_json, name='map_json'),
                        url(r'^map/(?P<pk>\d+)/kml21$', mapviews.map_kml, name='map_kml21'),
                        url(r'^map/(?P<pk>\d+)/geojson$', mapviews.MapDetail.as_view(model=Parcel), name='map_geojson'),
+                       url(r'^map/(?P<pk>\d+)/geojsonp$', mapviews.map_jsonp, name='map_geojsonp'),
 
                        url(r'^parcel/(?P<pk>\d+)$', DetailProtected.as_view(model=Parcel), name='parcel_detail'),
                        url(r'^parcel/new$', parcviews.ParcelNew.as_view(), name='parcel_new'),
