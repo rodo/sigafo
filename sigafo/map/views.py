@@ -9,11 +9,13 @@ from django.contrib.gis.shortcuts import render_to_kml
 from django.http import HttpResponse
 from djgeojson.views import GeoJSONLayerView
 from sigafo.parc.models import Parcel
-from sigafo.map.models import Map, MapProperty
+from sigafo.map.models import Map
 from sigafo.utils.view_mixins import ProtectedMixin
 from sigafo.map import forms
 from rest_framework.renderers import JSONRenderer
 from serializers import MapSerializer
+import json
+from djgeojson.serializers import Serializer as GeoJSONSerializer
 
 
 class JSONResponse(HttpResponse):
@@ -33,8 +35,8 @@ class MapDetail(GeoJSONLayerView):
 
     def get_queryset(self):
         super(MapDetail, self).get_queryset()
-        qsp = MapProperty.objects.filter(wmap_id=self.kwargs['pk'])
-        self.properties = [str(prop[0]) for prop in qsp.values_list('prop')]
+        qsp = Map.objects.get(pk=self.kwargs['pk'])
+        self.properties = [prop.key for prop in qsp.properties.all()]
         sql = """WITH projets AS (
         SELECT projet_id FROM map_map_projets
         WHERE map_id = {0}
@@ -107,3 +109,16 @@ def map_kml(request, pk):
     features = Parcel.objects.filter(pk__in=ids)
 
     return render_to_kml("map_parcel.kml", {'places': features})
+
+@csrf_exempt
+def map_jsonp(request, pk):
+    """Export datas in kml  format
+    """
+    view = MapDetail(model=Parcel,kwargs={'pk': pk})
+    view.object_list = [Parcel.objects.get(pk=pk)]
+    resp = view.render_to_response(context={})
+
+    data = '%s(%s);' % (request.REQUEST['callback'], resp.content)
+    return HttpResponse(data, "text/javascript")
+    
+
