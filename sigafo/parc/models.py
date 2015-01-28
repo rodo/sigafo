@@ -30,7 +30,8 @@ from sigafo.projet.models import Projet
 from sigafo.utils.models import GeoHStoreManager
 from random import random
 import reversion
-
+from json_field import JSONField
+import json
 
 # Site
 
@@ -43,12 +44,15 @@ class Site(models.Model):
     exploitant = models.ForeignKey(Contact, related_name='exploitant', blank=True, null=True)
     urls = models.ManyToManyField(Url, blank=True)
     comment = models.TextField(blank=True)
-
+    properties = JSONField()
     # updated by trigger
     nb_parcel = models.IntegerField(default=0)
     # updated by trigger
     nb_block = models.IntegerField(default=0)
 
+    # Needed for some map, may be null
+    projets = models.ManyToManyField(Projet, blank=True)
+    
     center = models.PointField(blank=True, null=True)
     objects = models.GeoManager()
 
@@ -75,6 +79,22 @@ class Site(models.Model):
 
     def get_blocks(self):
         return Block.objects.filter(parcel__site=self)
+
+    @property
+    def approx_center(self):
+        """
+        Here return real center for now
+
+        Return : Point
+        """
+        if self.center is None:
+            return None
+        else:
+            randx = 0
+            randy = 0
+            return Point(x=self.center.x + randx,
+                         y=self.center.y + randy)
+
 
 
 # Emplacements

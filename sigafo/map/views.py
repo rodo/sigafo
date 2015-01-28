@@ -9,6 +9,7 @@ from django.contrib.gis.shortcuts import render_to_kml
 from django.http import HttpResponse
 from djgeojson.views import GeoJSONLayerView
 from sigafo.parc.models import Parcel
+from sigafo.parc.models import Site
 from sigafo.map.models import Map
 from sigafo.utils.view_mixins import ProtectedMixin
 from sigafo.map import forms
@@ -37,16 +38,32 @@ class MapDetail(GeoJSONLayerView):
         super(MapDetail, self).get_queryset()
         qsp = Map.objects.get(pk=self.kwargs['pk'])
         self.properties = [prop.key for prop in qsp.properties.all()]
-        sql = """WITH projets AS (
-        SELECT projet_id FROM map_map_projets
-        WHERE map_id = {0}
-        )
-        SELECT DISTINCT(parcel_id) as id FROM parc_block_projets, parc_block
-        WHERE parc_block_projets.block_id= parc_block.id
-        AND projet_id IN (SELECT projet_id FROM projets);
-        """.format(self.kwargs['pk'])
-        ids = [p.id for p in Parcel.objects.raw(sql)]
-        features = Parcel.objects.filter(pk__in=ids)
+        if qsp.model == 'Parcel':
+            sql = """WITH projets AS (
+            SELECT projet_id FROM map_map_projets
+            WHERE map_id = {0}
+            )
+            SELECT DISTINCT(parcel_id) as id FROM parc_block_projets, parc_block
+            WHERE parc_block_projets.block_id= parc_block.id
+            AND projet_id IN (SELECT projet_id FROM projets);
+            """.format(self.kwargs['pk'])
+
+            ids = [p.id for p in Parcel.objects.raw(sql)]
+            features = Parcel.objects.filter(pk__in=ids)
+            
+        if qsp.model == 'Site':
+            sql = """WITH projets AS (
+            SELECT projet_id FROM map_map_projets
+            WHERE map_id = {0}
+            )
+            SELECT DISTINCT(site_id) as id FROM parc_site_projets, parc_site
+            WHERE parc_site_projets.site_id = parc_site.id
+            AND projet_id IN (SELECT projet_id FROM projets);
+            """.format(self.kwargs['pk'])
+
+            ids = [p.id for p in Parcel.objects.raw(sql)]
+            features = Site.objects.filter(pk__in=ids)
+            
         return features
 
 

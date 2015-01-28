@@ -14,6 +14,16 @@
     </li>
     <li>{% trans "Parcels" %} : {{object.nb_parcel}}</li>
     <li>{% trans "Blocks" %} : {{object.nb_block}}</li>
+
+    {% with Projets=object.projets.all %}
+    {% if Projets %}
+    <li>Projets : <ul>{% for projet in Projets %}
+      <li>{{projet.name}}</li>
+    {% endfor %}</ul>
+    </li>
+    {% endif %}
+    {% endwith %}
+    
     </div>
     
     {% leaflet_map "alert_detail" callback="main_map_init" %}

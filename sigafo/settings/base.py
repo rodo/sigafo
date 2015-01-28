@@ -152,6 +152,8 @@ INSTALLED_APPS = (
     'bootstrap3',
     'haystack',
     'json_dbindex',
+    'json_field',
+    'django_aggtrigg',
     # project apps
     'sigafo.agrof',
     'sigafo.contact',
