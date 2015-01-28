@@ -57,8 +57,6 @@ class Command(BaseCommand):
         """
         Make
         """
-        clean_all()
-
         if not options['filename']:
             print "-f is missing"
             sys.exit(1)
@@ -83,11 +81,11 @@ class Command(BaseCommand):
         for model in [Map, Block, Parcel, Site, Amenagement]:
             print "%s %d" % (model, model.objects.all().count())
 
-def clean_all():
-    """
-    """
-    for model in [Map, Block, Parcel, Site, Amenagement]:
-        model.objects.all().delete()
+# def clean_all():
+#     """
+#     """
+#     for model in [Map, Block, Parcel, Site, Amenagement]:
+#         model.objects.all().delete()
 
 def clean(value):
 
