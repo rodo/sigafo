@@ -147,7 +147,7 @@ def map_kml(request, pk):
 
 @csrf_exempt
 def map_jsonp(request, pk):
-    """Export datas in kml  format
+    """Export datas in jsonp
     """
     map = Map.objects.get(pk=pk)
     if map.model == 'Parcel':
@@ -156,7 +156,6 @@ def map_jsonp(request, pk):
 
     if map.model == 'Site':
         view = MapDetail(model=Site,kwargs={'pk': pk})
-        view.object_list = [Site.objects.get(pk=pk)]
 
     resp = view.render_to_response(context={})
     content = resp.content
