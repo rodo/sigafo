@@ -149,11 +149,21 @@ def map_kml(request, pk):
 def map_jsonp(request, pk):
     """Export datas in kml  format
     """
-    view = MapDetail(model=Parcel,kwargs={'pk': pk})
-    view.object_list = [Parcel.objects.get(pk=pk)]
-    resp = view.render_to_response(context={})
+    map = Map.objects.get(pk=pk)
+    if map.model == 'Parcel':
+        view = MapDetail(model=Parcel,kwargs={'pk': pk})
+        view.object_list = [Parcel.objects.get(pk=pk)]
 
-    data = '%s(%s);' % (request.REQUEST['callback'], resp.content)
+    if map.model == 'Site':
+        view = MapDetail(model=Site,kwargs={'pk': pk})
+        view.object_list = [Site.objects.get(pk=pk)]
+
+    resp = view.render_to_response(context={})
+    content = resp.content
+    try:
+        data = '%s(%s);' % (request.REQUEST['callback'], content)
+    except:
+        data = '%s(%s);' % (request.REQUEST['callback'], content.decode('utf-8'))
     return HttpResponse(data, "text/javascript")
     
 

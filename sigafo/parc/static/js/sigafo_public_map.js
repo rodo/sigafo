@@ -6,8 +6,52 @@
  *
  *
  */
-function map_init_basic (map, options) {
+function map_init_map (map, mapid) {
 
+    var layer = L.geoJson();
+    var markers = new L.MarkerClusterGroup();
+    var idmap = mapid.toString();
+    var dataurl = 'http://sigadev.lafrere.net/map/'+idmap+'/geojsonp?callback=parsejson';
+    var url = 'http://sigadev.lafrere.net/map/'+idmap+'/geojsonp';
+
+    //$.getJSON(dataurl, function (data) { });
+
+    $.ajax({
+	url: url,
+
+    // the name of the callback parameter, as specified by the YQL service
+	jsonp: "callback",
+
+    // tell jQuery we're expecting JSONP
+	dataType: "jsonp",
+
+    // tell YQL what we want and that we want JSON
+	data: {},
+
+    // work with the response
+	success: function( response ) {
+	    datas = response.features;
+    
+	    datas.forEach(function(parcel) {
+	
+		if (parcel.geometry != null ){
+		    var marker = L.marker(new L.LatLng(parcel.geometry.coordinates[1],
+						       parcel.geometry.coordinates[0]), { title: parcel.properties.title });
+                    marker.bindPopup("<h3>"+parcel.properties.title+"</h3><div><b>Description</b></div><div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id sapien augue. Morbi leo orci, iaculis vehicula mauris sit amet, consectetur convallis orci. Vestibulum vulputate nunc quis nunc vulputate pharetra. Maecenas quis mollis libero, ac molestie leo. Suspendisse malesuada congue nibh. Aenean vel lobortis nunc, in auctor sem. Morbi non risus diam. Cras in augue in lorem lacinia pellentesque non eget ipsum. Ut nec placerat ligula. Vestibulum sit amet mauris ex. Cras imperdiet ullamcorper sapien id congue. Nunc fringilla varius rutrum.</div>");
+		    markers.addLayer(marker);
+		}
+	    })
+	    
+	    map.addLayer(markers);
+
+	}
+    });
+
+
+}
+
+function map_init_basic (map, options) {
+    /* deprecated use map_init_map instead */
     var layer = L.geoJson();
     var markers = new L.MarkerClusterGroup();
     var dataurl = 'http://sigadev.lafrere.net/map/3/geojsonp?callback=parsejson';
