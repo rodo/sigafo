@@ -10,7 +10,7 @@ function map_init_basic (map, options) {
 
     var layer = L.geoJson();
     var markers = new L.MarkerClusterGroup();
-    var dataurl = 'http://sigadev.lafrere.net/map/1/geojsonp?callback=parsejson';
+    var dataurl = 'http://sigadev.lafrere.net/map/3/geojsonp?callback=parsejson';
 
     //$.getJSON(dataurl, function (data) { });
 
