@@ -44,14 +44,14 @@ class Site(models.Model):
     exploitant = models.ForeignKey(Contact, related_name='exploitant', blank=True, null=True)
     urls = models.ManyToManyField(Url, blank=True)
     comment = models.TextField(blank=True)
-    properties = JSONField()
+    properties = JSONField(blank=True, null=True)
     # updated by trigger
     nb_parcel = models.IntegerField(default=0)
     # updated by trigger
     nb_block = models.IntegerField(default=0)
 
     # Needed for some map, may be null
-    projets = models.ManyToManyField(Projet, blank=True)
+    projets = models.ManyToManyField(Projet, blank=True, null=True)
     
     center = models.PointField(blank=True, null=True)
     objects = models.GeoManager()
