@@ -100,6 +100,16 @@ class Site(models.Model):
                          y=self.center.y + randy)
 
 
+    @property
+    def center_lat(self):
+        if self.center:
+            return self.center.y
+
+    @property
+    def center_lon(self):
+        if self.center:
+            return self.center.x
+
 
 # Emplacements
 class Parcel(models.Model):
