@@ -31,17 +31,35 @@ function map_init_map (map, mapid) {
     // work with the response
 	success: function( response ) {
 	    datas = response.features;
-    
+
 	    datas.forEach(function(parcel) {
-	
+
 		if (parcel.geometry != null ){
 		    var marker = L.marker(new L.LatLng(parcel.geometry.coordinates[1],
-						       parcel.geometry.coordinates[0]), { title: parcel.properties.title });
-                    marker.bindPopup("<h3>"+parcel.properties.title+"</h3><div><b>Description</b></div><div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id sapien augue. Morbi leo orci, iaculis vehicula mauris sit amet, consectetur convallis orci. Vestibulum vulputate nunc quis nunc vulputate pharetra. Maecenas quis mollis libero, ac molestie leo. Suspendisse malesuada congue nibh. Aenean vel lobortis nunc, in auctor sem. Morbi non risus diam. Cras in augue in lorem lacinia pellentesque non eget ipsum. Ut nec placerat ligula. Vestibulum sit amet mauris ex. Cras imperdiet ullamcorper sapien id congue. Nunc fringilla varius rutrum.</div>");
+						                       parcel.geometry.coordinates[0]), { title: parcel.properties.title });
+
+            var popup = "<h3>"+parcel.properties.name+"</h3>";
+
+            //Stakeholder group: AGFORWARD UK Wood Pasture and Parkland Group
+
+            popup = popup + "<div>Contact : "+parcel.properties.map_public_info.contact+"</div>";
+            popup = popup + "<div>E-mail : "+parcel.properties.map_public_info.email+"</div>";
+            popup = popup + "<div>Address : "+parcel.properties.map_public_info.town+"</div>";
+
+
+            popup = popup + '<div>Coordinates: '+ parcel.properties.map_public_info.latitude;
+            popup = popup + ', '+ parcel.properties.map_public_info.longitude+'</div>';
+
+            popup = popup + '<div>Website with further details: <a href="'+parcel.properties.map_public_info.url+'">url</a></div>';
+
+
+
+
+            marker.bindPopup(popup);
 		    markers.addLayer(marker);
 		}
 	    })
-	    
+
 	    map.addLayer(markers);
 
 	}
@@ -73,9 +91,9 @@ function map_init_basic (map, options) {
     // work with the response
 	success: function( response ) {
 	    datas = response.features;
-    
+
 	    datas.forEach(function(parcel) {
-	
+
 		if (parcel.geometry != null ){
 		    var marker = L.marker(new L.LatLng(parcel.geometry.coordinates[1],
 						       parcel.geometry.coordinates[0]), { title: parcel.properties.title });
@@ -83,7 +101,7 @@ function map_init_basic (map, options) {
 		    markers.addLayer(marker);
 		}
 	    })
-	    
+
 	    map.addLayer(markers);
 
 	}
@@ -96,9 +114,9 @@ function parsejson (data) {
 
     /* layer.addData(data); */
     datas = data.features;
-    
+
     datas.forEach(function(parcel) {
-	
+
         if (parcel.geometry != null ){
             var marker = L.marker(new L.LatLng(parcel.geometry.coordinates[1],
                                                parcel.geometry.coordinates[0]), { title: parcel.properties.title });
@@ -106,7 +124,7 @@ function parsejson (data) {
             markers.addLayer(marker);
         }
     })
-    
+
     map.addLayer(markers);
 }
 
