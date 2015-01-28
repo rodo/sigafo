@@ -15,7 +15,7 @@ function map_init_basic (map, options) {
     //$.getJSON(dataurl, function (data) { });
 
     $.ajax({
-	url: "http://sigadev.lafrere.net/map/1/geojsonp",
+	url: "http://sigadev.lafrere.net/map/3/geojsonp",
 
     // the name of the callback parameter, as specified by the YQL service
 	jsonp: "callback",
