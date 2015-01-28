@@ -104,11 +104,15 @@ class Site(models.Model):
     def center_lat(self):
         if self.center:
             return self.center.y
+        else:
+            return 0
 
     @property
     def center_lon(self):
         if self.center:
             return self.center.x
+        else:
+            return 0
 
 
 # Emplacements

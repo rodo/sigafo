@@ -23,7 +23,6 @@ from .models import ModelProperty
 
 
 class MapAdmin(LeafletGeoAdmin):
-    readonly_fields = ('center',)
     list_display = ['title']
 
 class ModelPropertyAdmin(admin.ModelAdmin):
