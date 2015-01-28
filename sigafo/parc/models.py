@@ -45,6 +45,10 @@ class Site(models.Model):
     urls = models.ManyToManyField(Url, blank=True)
     comment = models.TextField(blank=True)
     properties = JSONField(blank=True, null=True)
+
+    # public info to display set on the map
+    map_public_info = JSONField(blank=True, null=True)
+
     # updated by trigger
     nb_parcel = models.IntegerField(default=0)
     # updated by trigger
