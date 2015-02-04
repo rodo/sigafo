@@ -99,7 +99,7 @@ def clean(value):
     return value
 
 def iline(row, i, projet_id):
-    res = 1
+    res = 0
     block_center = None
     projets = []
     data_imports = {}
@@ -147,14 +147,22 @@ def iline(row, i, projet_id):
             if matchObj.group(8) == "W":
                 lon = 0 - lon
 
-            print "latitude : %s lon %s " % (str(lat), str(lon))
+            print "latitude : %s lon %s %s " % (str(lat), str(lon), row[1])
         except:
             print 'bad coord'
+
+    coord = row[1].strip()
+    lat = float(coord.split(',')[0])
+    lon = float(coord.split(',')[1])
+
+    print 'lat : %s, lon: %s' % (lat, lon)
 
     wp = row[12].strip()
     url = row[13].strip()
     quality = row[3].strip()
     stkholdergroup = 17
+
+    image = "http://www.agforward.eu/%s" % (row[45].strip())
 
     proper = {'url': url,
               'import': 'import_janvier_20125',
@@ -164,13 +172,15 @@ def iline(row, i, projet_id):
               'contact': contact,
               'town': town,
               'wp': wp,
+              'image': image,
+              'imgheight': 82,
+              'imgwidth': 198,
               'stkgroup': stkholdergroup}
 
     site = Site.objects.create(name=site_nom,
                                properties=proper)
 
-    print site.properties
-    
+    #print site.properties
 
     if lat and lon:
         site.center = Point(lon, lat)
