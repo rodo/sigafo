@@ -68,7 +68,7 @@ class MapDetail(GeoJSONLayerView):
 
             ids = [p.id for p in Parcel.objects.raw(sql)]
             features = Parcel.objects.filter(pk__in=ids)
-            
+
         if qsp.model == 'Site':
             sql = """WITH projets AS (
             SELECT projet_id FROM map_map_projets
@@ -81,7 +81,7 @@ class MapDetail(GeoJSONLayerView):
 
             ids = [p.id for p in Parcel.objects.raw(sql)]
             features = Site.objects.filter(pk__in=ids)
-            
+
         return features
 
 
@@ -164,5 +164,3 @@ def map_jsonp(request, pk):
     except:
         data = '%s(%s);' % (request.REQUEST['callback'], content.decode('utf-8'))
     return HttpResponse(data, "text/javascript")
-    
-

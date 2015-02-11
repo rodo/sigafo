@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
-# Copyright (c) 2014 Agroof <http://www.agroof.net/>
+# Copyright (c) 2014,2015 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2014,2015 Agroof <http://www.agroof.net/>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from json_field import JSONField
+import json
 
 
 class Activite(models.Model):
@@ -63,6 +65,12 @@ class Contact(models.Model):
 
     user = models.ForeignKey(User, blank=True, null=True)
 
+    properties = JSONField(blank=True, null=True)
+
+    # public info to display set on the map
+    map_public_info = JSONField(blank=True, null=True)
+
+
     def __unicode__(self):
         """The unicode method
         """
@@ -83,7 +91,7 @@ class Contact(models.Model):
 class Organisme(models.Model):
     """Organisme
     """
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=150)
     address = models.TextField(blank=True, null=True)
     phonenumber = models.CharField(max_length=50, blank=True)
     url = models.URLField(blank=True, null=True)

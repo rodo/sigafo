@@ -112,7 +112,7 @@ def iline(row, i, projet_id):
 
     try:
         name = row[2].split(' ')
-        (firstname, lastname) = (name[0], name[1])
+        (lastname, firstname) = (name[0], name[1])
         block_name = row[3]
 
         # coord 49° 7' 3.529" N     1° 43' 44.987" E
@@ -125,6 +125,18 @@ def iline(row, i, projet_id):
     for proj in row[27].strip().split(';'):
         if len(proj):
             projets.append(proj.strip())
+
+
+    print firstname,lastname
+
+    try:
+        objcontact = Contact.objects.filter(firstname=firstname,
+                                            lastname=lastname)
+        email = objcontact[0].email
+    except:
+        email=""
+
+    
 
 
     town = row[4].strip()
@@ -170,6 +182,7 @@ def iline(row, i, projet_id):
               'latitude': lat,
               'longitude': lon,
               'contact': contact,
+              'email': email,
               'town': town,
               'wp': wp,
               'image': image,
@@ -181,6 +194,8 @@ def iline(row, i, projet_id):
                                properties=proper)
 
     #print site.properties
+
+    print email
 
     if lat and lon:
         site.center = Point(lon, lat)
