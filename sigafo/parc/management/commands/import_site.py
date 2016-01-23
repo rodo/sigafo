@@ -19,6 +19,15 @@
 #
 # Field delimiter : "," coma
 #
+"""
+Une fois l'import effectue il faut mettre a jour la base avec les
+commandes SQL suivantes :
+
+
+sigafo=# update parc_site set map_public_info = properties  where id > 355;                                                                                               
+sigafo=# update parc_site set parc_json = map_public_info::json where id > 355;  
+
+"""
 import sys
 import csv
 import re
@@ -30,7 +39,7 @@ from sigafo.parc.models import Parcel, Block, Site, Observation
 from sigafo.agrof.models import Essence, Amenagement
 from sigafo.contact.models import Contact
 from sigafo.projet.models import Projet
-from sigafo.referentiel import models
+from sigafo.referentiel import models as refs
 from optparse import make_option
 import json
 
@@ -49,8 +58,22 @@ class Command(BaseCommand):
                     "--projet",
                     dest="projet",
                     type="string",
-                    help="number of values to input",
+                    help="project id to link on",
                     default=None),
+
+        make_option("-c",
+                    "--code",
+                    dest="code_projet",
+                    type="string",
+                    help="project code found in .ods data file",
+                    default=None),
+
+        make_option("-t",
+                    "--truncate",
+                    dest="truncate",
+                    action="store_true",
+                    help="truncate datas before import",
+                    default=False),
         )
 
     def handle(self, *args, **options):
@@ -65,14 +88,24 @@ class Command(BaseCommand):
             print "-p [PROJET_ID] is missing"
             sys.exit(1)
 
+        if not options['code_projet']:
+            print "-c [PROJET_CODE] is missing"
+            sys.exit(1)
+
+        if options['truncate']:
+            Block.objects.all().delete()
+            Parcel.objects.all().delete()
+            Site.objects.all().delete()
+
         i = 0
         ok = 0
         with open(options['filename'], 'rb') as f:
                 reader = csv.reader(f)
                 for row in reader:
                     i = i + 1
+                    print "row %s" % i
                     if i > 3:
-                        res = iline(row, i, options['projet'])
+                        res = iline(row, i, options['projet'], options['code_projet'])
                         if res == 0:
                             ok = ok + 1
 
@@ -98,7 +131,7 @@ def clean(value):
 
     return value
 
-def iline(row, i, projet_id):
+def iline(row, i, projet_id, project_code):
     res = 0
     block_center = None
     projets = []
@@ -117,17 +150,22 @@ def iline(row, i, projet_id):
 
         # coord 49° 7' 3.529" N     1° 43' 44.987" E
         coord = row[1]
-
+        print firstname,lastname
     except:
         print "Parsing error line %d : %s"% (i, row[0])
 
 
-    for proj in row[27].strip().split(';'):
+    # filtre sur la colonne projet AR
+    projs = row[43].strip().split(';')
+    cprojs = [f.strip() for f in projs] 
+    for proj in cprojs:
         if len(proj):
             projets.append(proj.strip())
-
-
-    print firstname,lastname
+                
+    # project not found
+    if not project_code in cprojs:
+        print "Not in project %s, %s" % (project_code, cprojs)
+        return 1
 
     try:
         objcontact = Contact.objects.filter(firstname=firstname,
@@ -136,16 +174,11 @@ def iline(row, i, projet_id):
     except:
         email=""
 
-    
-
-
     town = row[4].strip()
     contact = row[2].strip()
 
-    try:
-        surface = float(row[5])
-    except:
-        surface = None
+    # icon_url colonne AV : 47
+    icon_url = row[47].strip()
 
     lat = None
     lon = None
@@ -174,7 +207,10 @@ def iline(row, i, projet_id):
     quality = row[3].strip()
     stkholdergroup = 17
 
-    image = "http://www.agforward.eu/%s" % (row[45].strip())
+    field = row[35].strip()
+    
+    #image = "http://www.agforward.eu/%s" % (row[45].strip())
+    image = row[45].strip()
 
     proper = {'url': url,
               'import': 'import_janvier_20125',
@@ -188,20 +224,116 @@ def iline(row, i, projet_id):
               'image': image,
               'imgheight': 82,
               'imgwidth': 198,
-              'stkgroup': stkholdergroup}
+              'stkgroup': stkholdergroup,
+              'icon_url': icon_url}
 
-    site = Site.objects.create(name=site_nom,
-                               properties=proper)
+    
+    (site, created) = Site.objects.get_or_create(name=site_nom,
+                                                 center = Point(lon, lat))
+    if created:                                        
+        site.properties=proper
+        site.save()
 
     #print site.properties
 
-    print email
+    print site.id, email
 
     if lat and lon:
         site.center = Point(lon, lat)
         site.save()
     #
+    # Parcelles
+    # G  6 Nom
+    # H  7
+    # I  8
+    # J  9
+    # K 10
+    # L 11 System Prod
+    # M 12
+    # N 13
+    # O 14 - Coord GPS
+    # P 15
+    # Q 16 - Expe
+    # R 17
+    # S 18
+    # T 19
+    # U 20
+    parcel_nom = row[6].strip()
 
+    coord = row[14].strip()
+    lat = float(coord.split(',')[0])
+    lon = float(coord.split(',')[1])
+
+    (parcel, created) = Parcel.objects.get_or_create(name=parcel_nom,
+                                                     site=site,
+                                                     center = Point(lon, lat),
+                                                     creator=User.objects.get(pk=1))
+    
+    parcel_system_prod = row[11].strip()
+    if len(parcel_system_prod) > 0:
+        (sp, created) = refs.SystemProd.objects.get_or_create(name=parcel_system_prod)
+        parcel.systemprod = sp
+
+    # surface colonne K
+    try:
+        parcel.surface = float(row[10].strip())
+    except:
+        pass
+
+    try:
+        parcel.altitude = float(row[15].strip())
+    except:
+        pass
+
+    try:
+        if row[16].strip() == 'Oui':
+            parcel.experimental = True
+    except:
+        pass
+
+    parcel.save()
+
+    #
+    # Bloc
+    #
+    # V 21 Nom
+    # W 22
+    # X 23
+    bloc_nom = row[21].strip()
+
+
+    (bloc, created) = Block.objects.get_or_create(name=bloc_nom,
+                                                  parcel=parcel
+                                                  )
+
+    try:
+        coord = row[25].strip()
+        lat = float(coord.split(',')[0])
+        lon = float(coord.split(',')[1])
+        bloc.center = Point(lon, lat)
+    except:
+        pass
+
+    properties = {'surface': row[24].strip(),
+                  'topography': row[28].strip(),
+                  'texture': row[29].strip(),
+                  'classe_ph': row[30].strip(),
+                  'classe_profondeur': row[31].strip(),
+                  'humidity': row[32].strip(),
+                  'drainage': row[33].strip(),
+                  'irrigation': row[34].strip(),
+                  'prod_veg_an': row[35].strip(),
+                  'prod_veg_pre': row[36].strip(),                  
+                  'prod_ani': row[37].strip(),
+                  'facon_culturale': row[38].strip(), # AM
+                  'fertilisation': row[39].strip(), # AN
+                  'traitement_phyto': row[40].strip(), # AO
+                  'mode_conduite': row[41].strip(), # AP
+                  'projets': row[43].strip(), # AR
+                  }
+    bloc.properties_text = properties
+    bloc.save()
+                                                 
     proj = Projet.objects.get(pk=projet_id)
     site.projets.add(proj)
     return res
