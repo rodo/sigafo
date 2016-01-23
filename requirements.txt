@@ -1,8 +1,8 @@
 Django==1.8.8
 Jinja2==2.7.3
 MarkupSafe==0.23
-Pygments==1.6
-Sphinx==1.2.2
+Pygments==2.1
+Sphinx==1.3.4
 Whoosh==2.7.0
 argparse==1.2.2
 
@@ -12,14 +12,14 @@ django-compressor==1.4
 django-crispy-forms==1.6.0
 django-extensions==1.6.1
 django-geojson==2.8.1
-django-haystack==2.1.0
-django-hstore==1.3.5
+django-haystack==2.4.1
+django-hstore==1.4.1
 django-json-dbindex==1.2.3
 django-leaflet==0.18.0
 
 django-registration==2.0.4
 
-django-reversion==1.8.1
+django-reversion==1.10.0
 djangorestframework==2.4.4
 
 docutils==0.12
@@ -27,7 +27,7 @@ fake-factory==0.5.3
 
 mccabe==0.2.1
 
-psycopg2==2.5.4
+psycopg2==2.6.1
 
 pep8==1.7.0
 
@@ -37,7 +37,7 @@ pyflakes==1.0.0
 pygraphviz==1.2
 python-ptrace==0.7
 six==1.10.0
-sqlparse==0.1.13
+sqlparse==0.1.18
 wsgiref==0.1.2
 django-uuidfield==0.5.0
 django-aggtrigg==0.6.4

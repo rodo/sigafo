@@ -6,23 +6,30 @@
     {% include "pager.html" %}
     <table class="table table-striped">
       <thead>
-	<tr>
+    <tr><th></th>
       <th>{% trans "Firstname" %}</th>
       <th>{% trans "Name" %}</th>
-	  <th>{% trans "Blocks" %}</th>            
-	</tr>
+      <th>{% trans "Activity" %}</th>
+      <th>{% trans "Phone" %}</th>
+      <th>{% trans "email" %}</th>
+    </tr>
       </thead>
       <tbody>
         {% for contact in object_list %}
         <tr>
-          <td>{{contact.firstname}} {{contact.lastname}}</a></td>
-          <td>{{contact.activite}}</a></td>          
-          <td>{{contact.phonenumber}}</a></td>          
-          <td>{{contact.email}}</a></td>          
+          <td>
+            <a href="{% url 'contact_detail' contact.id %}">
+            <span class="glyphicon glyphicon-user" /></a>
+          </td>
+          <td>{{contact.firstname}}</td>
+          <td>{{contact.lastname}}</td>
+          <td>{{contact.activite|default_if_none:''}}</td>
+          <td>{{contact.phonenumber}}</td>
+          <td>{{contact.email}}</td>
         </tr>
         {% endfor %}
       </tbody>
-    </table>      
+    </table>
   </div>
 
   <div class="col-md-2">
@@ -34,4 +41,3 @@
   </div>
 </div>
 {% endblock %}
-
