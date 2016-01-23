@@ -70,6 +70,8 @@ class Contact(models.Model):
     # public info to display set on the map
     map_public_info = JSONField(blank=True, null=True)
 
+    class Meta:
+        ordering = ['lastname', 'firstname']
 
     def __unicode__(self):
         """The unicode method

@@ -12,6 +12,21 @@
     <li>
     {% trans "Name" %} : {{object.firstname}} {{object.lastname}}
     </li>
+    <li>
+    {% trans "Address" %} : {{object.adressl}}
+    </li>
+    <li>
+    {% trans "Phonenumber" %} : {{object.phonenumber}}
+    </li>    
+    <li>
+    {% trans "Email" %} : {{object.email}}
+    </li>
+    <li>
+    {% trans "Activite" %} : {{ object.activite|default_if_none:''}}
+    </li>    
+    <li>
+    {% trans "Comment" %} : {{object.comment}}
+    </li>
     </div>
     
     {% leaflet_map "alert_detail" callback="main_map_init" %}
