@@ -65,7 +65,7 @@ class Map(models.Model):
     public_map = models.BooleanField(default=False)
 
     # Projects which the map is belong to
-    properties = models.ManyToManyField(ModelProperty, blank=True, null=True)
+    properties = models.ManyToManyField(ModelProperty, blank=True)
 
     # properties available/displayed on map
     static_properties = hstore.DictionaryField(db_index=True, blank=True, null=True)

@@ -64,9 +64,16 @@ urlpatterns = patterns(
     url(r'^map/(?P<pk>\d+)/geojsonp$', mapviews.map_jsonp, name='map_geojsonp'),
     
     url(r'^parcel/(?P<pk>\d+)$', DetailProtected.as_view(model=Parcel), name='parcel_detail'),
-    url(r'^parcel/new$', parcviews.ParcelNew.as_view(), name='parcel_new'),
-    url(r'^parcel/$', parcviews.ParcelList.as_view(model=Parcel,
-                                                   paginate_by=10), name='parcel_list'),
+
+    url(r'^parcel/new$',
+        parcviews.ParcelNew.as_view(),
+        name='parcel_new'),
+
+    url(r'^parcel/$',
+        parcviews.ParcelList.as_view(model=Parcel,
+                                     paginate_by=10),
+        name='parcel_list'),
+    
     url(r'^parcel/json/$', parcviews.ParcelJSONList.as_view(), name='parcel_json'),
     url(r'^parcel/geojson$', GeoJSONLayerView.as_view(model=Parcel,
                                                       properties=['title'],

@@ -55,7 +55,7 @@ class Site(models.Model):
     nb_block = models.IntegerField(default=0)
 
     # Needed for some map, may be null
-    projets = models.ManyToManyField(Projet, blank=True, null=True)
+    projets = models.ManyToManyField(Projet, blank=True)
     
     center = models.PointField(blank=True, null=True)
     objects = models.GeoManager()
@@ -119,20 +119,28 @@ class Site(models.Model):
 class Parcel(models.Model):
     """The client as consummer
     """
-    site = models.ForeignKey(Site)
+    site = models.ForeignKey(Site,
+                             on_delete=models.PROTECT)
     name = models.CharField(max_length=50)
 
     # who owned the parcel
-    owner = models.ForeignKey(Contact, related_name='powner', blank=True, null=True)
+    owner = models.ForeignKey(Contact,
+                              related_name='powner',
+                              blank=True,
+                              null=True)
 
     # who works on the parcel
-    exploitant = models.ForeignKey(Contact, related_name='pexploit', blank=True, null=True)
+    exploitant = models.ForeignKey(Contact,
+                                   related_name='pexploit',
+                                   blank=True, null=True)
 
     # in ha
     surface = models.FloatField(blank=True, null=True)
 
     # 
-    systemprod = models.ForeignKey(refs.SystemProd, blank=True)
+    systemprod = models.ForeignKey(refs.SystemProd,
+                                   blank=True,
+                                   null=True)
 
     # in ha
     altitude = models.FloatField(blank=True, null=True)
@@ -140,7 +148,7 @@ class Parcel(models.Model):
     # in ha
     experimental = models.BooleanField(default=False)
 
-
+    # Coordonnées GPS
     center = models.PointField(blank=True, null=True)
     polygon = models.PolygonField(blank=True, null=True)
 
@@ -149,7 +157,9 @@ class Parcel(models.Model):
     # updated by trigger
     nb_block = models.IntegerField(default=0)
     # updated by triggers
-    variables = hstore.DictionaryField(db_index=True, blank=True, null=True)
+    variables = hstore.DictionaryField(db_index=True,
+                                       blank=True,
+                                       null=True)
 
     # who create the map
     creator = models.ForeignKey(User)
@@ -162,7 +172,7 @@ class Parcel(models.Model):
         """
         The unicode method
         """
-        return "%s" % (self.name)
+        return "%s - %s" % (self.site.name, self.name)
 
     @property
     def departement(self):
@@ -218,14 +228,16 @@ class Parcel(models.Model):
             return self.center.x
 
 
-
 # Block, sous-ensemble de la parcelle
 class Block(models.Model):
     """
     Un block est un emplacement geographique avec une activité
     """
-    parcel = models.ForeignKey(Parcel)
-    name = models.CharField(max_length=50)
+    parcel = models.ForeignKey(Parcel,
+                               on_delete=models.PROTECT)
+    
+    name = models.CharField(max_length=300)
+    
     surface = models.FloatField(blank=True, null=True)
 
     center = models.PointField(blank=True, null=True)
@@ -243,7 +255,9 @@ class Block(models.Model):
     import_initial = hstore.DictionaryField(db_index=True, blank=True, null=True)
 
     #
-    topography    = models.ForeignKey(refs.Topography, blank=True, null=True)
+    properties_text = JSONField(blank=True, null=True)
+    #
+    topography = models.ForeignKey(refs.Topography, blank=True, null=True)
     classph    = models.ForeignKey(refs.ClassePH, blank=True, null=True)
     classprof  = models.ForeignKey(refs.ClasseProfondeur, blank=True, null=True)
     classhumid = models.ForeignKey(refs.ClasseHumidity, blank=True, null=True)
