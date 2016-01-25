@@ -5,27 +5,32 @@
 {% block content %}
 <div class="row">
   <div class="col-md-10">
-    {% include "pager-api.html" %}
+    {% include "pager.html" %}
     <table class="table table-striped">
       <thead>
-	<tr>
+    <tr>
       <th>{% trans "Site" %}</th>
       <th>{% trans "Name" %}</th>
-      <th>{% trans "System" %}</th>      
-	  <th>{% trans "Blocks" %}</th>            
-	</tr>
+      <th>{% trans "System" %}</th>
+      <th>{% trans "Blocks" %}</th>
+      <th>{% trans "Experimental" %}</th>
+    </tr>
       </thead>
       <tbody>
         {% for parcel in object_list %}
         <tr>
-          <td><a href="{{parcel.site.get_absolute_url}}">{{parcel.site.name}}</a></td>
+          <td>
+            <a href="{{parcel.site.get_absolute_url}}">{{parcel.site.name}}</a>
+
+          </td>
           <td><a href="{{parcel.get_absolute_url}}">{{parcel.name}}</a></td>
           <td>{{parcel.systemprod.name}}</td>
           <td>{% if parcel.nb_block > 0 %}{{parcel.nb_block}}{% endif %}</a></td>
+          <td>{{parcel.experimental}}</td>
         </tr>
         {% endfor %}
       </tbody>
-    </table>      
+    </table>
   </div>
 
   <div class="col-md-2">
@@ -37,4 +42,3 @@
   </div>
 </div>
 {% endblock %}
-

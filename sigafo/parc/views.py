@@ -82,11 +82,11 @@ class BlockList(ProtectedMixin, ListView):
         return blocks
 
 
-class HomepageView(TemplateView):
-    template_name = "newhome.html"
-
-
 class BlockEdit(ProtectedMixin, UpdateView):
     model = Block
     form_class = forms.BlockForm
     template_name = 'parc/block_form.html'
+
+
+class HomepageView(TemplateView):
+    template_name = "newhome.html"

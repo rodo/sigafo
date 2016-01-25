@@ -37,6 +37,11 @@ class ContactIndex(indexes.SearchIndex, indexes.Indexable):
         """Used when the entire index for model is updated."""
         return self.get_model().objects.all()
 
+    def prepare_firstname(self, object):
+        return object.firstname.lower()
+
+    def prepare_lastname(self, object):
+        return object.lastname.lower()    
 
 class OrganismeIndex(indexes.SearchIndex, indexes.Indexable):
     """

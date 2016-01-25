@@ -19,17 +19,28 @@
     {% trans "Usage" %} : <a href="{{object.domain.get_absolute_url}}">{{object.usage}}</a>
     </li>
     <li>
+    {% trans "Surface" %} : {{object.surface|default:''}}
+    </li>
+    <li>
+    {% trans "Altitude" %} : {{object.altitude|default:''}}
+    </li>
+    <li>
+    {% trans "Lon / Lat" %} :
+    <a target="_blank" href="http://www.openstreetmap.org/#map=12/{{object.center.y}}/{{object.center.x}}">
+    {{object.center.x}}, {{object.center.y}}</a>
+    </li>
+    <li>
     {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
     </li>
     <li>
     {% trans "Start on" %} : {{object.date_debut}}
     </li>
     </div>
-    
+
     {% leaflet_map "alert_detail" callback="main_map_init" %}
     {% if object.description %}
     <hr/>
-    
+
     <div>
     <div class="alert alert-info">
       {{object.description}}
@@ -37,7 +48,7 @@
     </div>
     {% endif %}
     </div>
-    
+
     <div class="col-md-6">
       <table class="table table-condensed">
         <thead>
@@ -62,7 +73,6 @@
     </p>
     {% endif %}
   </div>
-  
-</div>  
+
+</div>
 {% endblock %}
-  

@@ -24,8 +24,8 @@ Une fois l'import effectue il faut mettre a jour la base avec les
 commandes SQL suivantes :
 
 
-sigafo=# update parc_site set map_public_info = properties  where id > 355;                                                                                               
-sigafo=# update parc_site set parc_json = map_public_info::json where id > 355;  
+sigafo=# update parc_site set map_public_info = properties  where id > 355;
+sigafo=# update parc_site set parc_json = map_public_info::json where id > 355;
 
 """
 import sys
@@ -82,14 +82,6 @@ class Command(BaseCommand):
         """
         if not options['filename']:
             print "-f is missing"
-            sys.exit(1)
-
-        if not options['projet']:
-            print "-p [PROJET_ID] is missing"
-            sys.exit(1)
-
-        if not options['code_projet']:
-            print "-c [PROJET_CODE] is missing"
             sys.exit(1)
 
         if options['truncate']:
@@ -157,15 +149,13 @@ def iline(row, i, projet_id, project_code):
 
     # filtre sur la colonne projet AR
     projs = row[43].strip().split(';')
-    cprojs = [f.strip() for f in projs] 
+    cprojs = [f.strip() for f in projs]
     for proj in cprojs:
-        if len(proj):
-            projets.append(proj.strip())
-                
-    # project not found
-    if not project_code in cprojs:
-        print "Not in project %s, %s" % (project_code, cprojs)
-        return 1
+        try:
+            projet_id = Projet.objects.get(code=proj)
+            projets.append(projet_id.id)
+        except:
+            pass
 
     try:
         objcontact = Contact.objects.filter(firstname=firstname,
@@ -197,8 +187,12 @@ def iline(row, i, projet_id, project_code):
             print 'bad coord'
 
     coord = row[1].strip()
-    lat = float(coord.split(',')[0])
-    lon = float(coord.split(',')[1])
+    slat = unicode(coord.split(',')[0],"UTF-8")
+    slat = slat.replace(u"\xc2\xa0", " ")
+    lat = float(slat)
+    slon = unicode(coord.split(',')[1],"UTF-8")
+    slon = slon.replace(u"\xc2\xa0", " ")
+    lon = float(slon)
 
     print 'lat : %s, lon: %s' % (lat, lon)
 
@@ -208,7 +202,7 @@ def iline(row, i, projet_id, project_code):
     stkholdergroup = 17
 
     field = row[35].strip()
-    
+
     #image = "http://www.agforward.eu/%s" % (row[45].strip())
     image = row[45].strip()
 
@@ -227,10 +221,10 @@ def iline(row, i, projet_id, project_code):
               'stkgroup': stkholdergroup,
               'icon_url': icon_url}
 
-    
+
     (site, created) = Site.objects.get_or_create(name=site_nom,
                                                  center = Point(lon, lat))
-    if created:                                        
+    if created:
         site.properties=proper
         site.save()
 
@@ -260,15 +254,23 @@ def iline(row, i, projet_id, project_code):
     # U 20
     parcel_nom = row[6].strip()
 
+    if parcel_nom == "":
+        parcel_nom = "Sans nom"
+
+
     coord = row[14].strip()
-    lat = float(coord.split(',')[0])
-    lon = float(coord.split(',')[1])
+    slat = unicode(coord.split(',')[0],"UTF-8")
+    slat = slat.replace(u"\xc2\xa0", " ")
+    lat = float(slat)
+    slon = unicode(coord.split(',')[1],"UTF-8")
+    slon = slon.replace(u"\xc2\xa0", " ")
+    lon = float(slon)
 
     (parcel, created) = Parcel.objects.get_or_create(name=parcel_nom,
                                                      site=site,
                                                      center = Point(lon, lat),
                                                      creator=User.objects.get(pk=1))
-    
+
     parcel_system_prod = row[11].strip()
     if len(parcel_system_prod) > 0:
         (sp, created) = refs.SystemProd.objects.get_or_create(name=parcel_system_prod)
@@ -301,6 +303,8 @@ def iline(row, i, projet_id, project_code):
     # X 23
     bloc_nom = row[21].strip()
 
+    if bloc_nom == "":
+        bloc_nom = "Sans nom"
 
     (bloc, created) = Block.objects.get_or_create(name=bloc_nom,
                                                   parcel=parcel
@@ -323,7 +327,7 @@ def iline(row, i, projet_id, project_code):
                   'drainage': row[33].strip(),
                   'irrigation': row[34].strip(),
                   'prod_veg_an': row[35].strip(),
-                  'prod_veg_pre': row[36].strip(),                  
+                  'prod_veg_pre': row[36].strip(),
                   'prod_ani': row[37].strip(),
                   'facon_culturale': row[38].strip(), # AM
                   'fertilisation': row[39].strip(), # AN
@@ -333,7 +337,10 @@ def iline(row, i, projet_id, project_code):
                   }
     bloc.properties_text = properties
     bloc.save()
-                                                 
-    proj = Projet.objects.get(pk=projet_id)
-    site.projets.add(proj)
+
+    # Ajout aux projets
+    for proj in projets:
+        proj = Projet.objects.get(pk=proj)
+        bloc.projets.add(proj)
+
     return res

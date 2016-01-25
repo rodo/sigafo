@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}{% load crispy_forms_tags %}
+{% block content %}
+<div class="row">    
+  <div class="col-md-8">
+
+
+    {{ form.non_field_errors }}
+    {{ form.field_errors }}
+    {{ form.errors }}
+
+    
+    {% crispy form %}
+  </div>
+  
+  <div class="col-md-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">{% trans "New parcel" %}</div>
+      <div class="panel-body">Création d'une nouvelle parcelle.</div>
+    </div>
+    <div class="panel panel-info">
+      <div class="panel-heading">{% trans "Contact" %}</div>
+      <div class="panel-body">
+        <a href="{% url 'parcel_new' %}" class="btn btn-primary btn-block">{% trans "Ajout comme propriétaire" %}</a>               
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

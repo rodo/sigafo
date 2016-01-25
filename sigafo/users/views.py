@@ -20,6 +20,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from sigafo.projet.models import Projet
+from sigafo.parc.models import Parcel, Site
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,14 @@ def profile(request):
     """
     projets = Projet.objects.filter(users__in=[request.user.id])    
 
+    
+    nb_parcel = Parcel.objects.all().count()
+    nb_site = Site.objects.all().count()
+
+
     return render(request,
                   'profile.html',
                   {'my_projects': projets,
-                   'user': request.user})
+                   'user': request.user,
+                   'nb_parcel': nb_parcel,
+                   'nb_site': nb_site})
