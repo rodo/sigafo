@@ -35,10 +35,26 @@ function map_init_map (map, mapid) {
 	    datas.forEach(function(parcel) {
 
 		if (parcel.geometry != null ){
-		    var marker = L.marker(new L.LatLng(parcel.geometry.coordinates[1],
-						                       parcel.geometry.coordinates[0]), { title: parcel.properties.title });
 
-            var popup = "<h3>"+parcel.properties.name+"</h3>";
+            var markurl = "http://www.agforward.eu/files/agforward/css/images/People.png";
+
+            var greenIcon = L.icon({
+                iconUrl: markurl,
+
+                iconSize:     [32, 32], // size of the icon
+                iconAnchor:   [16, 31], // point of the icon which will correspond to marker's location
+                popupAnchor:  [-3, -16] // point from which the popup should open relative to the iconAnchor
+            });
+  
+		    var marker = L.marker(new L.LatLng(parcel.geometry.coordinates[1],
+						                       parcel.geometry.coordinates[0]), { title: parcel.properties.title, icon: greenIcon });
+
+
+            img = '<img src="'+parcel.properties.map_public_info.image+'"/>';
+
+            var popup = img;
+
+            popup = popup + "<h3>"+parcel.properties.name+"</h3>";
 
             //Stakeholder group: AGFORWARD UK Wood Pasture and Parkland Group
 
@@ -51,9 +67,6 @@ function map_init_map (map, mapid) {
             popup = popup + ', '+ parcel.properties.map_public_info.longitude+'</div>';
 
             popup = popup + '<div>Website with further details: <a href="'+parcel.properties.map_public_info.url+'">url</a></div>';
-
-
-
 
             marker.bindPopup(popup);
 		    markers.addLayer(marker);

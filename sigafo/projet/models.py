@@ -36,22 +36,27 @@ class Thematique(models.Model):
         return "%s" % (self.name)
 
 
-
 class Projet(models.Model):
     """Projet
     """
     name = models.CharField(max_length=50)
 
     # est-ce un projet de recherche
-    taxon = models.IntegerField(choices=((1,'Research'), (2, 'Territory'), (3, 'Formation')))
+    taxon = models.IntegerField(choices=((1,'Research'),
+                                         (2, 'Territory'),
+                                         (3, 'Formation')))
 
     annee_debut = models.IntegerField(blank=True, null=True)
     annee_fin = models.IntegerField(blank=True, null=True)
 
-    referent_interne = models.ForeignKey(User, blank=True, null=True)
+    referent_interne = models.ForeignKey(User,
+                                         blank=True,
+                                         null=True)
 
     objectifs = models.TextField(blank=True)
     description = models.TextField(blank=True)
+
+    code = models.CharField(max_length=50, db_index=True, unique=True)
 
     # personnes incluses dans le projet
     coordinators = models.ManyToManyField(Contact,
