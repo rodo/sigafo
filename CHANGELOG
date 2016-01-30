@@ -1,0 +1,3 @@
+
+	* contact_contact add fields properties json, map_public_info json
+	* alter contact_organismet alter name type varchar (150)

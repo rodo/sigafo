@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
-# Copyright (c) 2014 Agroof <http://www.agroof.net/>
+# Copyright (c) 2014-2016 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2014-2016 Agroof <http://www.agroof.net/>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ from sigafo.projet.models import Projet
 from sigafo.utils.models import GeoHStoreManager
 from random import random
 import reversion
-from json_field import JSONField
+from django_pgjson.fields import JsonField
 import json
 
 # Site
@@ -44,10 +44,12 @@ class Site(models.Model):
     exploitant = models.ForeignKey(Contact, related_name='exploitant', blank=True, null=True)
     urls = models.ManyToManyField(Url, blank=True)
     comment = models.TextField(blank=True)
-    properties = JSONField(blank=True, null=True)
+
+    #
+    properties = JsonField(blank=True, null=True)
 
     # public info to display set on the map
-    map_public_info = JSONField(blank=True, null=True)
+    map_public_info = JsonField(blank=True, null=True)
 
     # updated by trigger
     nb_parcel = models.IntegerField(default=0)
@@ -244,7 +246,10 @@ class Block(models.Model):
 
     date_debut = models.DateField(blank=True, null=True)
     date_fin = models.DateField(blank=True, null=True)
-    usage = models.CharField(max_length=300, blank=True) # referentiel
+
+    # usage
+    # referentiel
+    usage = models.CharField(max_length=300, blank=True) 
 
     projets = models.ManyToManyField(Projet, blank=True)
 
@@ -255,12 +260,25 @@ class Block(models.Model):
     import_initial = hstore.DictionaryField(db_index=True, blank=True, null=True)
 
     #
-    properties_text = JSONField(blank=True, null=True)
-    #
     topography = models.ForeignKey(refs.Topography, blank=True, null=True)
     classph    = models.ForeignKey(refs.ClassePH, blank=True, null=True)
     classprof  = models.ForeignKey(refs.ClasseProfondeur, blank=True, null=True)
     classhumid = models.ForeignKey(refs.ClasseHumidity, blank=True, null=True)
+
+    # Production vegetales perennes
+    prod_veg_per = models.TextField()
+
+    # Production animale
+    prod_animal = models.TextField()
+
+    #
+    properties = JsonField(blank=True, null=True)
+
+    # public info to display set on the map
+    map_public_info = JsonField(blank=True, null=True)
+
+    # nombre d'amenagement (mise à jour par Trigger)
+    nb_amg = models.IntegerField(default=0)
 
     objects = GeoHStoreManager()
 
@@ -331,5 +349,8 @@ class Observation(models.Model):
         """
         return reverse('block_detail', args=[self.block.id])
 
+
+
 #reversion.register(Parcel)
 #reversion.register(Block)
+

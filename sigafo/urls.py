@@ -80,7 +80,7 @@ urlpatterns = patterns(
                                                       geometry_field='approx_center'), name='parcel_geojson'),
     
     url(r'^block/$', parcviews.BlockList.as_view(model=Block), name='block_list'),
-    url(r'^block/(?P<pk>\d+)$', DetailProtected.as_view(model=Block), name='block_detail'),
+    url(r'^block/(?P<pk>\d+)$', parcviews.BlockDetail.as_view(), name='block_detail'),
     url(r'^block/(?P<pk>\d+)/import$', DetailProtected.as_view(model=Block,
                                                                template_name="parc/block_import.html"), name='block_import'),
     url(r'^block/(?P<pk>\d+)/edit$', parcviews.BlockEdit.as_view(), name='block_edit'),

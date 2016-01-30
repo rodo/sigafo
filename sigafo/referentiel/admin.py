@@ -30,3 +30,11 @@ admin.site.register(models.Texture)
 admin.site.register(models.ClassePH)
 admin.site.register(models.ClasseProfondeur)
 admin.site.register(models.ClasseHumidity)
+
+
+class AmEssenceAdmin(admin.ModelAdmin):
+    """Custom Admin for essences
+    """
+    ordering = ['name']
+
+admin.site.register(models.AmEssence, AmEssenceAdmin)

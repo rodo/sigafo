@@ -36,7 +36,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from sigafo.map.models import Map
 from sigafo.parc.models import Parcel, Block, Site, Observation
-from sigafo.agrof.models import Essence, Amenagement
+from sigafo.agrof.models import Amenagement
 from sigafo.contact.models import Contact
 from sigafo.projet.models import Projet
 from sigafo.referentiel import models as refs

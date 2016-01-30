@@ -4,5 +4,10 @@
  {"pk": 4, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie élevage"}},
  {"pk": 5, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie plantes aromatiques et médicinales"}},
  {"pk": 6, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie fruitière"}},
- {"pk": 7, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie industrielle"}}
+ {"pk": 7, "model": "referentiel.systemprod", "fields": {"name": "Agroforesterie industrielle"}},
+ {"pk": 1, "model": "referentiel.amessence", "fields": {"name": "Paulownia Tomentosa"}},
+ {"pk": 2, "model": "referentiel.amessence", "fields": {"name": "Cormier"}},
+ {"pk": 3, "model": "referentiel.amessence", "fields": {"name": "Noyer greffe"}},
+ {"pk": 4, "model": "referentiel.amessence", "fields": {"name": "Noyer hybride"}},
+ {"pk": 5, "model": "referentiel.amessence", "fields": {"name": "Merisier"}} 
 ]

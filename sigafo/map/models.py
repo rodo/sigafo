@@ -60,7 +60,7 @@ class Map(models.Model):
 
     # is the map published or not
     published = models.BooleanField(default=False)
-    
+
     # public_map : the geojson is open to everybody
     public_map = models.BooleanField(default=False)
 
@@ -68,7 +68,9 @@ class Map(models.Model):
     properties = models.ManyToManyField(ModelProperty, blank=True)
 
     # properties available/displayed on map
-    static_properties = hstore.DictionaryField(db_index=True, blank=True, null=True)
+    static_properties = hstore.DictionaryField(db_index=True,
+                                               blank=True,
+                                               null=True)
 
     # who create the map
     creator = models.ForeignKey(User)
@@ -94,4 +96,3 @@ class Map(models.Model):
     @property
     def center_lon(self):
         return self.center.x
-

@@ -188,3 +188,114 @@ class ElmtsPaysage(models.Model):
         """The unicode method
         """
         return "%s" % (self.name)
+
+
+class AmNature(models.Model):
+    """ Aménagements
+
+    Nature de l'aménagement
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class AmObjectifInit(models.Model):
+    """ Aménagements
+
+    Objectif de l'aménagement
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+class AmEssence(models.Model):
+    """ Aménagements
+
+    Essence de l'aménagement
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class AmConduite(models.Model):
+    """ Aménagements
+
+    Conduite de l'aménagement
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class AmProtection(models.Model):
+    """ Aménagements
+
+    Protection de l'aménagement
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class AmPaillage(models.Model):
+    """ Aménagements
+
+    Paillage de l'aménagement
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class AmGestionbe(models.Model):
+    """ Aménagements
+
+    Gestionbe de la bande enherbée
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+class AmNaturebe(models.Model):
+    """ Aménagements
+
+    Nature de la bande enherbée
+
+    """
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
