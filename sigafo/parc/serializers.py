@@ -30,3 +30,9 @@ class ParcelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Parcel
+
+
+class BlockSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Block

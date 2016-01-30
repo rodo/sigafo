@@ -19,7 +19,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from json_field import JSONField
+from django_pgjson.fields import JsonField
 import json
 
 
@@ -65,10 +65,10 @@ class Contact(models.Model):
 
     user = models.ForeignKey(User, blank=True, null=True)
 
-    properties = JSONField(blank=True, null=True)
+    properties = JsonField(blank=True, null=True)
 
     # public info to display set on the map
-    map_public_info = JSONField(blank=True, null=True)
+    map_public_info = JsonField(blank=True, null=True)
 
     class Meta:
         ordering = ['lastname', 'firstname']

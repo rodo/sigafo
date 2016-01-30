@@ -3,5 +3,8 @@
  {"pk": 3, "model": "map.modelproperty", "fields": {"model": "Site", "key": "nb_block", "name": "Nb of blocks"}},
  {"pk": 4, "model": "map.modelproperty", "fields": {"model": "Site", "key": "nb_parcel", "name": "Nb of parcels"}},
  {"pk": 5, "model": "map.modelproperty", "fields": {"model": "Site", "key": "name", "name": "name"}},
- {"pk": 6, "model": "map.modelproperty", "fields": {"model": "Parcel", "key": "anonymous_title", "name": "anonymous title"}}
+ {"pk": 6, "model": "map.modelproperty", "fields": {"model": "Parcel", "key": "anonymous_title", "name": "anonymous title"}},
+ {"pk": 7, "model": "map.modelproperty", "fields": {"model": "Block", "key": "map_public_info", "name": "Informations publiques"}},
+ {"pk": 8, "model": "map.modelproperty", "fields": {"model": "Parcel", "key": "map_public_info", "name": "Informations publiques"}},
+ {"pk": 9, "model": "map.modelproperty", "fields": {"model": "Site", "key": "map_public_info", "name": "Informations publiques"}}
 ]

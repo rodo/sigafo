@@ -16,11 +16,7 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 from django.contrib import admin
-from .models import Essence, Indicator, Measure, Amenagement
-
-
-class EssenceAdmin(admin.ModelAdmin):
-    pass
+from .models import Indicator, Measure, Amenagement
 
 
 class IndicatorAdmin(admin.ModelAdmin):
@@ -35,7 +31,6 @@ class AmenagementAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(Essence, EssenceAdmin)
 admin.site.register(Indicator, IndicatorAdmin)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(Amenagement, AmenagementAdmin)

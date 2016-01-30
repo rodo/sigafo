@@ -45,44 +45,60 @@
 </div>
 
 <div class="col-md-7">
+    <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>{% trans "Amenagements" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for amg in amgs %}
+      <tr>
+        <td>
+          <span class="badge">{{obs.author}}</span> {{amg.name}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   <table class="table table-condensed">
     <thead>
-	  <tr>
-	    <th>{% trans "Observations" %}</th>
-	  </tr>
+      <tr>
+        <th>{% trans "Observations" %}</th>
+      </tr>
     </thead>
     <tbody>
       {% for obs in object.get_observations %}
       <tr>
         <td>
-          <span class="badge">{{obs.author}}</span> {{obs.observation}}        
+          <span class="badge">{{obs.author}}</span> {{obs.observation}}
         </td>
       </tr>
-	  {% endfor %}
+      {% endfor %}
     </tbody>
   </table>
-  
+
 </div>
 
 <div class="col-md-2">
   <div>
     <table class="table table-striped">
-	  <thead>
-	    <tr>
-	      <th>{% trans "Projects" %}</th>
-	    </tr>
-	  </thead>
+      <thead>
+        <tr>
+          <th>{% trans "Projects" %}</th>
+        </tr>
+      </thead>
       <tbody>
         {% for projet in object.projets.all %}
         <tr>
-	      <td><a href="{% url 'projet_detail' pk=projet.id %}">{{projet.name}}</a></td>
-	    </tr>
-	    {% endfor %}
+          <td><a href="{% url 'projet_detail' pk=projet.id %}">{{projet.name}}</a></td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
 
 
   </div>
-  
+
 </div>
 {% endblock %}

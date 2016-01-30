@@ -26,7 +26,7 @@ from django.views.generic import CreateView, UpdateView
 from django.contrib.gis.shortcuts import render_to_kml
 from django.http import HttpResponse
 from djgeojson.views import GeoJSONLayerView
-from sigafo.parc.models import Parcel
+from sigafo.parc.models import Parcel, Block
 from sigafo.parc.models import Site
 from sigafo.map.models import Map
 from sigafo.utils.view_mixins import ProtectedMixin
@@ -56,6 +56,20 @@ class MapDetail(GeoJSONLayerView):
         super(MapDetail, self).get_queryset()
         qsp = Map.objects.get(pk=self.kwargs['pk'])
         self.properties = [prop.key for prop in qsp.properties.all()]
+
+        if qsp.model == 'Block':
+            sql = """WITH projets AS (
+            SELECT projet_id FROM map_map_projets
+            WHERE map_id = {0}
+            )
+            SELECT parc_block.id FROM parc_block_projets, parc_block
+            WHERE parc_block_projets.block_id= parc_block.id
+            AND projet_id IN (SELECT projet_id FROM projets);
+            """.format(self.kwargs['pk'])
+
+            ids = [p.id for p in Block.objects.raw(sql)]
+            features = Block.objects.filter(pk__in=ids)
+
         if qsp.model == 'Parcel':
             sql = """WITH projets AS (
             SELECT projet_id FROM map_map_projets
@@ -150,6 +164,10 @@ def map_jsonp(request, pk):
     """Export datas in jsonp
     """
     map = Map.objects.get(pk=pk)
+
+    if map.model == 'Block':
+        view = MapDetail(model=Block,kwargs={'pk': pk})
+
     if map.model == 'Parcel':
         view = MapDetail(model=Parcel,kwargs={'pk': pk})
         view.object_list = [Parcel.objects.get(pk=pk)]

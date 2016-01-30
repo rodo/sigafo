@@ -20,53 +20,89 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from sigafo.parc.models import Block
+from sigafo.referentiel import models as refs
+from django_pgjson.fields import JsonField
+import json
 
 
-class Essence(models.Model):
-    """Essence d'arbre
-    """
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """
-        The unicode method
-        """
-        return "%s" % (self.name)
-
-
+# Aménagement
 class Amenagement(models.Model):
     """
+    Un aménagement est dans un block
     """
-    blocks = models.ManyToManyField(Block)
-
-    annee_debut = models.IntegerField(blank=True, null=True)
-    annee_fin = models.IntegerField(blank=True, null=True)
-
-    localisation = models.IntegerField(choices=((1, 'intraparcellaire'),
-                                                 (2, 'périphérique')))
-
-    #nature= models.ManyToManyField(Essence, blank=True)
-
-    proportion_bloc = models.IntegerField(blank=True, null=True)
+    block = models.ForeignKey(Block)
     
     name = models.CharField(max_length=300)
-    essences = models.ManyToManyField(Essence, blank=True)
 
-    # distance entre les arbres sur la ligne
-    online_distance = models.FloatField(blank=True, null=True)
+    date_debut = models.DateField(blank=True, null=True)
+    date_fin = models.DateField(blank=True, null=True)
+
+    localisation = models.IntegerField(blank=True, null=True,
+                                       choices=((0, 'intra'),
+                                                (1, 'periph')))
+
+    nature = models.ForeignKey(refs.AmNature, blank=True, null=True)
+
+    quality = models.IntegerField(blank=True, null=True,
+                                  choices=((0, 'faible'),
+                                           (1, 'moyenne'),
+                                           (2, 'bonne')))
+
+    proportion = models.IntegerField(blank=True, null=True)
+
+    objectifs = models.ManyToManyField(refs.AmObjectifInit, blank = True)
+
+    essences = models.ManyToManyField(refs.AmEssence, blank = True)
+
+    conduites = models.ManyToManyField(refs.AmConduite, blank = True)    
+
+    # année de plantation
+    annee_plan = models.IntegerField(blank=True, null=True)
+
+    # largeur de bande
+    larg_band = models.IntegerField(blank=True, null=True)
+
+    # lineaire de haie
+    lin_haie = models.IntegerField(blank=True, null=True)
+
+    # densité
+    density = models.IntegerField(blank=True, null=True)
+
+    # distance sur la ligne
+    dist_on_line = models.IntegerField(blank=True, null=True)
 
     # distance entre les lignes
-    line_spacing = models.FloatField(blank=True, null=True)
+    dist_inter_line = models.IntegerField(blank=True, null=True)
 
-    # Commentaires divers
-    comment = models.TextField(blank=True)
+    # distance entre les lignes de taillis
+    dist_inter_taillis = models.IntegerField(blank=True, null=True)
 
-    def __unicode__(self):
-        """
-        The unicode method
-        """
-        return "%s" % (self.name)
+    # Largeur tournières
+    larg_tourn = models.IntegerField(blank=True, null=True)
+
+    # Protections
+    protections = models.ManyToManyField(refs.AmProtection, blank=True)    
+
+    # Paillage
+    protections = models.ManyToManyField(refs.AmPaillage, blank=True)    
+
+    # commentaires sur les arbres
+    comm_arbre = models.TextField(blank=True, null=True)    
+
+    # Nature de la bande enherbée
+    nature_be = models.ForeignKey(refs.AmNaturebe, blank=True, null=True)    
+
+    # Gestion de la bande enherbée
+    gestion_be = models.ManyToManyField(refs.AmGestionbe, blank=True)    
+
+    # commentaires sur la bande enherbée
+    comm_be = models.TextField(blank=True, null=True)    
+
+    #
+    properties = JsonField(blank=True, null=True)
+
+    #
+    map_public_info = JsonField(blank=True, null=True)
 
 
 class Indicator(models.Model):

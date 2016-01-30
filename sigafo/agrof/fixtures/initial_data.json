@@ -1,5 +1,0 @@
-[{"pk": 1, "model": "agrof.essence", "fields": {"name": "Paulownia Tomentosa"}},
- {"pk": 2, "model": "agrof.essence", "fields": {"name": "Cormier"}},
- {"pk": 3, "model": "agrof.essence", "fields": {"name": "Noyer greffe"}},
- {"pk": 4, "model": "agrof.essence", "fields": {"name": "Noyer hybride"}}
-]
