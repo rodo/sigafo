@@ -13,6 +13,7 @@ json_build_object(
     'dist_on_line', NEW.dist_on_line,
     'density', NEW.density
     );
+
 NEW.map_public_info = NEW.properties;
 
   RETURN NEW;

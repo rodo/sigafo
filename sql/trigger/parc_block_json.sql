@@ -16,6 +16,13 @@ BEGIN
         ('{"parcel":' || (SELECT map_public_info FROM parc_parcel WHERE id=NEW.parcel_id) || '}')::json,
         NEW.properties);
 
+    NEW.map_public_info = json_append(
+        ('{"amenagements": ' ||
+            (SELECT array_to_json(array_agg(map_public_info))
+            FROM agrof_amenagement WHERE block_id=NEW.id) || '}')::json,
+        NEW.map_public_info);
+
+
   RETURN NEW;
 END;
 $parc_block_json$ LANGUAGE plpgsql;

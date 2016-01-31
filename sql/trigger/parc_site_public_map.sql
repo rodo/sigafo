@@ -5,8 +5,11 @@ CREATE OR REPLACE FUNCTION parc_site_public_map()
     RETURNS trigger AS $parc_site_public_map$
 BEGIN
 
-NEW.map_public_info = NEW.properties;
-
+NEW.map_public_info =
+json_build_object(
+    'name', NEW.name,
+    'town', NEW.properties->'town'::text
+   );
 
   RETURN NEW;
 END;

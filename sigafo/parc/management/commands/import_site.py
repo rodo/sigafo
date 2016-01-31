@@ -146,8 +146,7 @@ def iline(row, i, projet_id, project_code):
     except:
         print "Parsing error line %d : %s"% (i, row[0])
 
-
-    # filtre sur la colonne projet AR
+    # filtre sur la colonne projet AR des blocs
     projs = row[43].strip().split(';')
     cprojs = [f.strip() for f in projs]
     for proj in cprojs:
@@ -196,6 +195,8 @@ def iline(row, i, projet_id, project_code):
 
     print 'lat : %s, lon: %s' % (lat, lon)
 
+    commune = row[4].strip()
+
     wp = row[12].strip()
     url = row[13].strip()
     quality = row[3].strip()
@@ -224,7 +225,11 @@ def iline(row, i, projet_id, project_code):
 
     (site, created) = Site.objects.get_or_create(name=site_nom,
                                                  center = Point(lon, lat))
-    if created:
+
+    if len(commune):
+        site.commune = commune
+    
+    if created:        
         site.properties=proper
         site.save()
 
@@ -372,9 +377,6 @@ def iline(row, i, projet_id, project_code):
             (conduite, created) = refs.ModeConduite.objects.get_or_create(name=tilg.capitalize())
             bloc.conduites.add(conduite)
     #
-
-
-
 
     bloc.properties = properties
     bloc.save()
