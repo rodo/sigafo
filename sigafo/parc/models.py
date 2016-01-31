@@ -167,6 +167,13 @@ class Parcel(models.Model):
                                        blank=True,
                                        null=True)
 
+    # properties
+    properties = JsonField(blank=True, null=True)
+
+    # public info to display set on the map
+    map_public_info = JsonField(blank=True, null=True)
+
+
     # who create the map
     creator = models.ForeignKey(User)
 

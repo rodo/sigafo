@@ -12,7 +12,9 @@ BEGIN
 --   'date_start', NEW.date_debut
 --    );
 
-NEW.map_public_info = NEW.properties;
+    NEW.map_public_info = json_append(
+        ('{"parcel":' || (SELECT map_public_info FROM parc_parcel WHERE id=NEW.parcel_id) || '}')::json,
+        NEW.properties);
 
   RETURN NEW;
 END;
