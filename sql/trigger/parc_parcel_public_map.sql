@@ -8,7 +8,7 @@ BEGIN
 NEW.properties =
 json_build_object(
     'name', NEW.name,
-    'center', NEW.center,
+    'center', ('{"geometry":' || ST_AsGeoJSON(NEW.center) || '}')::json,
     'experimental', NEW.experimental,
     'surface', NEW.surface
    );
