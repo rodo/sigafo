@@ -1,16 +1,16 @@
 --
---
+-- TODO 
 --
 CREATE OR REPLACE FUNCTION parc_block_json()
     RETURNS trigger AS $parc_block_json$
 BEGIN
 
 
-NEW.properties =
-json_build_object(
-    'surface', NEW.surface,
-    'date_start', NEW.date_debut
-    );
+--NEW.properties =
+--json_build_object(
+--    'surface', NEW.surface,
+--   'date_start', NEW.date_debut
+--    );
 
 NEW.map_public_info = NEW.properties;
 
