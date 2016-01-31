@@ -13,9 +13,12 @@ json_build_object(
     'surface', NEW.surface
    );
 
-NEW.map_public_info = NEW.properties;
+NEW.map_public_info = json_append(
+    ('{"site":' || (SELECT map_public_info FROM parc_site WHERE id=NEW.site_id) || '}')::json,
+    NEW.properties);
 
-  RETURN NEW;
+RETURN NEW;
+
 END;
 $parc_parcel_json$ LANGUAGE plpgsql;
 

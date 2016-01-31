@@ -40,8 +40,16 @@ class Site(models.Model):
     """
     name = models.CharField(max_length=300)
     address = models.TextField(blank=True)
+
+    commune = models.TextField(blank=True,
+                               null=True)
+    
     owner = models.ForeignKey(Contact, related_name='owner', blank=True, null=True)
-    exploitant = models.ForeignKey(Contact, related_name='exploitant', blank=True, null=True)
+
+    exploitant = models.ForeignKey(Contact,
+                                   related_name='exploitant',
+                                   blank=True, null=True)
+    
     urls = models.ManyToManyField(Url, blank=True)
     comment = models.TextField(blank=True)
 
