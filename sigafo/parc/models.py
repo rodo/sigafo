@@ -58,7 +58,7 @@ class Site(models.Model):
 
     # Needed for some map, may be null
     projets = models.ManyToManyField(Projet, blank=True)
-    
+
     center = models.PointField(blank=True, null=True)
     objects = models.GeoManager()
 
@@ -139,13 +139,17 @@ class Parcel(models.Model):
     # in ha
     surface = models.FloatField(blank=True, null=True)
 
-    # 
+    #
     systemprod = models.ForeignKey(refs.SystemProd,
                                    blank=True,
                                    null=True)
 
     # in ha
     altitude = models.FloatField(blank=True, null=True)
+
+    # dispositifs experimental
+    experimental_devices = models.ManyToManyField(refs.ExperimentalDevice,
+                                                  blank=True)
 
     # in ha
     experimental = models.BooleanField(default=False)
@@ -165,7 +169,7 @@ class Parcel(models.Model):
 
     # who create the map
     creator = models.ForeignKey(User)
-    
+
     comment = models.TextField(blank=True)
     objects = GeoHStoreManager()
 
@@ -237,9 +241,9 @@ class Block(models.Model):
     """
     parcel = models.ForeignKey(Parcel,
                                on_delete=models.PROTECT)
-    
+
     name = models.CharField(max_length=300)
-    
+
     surface = models.FloatField(blank=True, null=True)
 
     center = models.PointField(blank=True, null=True)
@@ -249,7 +253,7 @@ class Block(models.Model):
 
     # usage
     # referentiel
-    usage = models.CharField(max_length=300, blank=True) 
+    usage = models.CharField(max_length=300, blank=True)
 
     projets = models.ManyToManyField(Projet, blank=True)
 
@@ -275,20 +279,20 @@ class Block(models.Model):
     prod_animal = models.TextField()
 
     # Façon culturale
-    tillage = models.ManyToManyField(refs.Tillage,
-                                     blank=True)
+    tillages = models.ManyToManyField(refs.Tillage,
+                                      blank=True)
 
     # Fertilisation
-    fertilisation = models.ManyToManyField(refs.Fertilisation,
-                                           blank=True)
+    fertilisations = models.ManyToManyField(refs.Fertilisation,
+                                            blank=True)
 
     # Traitement phytosanitaire
-    traitphyto = models.ManyToManyField(refs.TraitPhyto,
-                                        blank=True)
+    traitphytos = models.ManyToManyField(refs.TraitPhyto,
+                                         blank=True)
 
     # Mode de conduite
-    conduite = models.ManyToManyField(refs.ModeConduite,
-                                      blank=True)
+    conduites = models.ManyToManyField(refs.ModeConduite,
+                                       blank=True)
 
 
     #
@@ -373,4 +377,3 @@ class Observation(models.Model):
 
 #reversion.register(Parcel)
 #reversion.register(Block)
-

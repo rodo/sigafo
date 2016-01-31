@@ -151,6 +151,19 @@ class Texture(models.Model):
         return "%s" % (self.name)
 
 
+class ExperimentalDevice(models.Model):
+    """
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
 class ClassePH(models.Model):
     """
     """

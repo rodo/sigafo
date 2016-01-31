@@ -238,26 +238,20 @@ def iline(row, i, projet_id, project_code):
     #
     # Parcelles
     # G  6 Nom
+    parcel_nom = row[6].strip()
+
+    if parcel_nom == "":
+        parcel_nom = "Parcelle sans nom"
+
     # H  7
     # I  8
     # J  9
     # K 10
     # L 11 System Prod
+    systemprod = row[11].strip()
     # M 12
     # N 13
     # O 14 - Coord GPS
-    # P 15
-    # Q 16 - Expe
-    # R 17
-    # S 18
-    # T 19
-    # U 20
-    parcel_nom = row[6].strip()
-
-    if parcel_nom == "":
-        parcel_nom = "Sans nom"
-
-
     coord = row[14].strip()
     slat = unicode(coord.split(',')[0],"UTF-8")
     slat = slat.replace(u"\xc2\xa0", " ")
@@ -266,10 +260,31 @@ def iline(row, i, projet_id, project_code):
     slon = slon.replace(u"\xc2\xa0", " ")
     lon = float(slon)
 
-    (parcel, created) = Parcel.objects.get_or_create(name=parcel_nom,
-                                                     site=site,
-                                                     center = Point(lon, lat),
-                                                     creator=User.objects.get(pk=1))
+    (parcel, created) = Parcel.objects.get_or_create(
+        name=parcel_nom,
+        site=site,
+        center = Point(lon, lat),
+        creator=User.objects.get(pk=1))
+
+    if len(systemprod) > 0 and len(systemprod) < 301:
+        (obj, created) = refs.SystemProd.objects.get_or_create(name=systemprod.capitalize())
+        parcel.systemprod = obj
+
+
+    # P 15
+    # Q 16 - Expe
+    # R 17
+    # S 18 - Dispositif experimental
+    expedevs = [e.strip() for e in (row[18].strip()).split(';')]
+    for tilg in expedevs:
+        if len(tilg) > 0 and len(tilg) < 301:
+            (expedev, created) = refs.ExperimentalDevice.objects.get_or_create(name=tilg.capitalize())
+            parcel.experimental_devices.add(expedev)
+    #
+
+
+    # T 19
+    # U 20
 
     parcel_system_prod = row[11].strip()
     if len(parcel_system_prod) > 0:
@@ -327,15 +342,41 @@ def iline(row, i, projet_id, project_code):
                   'drainage': row[33].strip(),
                   'irrigation': row[34].strip(),
                   'prod_veg_an': row[35].strip(),
-                  'prod_veg_pre': row[36].strip(),
-                  'prod_ani': row[37].strip(),
+                  'prod_veg_per': row[36].strip(),
+                  'prod_animal': row[37].strip(),
                   'facon_culturale': row[38].strip(), # AM
                   'fertilisation': row[39].strip(), # AN
                   'traitement_phyto': row[40].strip(), # AO
                   'mode_conduite': row[41].strip(), # AP
                   'projets': row[43].strip(), # AR
+                  'image_url': row[45].strip(), # AT
+                  'icon_url': row[47].strip(), # AV
                   }
-    bloc.properties_text = properties
+
+    bloc.prod_veg_an = row[35].strip()
+    bloc.prod_veg_per = row[36].strip()
+    bloc.prod_animal = row[37].strip()
+
+    # Façons culturales / Tillage
+    tillages = [e.strip() for e in (row[38].strip()).split(';')]
+    for tilg in tillages:
+        if len(tilg):
+            (tillage, created) = refs.Tillage.objects.get_or_create(name=tilg.capitalize())
+            bloc.tillages.add(tillage)
+    #
+
+    # Mode de conduites
+    conduites = [e.strip() for e in (row[41].strip()).split(';')]
+    for tilg in conduites:
+        if len(tilg):
+            (conduite, created) = refs.ModeConduite.objects.get_or_create(name=tilg.capitalize())
+            bloc.conduites.add(conduite)
+    #
+
+
+
+
+    bloc.properties = properties
     bloc.save()
 
     # Ajout aux projets
