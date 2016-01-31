@@ -265,11 +265,31 @@ class Block(models.Model):
     classprof  = models.ForeignKey(refs.ClasseProfondeur, blank=True, null=True)
     classhumid = models.ForeignKey(refs.ClasseHumidity, blank=True, null=True)
 
+    # Production vegetales annuelles
+    prod_veg_an = models.TextField()
+
     # Production vegetales perennes
     prod_veg_per = models.TextField()
 
     # Production animale
     prod_animal = models.TextField()
+
+    # Façon culturale
+    tillage = models.ManyToManyField(refs.Tillage,
+                                     blank=True)
+
+    # Fertilisation
+    fertilisation = models.ManyToManyField(refs.Fertilisation,
+                                           blank=True)
+
+    # Traitement phytosanitaire
+    traitphyto = models.ManyToManyField(refs.TraitPhyto,
+                                        blank=True)
+
+    # Mode de conduite
+    conduite = models.ManyToManyField(refs.ModeConduite,
+                                      blank=True)
+
 
     #
     properties = JsonField(blank=True, null=True)

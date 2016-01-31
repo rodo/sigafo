@@ -20,12 +20,49 @@
 #
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
+from rest_framework import serializers
+from rest_framework import permissions
+from rest_framework import viewsets
 from sigafo.referentiel import models
 from sigafo.referentiel import serializers
 from sigafo.utils.view_mixins import APICacheMixin
 
 
-class TopographyList(APICacheMixin, generics.ListAPIView):
+class ApiV1Views(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    paginate_by = 10
+
+
+class AmEssenceViewSet(ApiV1Views):
+    queryset = models.AmEssence.objects.all()
+    serializer_class = serializers.AmEssenceSerializer
+
+
+class AmConduiteViewSet(ApiV1Views):
+    queryset = models.AmConduite.objects.all()
+    serializer_class = serializers.AmConduiteSerializer
+
+
+class AmNatureViewSet(ApiV1Views):
+    queryset = models.AmNature.objects.all()
+    serializer_class = serializers.AmNatureSerializer
+
+
+class AmObjectifInitViewSet(ApiV1Views):
+    queryset = models.AmObjectifInit.objects.all()
+    serializer_class = serializers.AmObjectifInitSerializer
+
+
+class AmNaturebeViewSet(ApiV1Views):
+    queryset = models.AmNaturebe.objects.all()
+    serializer_class = serializers.AmNaturebeSerializer
+
+
+class AmGestionbeViewSet(ApiV1Views):
+    queryset = models.AmGestionbe.objects.all()
+    serializer_class = serializers.AmGestionbeSerializer
+
+
+class TopographyViewSet(ApiV1Views):
     queryset = models.Topography.objects.all()
     serializer_class = serializers.TopographySerializer
-    paginate_by = 100

@@ -24,6 +24,7 @@ from uuidfield import UUIDField
 class SystemProd(models.Model):
     """Systeme de production agroforestier
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -84,6 +85,44 @@ class Tillage(models.Model):
         """
         return "%s" % (self.name)
 
+
+class Fertilisation(models.Model):
+    """Fertilisation
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class TraitPhyto(models.Model):
+    """Traitement phytosanitaire
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
+
+
+class ModeConduite(models.Model):
+    """Mode de consuite des blocs
+    """
+    uuid = UUIDField(auto=True)
+    name = models.CharField(max_length=300)
+    comment = models.TextField(blank=True)
+
+    def __unicode__(self):
+        """The unicode method
+        """
+        return "%s" % (self.name)
 
 
 class Topography(models.Model):
@@ -195,6 +234,7 @@ class AmNature(models.Model):
 
     Nature de l'aménagement
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -209,6 +249,7 @@ class AmObjectifInit(models.Model):
 
     Objectif de l'aménagement
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -222,6 +263,7 @@ class AmEssence(models.Model):
 
     Essence de l'aménagement
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -236,6 +278,7 @@ class AmConduite(models.Model):
 
     Conduite de l'aménagement
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -250,6 +293,7 @@ class AmProtection(models.Model):
 
     Protection de l'aménagement
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -264,6 +308,7 @@ class AmPaillage(models.Model):
 
     Paillage de l'aménagement
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -276,8 +321,9 @@ class AmPaillage(models.Model):
 class AmGestionbe(models.Model):
     """ Aménagements
 
-    Gestionbe de la bande enherbée
+    Gestion de la bande enherbée
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 
@@ -292,6 +338,7 @@ class AmNaturebe(models.Model):
     Nature de la bande enherbée
 
     """
+    uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True)
 

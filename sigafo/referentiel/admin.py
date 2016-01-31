@@ -35,6 +35,7 @@ admin.site.register(models.ClasseHumidity)
 class AmEssenceAdmin(admin.ModelAdmin):
     """Custom Admin for essences
     """
+    read_only = ['uuid']
     ordering = ['name']
 
 admin.site.register(models.AmEssence, AmEssenceAdmin)

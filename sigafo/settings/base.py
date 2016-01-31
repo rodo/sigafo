@@ -226,3 +226,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 #
 LANGUAGES = (('en', 'English'),
              ('fr', 'French'))
+#
+#
+#
+REST_FRAMEWORK = {
+    'PAGE_SIZE': 10
+}

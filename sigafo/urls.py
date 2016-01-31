@@ -18,11 +18,33 @@ from sigafo.map import views as mapviews
 from sigafo.parc import views as parcviews
 from sigafo.contact import views as contactviews
 from sigafo.referentiel import views as refviews
+from sigafo.referentiel import models as modref
+
+from sigafo.referentiel import serializers as ref_ser
+
+from rest_framework import routers, serializers, viewsets
+from rest_framework import permissions
+
+    
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+
+router.register(r'essence', refviews.AmEssenceViewSet)
+router.register(r'nature', refviews.AmNatureViewSet)
+router.register(r'gestionbe', refviews.AmGestionbeViewSet)
+router.register(r'naturebe', refviews.AmNaturebeViewSet)
+router.register(r'objectifinit', refviews.AmObjectifInitViewSet)
+router.register(r'conduite', refviews.AmConduiteViewSet)
+router.register(r'topography', refviews.TopographyViewSet)
+
 
 admin.autodiscover()
 
 urlpatterns = patterns(
     '',
+    url(r'^api/v1/', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', HomepageView.as_view()),
     url(r'^search/', include('haystack.urls')),
@@ -93,7 +115,5 @@ urlpatterns = patterns(
     url(r'^project/new$', ListProtected.as_view(model=Projet), name='projet_new'),
     url(r'^accounts/profile/$', 'sigafo.users.views.profile', name='profile'),
     url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'^i18n/', include('django.conf.urls.i18n')),
-    
-    url(r'^referentiel/json/$', refviews.TopographyList.as_view(), name='referentiel_json'),
+    url(r'^i18n/', include('django.conf.urls.i18n')),    
 )

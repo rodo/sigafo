@@ -146,7 +146,7 @@ def iline(row, i):
     essences = [e.strip() for e in (row[10].strip()).split(';')]
     for ess in essences:
         if len(ess):
-            (essence, created) = refs.AmEssence.objects.get_or_create(name=ess)
+            (essence, created) = refs.AmEssence.objects.get_or_create(name=ess.capitalize())
             am.essences.add(essence)
 
 
@@ -154,7 +154,7 @@ def iline(row, i):
     conduites = [e.strip() for e in (row[11].strip()).split(';')]
     for cond in conduites:
         if len(cond):
-            (conduite, created) = refs.AmConduite.objects.get_or_create(name=cond)
+            (conduite, created) = refs.AmConduite.objects.get_or_create(name=cond.capitalize())
             am.conduites.add(conduite)
     #
 

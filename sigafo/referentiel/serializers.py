@@ -17,7 +17,57 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 from rest_framework import serializers
+from rest_framework import permissions
+from rest_framework import viewsets
+
 from sigafo.referentiel import models
+
+# Serializers define the API representation.
+class AmConduiteSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AmConduite
+        fields = ('uuid', 'name')
+
+
+class AmEssenceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AmEssence
+        fields = ('uuid', 'name')
+        
+
+class AmNatureSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AmNature
+        fields = ('uuid', 'name')
+
+
+class AmObjectifInitSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AmObjectifInit
+        fields = ('uuid', 'name')
+
+class AmProtectionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AmProtection
+        fields = ('uuid', 'name')
+
+
+class AmPaillageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AmPaillage
+        fields = ('uuid', 'name')
+        
+
+class AmGestionbeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AmGestionbe
+        fields = ('uuid', 'name')
+
+
+class AmNaturebeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AmNaturebe
+        fields = ('uuid', 'name')
 
 
 class TopographySerializer(serializers.ModelSerializer):
