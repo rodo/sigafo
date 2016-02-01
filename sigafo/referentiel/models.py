@@ -20,342 +20,145 @@
 from django.db import models
 from uuidfield import UUIDField
 
+class refModel(models.Model):
 
-class SystemProd(models.Model):
-    """Systeme de production agroforestier
-    """
     uuid = UUIDField(auto=True)    
     name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
+    comment = models.TextField(blank=True, null=True)
+    # technical field
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        abstract = True
 
     def __unicode__(self):
         """The unicode method
         """
         return "%s" % (self.name)
 
-
-class AnimalProduction(models.Model):
+class SystemProd(refModel):
     """Systeme de production agroforestier
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class VegetalProductionAnnual(models.Model):
+class AnimalProduction(refModel):
     """Systeme de production agroforestier
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class VegetalProductionPerennial(models.Model):
+class VegetalProductionAnnual(refModel):
     """Systeme de production agroforestier
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class Tillage(models.Model):
+class VegetalProductionPerennial(refModel):
+    """Systeme de production agroforestier
+    """
+
+class Tillage(refModel):
     """Façon culturales
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class Fertilisation(models.Model):
+class Fertilisation(refModel):
     """Fertilisation
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class TraitPhyto(models.Model):
+class TraitPhyto(refModel):
     """Traitement phytosanitaire
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class ModeConduite(models.Model):
+class ModeConduite(refModel):
     """Mode de consuite des blocs
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class Topography(models.Model):
+class Topography(refModel):
     """Systeme de production agroforestier
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class Texture(models.Model):
+class Texture(refModel):
     """
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class ExperimentalDevice(models.Model):
+class ExperimentalDevice(refModel):
     """
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class ClassePH(models.Model):
+class ClassePH(refModel):
     """
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class ClasseProfondeur(models.Model):
+class ClasseProfondeur(refModel):
     """
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class ClasseHumidity(models.Model):
+class ClasseHumidity(refModel):
     """
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class ExperimentalSubjects(models.Model):
+class ExperimentalSubjects(refModel):
     """Thèmes experimentaux
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class NatureBlock(models.Model):
+class NatureBlock(refModel):
     """Nature du bloc
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class ElmtsPaysage(models.Model):
+class ElmtsPaysage(refModel):
     """Elèments paysagers environnants
     """
-    uuid = UUIDField(auto=True)
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class AmNature(models.Model):
+class AmNature(refModel):
     """ Aménagements
 
     Nature de l'aménagement
     """
-    uuid = UUIDField(auto=True)    
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class AmObjectifInit(models.Model):
+class AmObjectifInit(refModel):
     """ Aménagements
 
     Objectif de l'aménagement
     """
-    uuid = UUIDField(auto=True)    
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-class AmEssence(models.Model):
+class AmEssence(refModel):
     """ Aménagements
 
     Essence de l'aménagement
     """
-    uuid = UUIDField(auto=True)    
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class AmConduite(models.Model):
+class AmConduite(refModel):
     """ Aménagements
 
     Conduite de l'aménagement
     """
-    uuid = UUIDField(auto=True)    
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class AmProtection(models.Model):
+class AmProtection(refModel):
     """ Aménagements
 
     Protection de l'aménagement
     """
-    uuid = UUIDField(auto=True)    
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
 
 
-class AmPaillage(models.Model):
+class AmPaillage(refModel):
     """ Aménagements
 
     Paillage de l'aménagement
     """
-    uuid = UUIDField(auto=True)    
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-
-class AmGestionbe(models.Model):
+class AmGestionbe(refModel):
     """ Aménagements
 
     Gestion de la bande enherbée
     """
-    uuid = UUIDField(auto=True)    
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
 
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)
-
-class AmNaturebe(models.Model):
+class AmNaturebe(refModel):
     """ Aménagements
 
     Nature de la bande enherbée
 
     """
-    uuid = UUIDField(auto=True)    
-    name = models.CharField(max_length=300)
-    comment = models.TextField(blank=True)
-
-    def __unicode__(self):
-        """The unicode method
-        """
-        return "%s" % (self.name)

@@ -19,6 +19,7 @@
 from django import forms
 from django.forms.widgets import Textarea, TextInput, Select, CheckboxInput, HiddenInput, RadioSelect
 from sigafo.parc import models
+from sigafo.referentiel import models as refs
 from sigafo.projet.models import Projet
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
@@ -38,16 +39,55 @@ class BlockForm(forms.ModelForm):
         model = models.Block
         # user will be set in views.ResumeNew
         # other fields will be set as model default
-        exclude = ('parcel', 'properties', 'variables', 'import_initial')
-      
+        exclude = ('parcel',
+                   'properties',
+                   'variables',
+                   'map_public_info',
+                   'import_initial',
+                   'nb_amg')
+
     name = forms.CharField(max_length=50,
                            required=True,
                            label=u"Name",
                            widget=TextInput(attrs=xlarge))
 
-    projets = forms.ModelMultipleChoiceField(required=False,
-                                             queryset=Projet.objects.all().order_by('name'))
+    projets = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=Projet.objects.all().order_by('name'))
+
+    surface = forms.CharField(required=False,
+                              label=u"Surface",
+                              widget=TextInput(attrs=large))
     
+
+    prod_veg_an = forms.CharField(max_length=500,
+                                  required=False,
+                                  label=u"Production végétale annuelle",
+                                  widget=TextInput(attrs=xlarge))
+
+    prod_veg_per = forms.CharField(max_length=500,
+                                   required=False,
+                                   label=u"Production végétale perenne",
+                                   widget=TextInput(attrs=large))
+
+    prod_animal = forms.CharField(max_length=500,
+                                  required=False,
+                                  label=u"Production animale",
+                                  widget=TextInput(attrs=large))
+
+    class_ph = forms.ModelChoiceField(required=False,
+                                      label=u"Classe PH",
+                                      queryset=refs.ClassePH.objects.all().order_by('name'))
+
+    class_prof = forms.ModelChoiceField(required=False,
+                                        label=u"Classe Profondeur",
+                                        queryset=refs.ClasseProfondeur.objects.all().order_by('name'))
+
+    class_humid = forms.ModelChoiceField(required=False,
+                                        label=u"Classe humidité",
+                                        queryset=refs.ClasseHumidity.objects.all().order_by('name'))
+
+
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.label_class = 'col-lg-2'
@@ -56,6 +96,12 @@ class BlockForm(forms.ModelForm):
         layout.Field('parcel'),
         layout.Field('name'),
         layout.Field('projets'),
+        layout.Field('prod_veg_an'),
+        layout.Field('prod_veg_per'),
+        layout.Field('prod_animal'),
+        layout.Field('class_ph'),
+        layout.Field('class_prof'),
+        layout.Field('class_humid'),        
 
         FormActions(
             layout.Submit('save_changes', 'Enregistrer', css_class="btn-primary"),
@@ -73,14 +119,14 @@ class ParcelForm(forms.ModelForm):
         # user will be set in views.ResumeNew
         # other fields will be set as model default
         exclude = ('nb_block', 'variables', 'center', 'polygon')
-      
+
     name = forms.CharField(max_length=50,
                            required=True,
                            label=u"Name",
                            widget=TextInput(attrs=xlarge))
 
 
-    
+
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.label_class = 'col-lg-2'

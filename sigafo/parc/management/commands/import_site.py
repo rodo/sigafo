@@ -348,7 +348,7 @@ def iline(row, i, projet_id, project_code):
                   'irrigation': row[34].strip(),
                   'prod_veg_an': row[35].strip(),
                   'prod_veg_per': row[36].strip(),
-                  'prod_animal': row[37].strip(),
+                  'prod_animal': row[37].strip(), 
                   'facon_culturale': row[38].strip(), # AM
                   'fertilisation': row[39].strip(), # AN
                   'traitement_phyto': row[40].strip(), # AO
@@ -357,6 +357,26 @@ def iline(row, i, projet_id, project_code):
                   'image_url': row[45].strip(), # AT
                   'icon_url': row[47].strip(), # AV
                   }
+
+    # AE
+    classe_ph = row[30].strip()
+    if len(classe_ph):
+        if (classe_ph != 'NR'):
+            (PH, created) = refs.ClassePH.objects.get_or_create(name=classe_ph)
+            bloc.classeph = PH
+    
+    classe_prof = row[31].strip()
+    if len(classe_prof):
+        if (classe_prof != 'NR'):
+            (PROF, created) = refs.ClasseProfondeur.objects.get_or_create(name=classe_prof)
+            bloc.classeprof = PROF
+
+    classe_humid = row[32].strip()
+    if len(classe_humid):
+        if (classe_humid != 'NR'):
+            (HUMID, created) = refs.ClasseHumidity.objects.get_or_create(name=classe_humid)
+            bloc.classehumidity = HUMID
+
 
     bloc.prod_veg_an = row[35].strip()
     bloc.prod_veg_per = row[36].strip()

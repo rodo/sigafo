@@ -43,15 +43,15 @@ class Site(models.Model):
 
     commune = models.TextField(blank=True,
                                null=True)
-    
+
     owner = models.ForeignKey(Contact, related_name='owner', blank=True, null=True)
 
     exploitant = models.ForeignKey(Contact,
                                    related_name='exploitant',
                                    blank=True, null=True)
-    
+
     urls = models.ManyToManyField(Url, blank=True)
-    comment = models.TextField(blank=True)
+    comment = models.TextField(blank=True, null=True)
 
     #
     properties = JsonField(blank=True, null=True)
@@ -185,7 +185,7 @@ class Parcel(models.Model):
     # who create the map
     creator = models.ForeignKey(User)
 
-    comment = models.TextField(blank=True)
+    comment = models.TextField(blank=True, null=True)
     objects = GeoHStoreManager()
 
 
@@ -272,26 +272,33 @@ class Block(models.Model):
 
     projets = models.ManyToManyField(Projet, blank=True)
 
-    urls = models.ManyToManyField(Url, blank=True)
+    urls = models.ManyToManyField(Url,
+                                  blank=True)
 
-    comment = models.TextField(blank=True)
+    comment = models.TextField(blank=True, null=True)
     variables = hstore.DictionaryField(db_index=True, blank=True, null=True)
     import_initial = hstore.DictionaryField(db_index=True, blank=True, null=True)
 
     #
-    topography = models.ForeignKey(refs.Topography, blank=True, null=True)
+    topography = models.ForeignKey(refs.Topography,
+                                   blank=True,
+                                   null=True)
+
     classph    = models.ForeignKey(refs.ClassePH, blank=True, null=True)
     classprof  = models.ForeignKey(refs.ClasseProfondeur, blank=True, null=True)
     classhumid = models.ForeignKey(refs.ClasseHumidity, blank=True, null=True)
 
     # Production vegetales annuelles
-    prod_veg_an = models.TextField()
+    prod_veg_an = models.TextField(blank=True,
+                                   null=True)
 
     # Production vegetales perennes
-    prod_veg_per = models.TextField()
+    prod_veg_per = models.TextField(blank=True,
+                                    null=True)
 
     # Production animale
-    prod_animal = models.TextField()
+    prod_animal = models.TextField(blank=True,
+                                   null=True)
 
     # Façon culturale
     tillages = models.ManyToManyField(refs.Tillage,
