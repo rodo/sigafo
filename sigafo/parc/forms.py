@@ -59,7 +59,6 @@ class BlockForm(forms.ModelForm):
                               label=u"Surface",
                               widget=TextInput(attrs=large))
     
-
     prod_veg_an = forms.CharField(max_length=500,
                                   required=False,
                                   label=u"Production végétale annuelle",

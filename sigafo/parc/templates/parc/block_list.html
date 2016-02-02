@@ -10,13 +10,16 @@
       <thead>
 	<tr>
 	  <th>{% trans "Name" %}</th>
-	  <th>{% trans "Surface" %}</th>
+      <th>{% trans "Surface" %}</th>
+      <th>{% trans "Amgnt" %}</th>
 	</tr>
       </thead>
       <tbody>
         {% for block in object_list %}
         <tr>
-          <td><a href="{{block.get_absolute_url}}">{{block.parcel.site.name}} {{block.name}}</a></td>
+          <td><a
+            href="{{block.get_absolute_url}}">{{block.parcel.site.name}}
+            - {{block.parcel.name}} - {{block.name}}</a></td>
           <td>{{block.surface}}</a></td>
           <td>{{block.nb_amg}}</a></td>          
         </tr>

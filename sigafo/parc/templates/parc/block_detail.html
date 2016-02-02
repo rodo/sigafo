@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% load leaflet_tags %}{% load geojson_tags %}
 {% load i18n %}{% load compress %}
 {% block title %} : {{object.name}}{% endblock %}
-{% block pagetitle %}{% trans "Alert" %} : {{object.name}}{% endblock %}
+{% block pagetitle %}{% trans "Bloc" %} : {{object.name}}{% endblock %}
 {% block rssnavbar %}<a href="events/feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
 {% block content %}
 <div class="row">
@@ -16,9 +16,11 @@
         {% trans "Parcel" %} : <a href="{{object.parcel.get_absolute_url}}">{{object.parcel.name}}</a>
       </li>
       <li>
-        {% trans "Exploitant" %} : <a href="{{object.parcel.site.exploitant.get_absolute_url}}">{{object.parcel.site.exploitant}}</a>
+      {% trans "Exploitant" %} :
+      <a href="{{object.parcel.site.exploitant.get_absolute_url}}">
+      {{object.parcel.site.exploitant|default:''}}</a>
       </li>
-      <li>{% trans "Surface" %} : {{object.surface}}</li>
+      <li>{% trans "Surface" %} : {{object.surface|default:''}}</li>
     </ul>
   </div>
   <div>
@@ -30,10 +32,10 @@
   </div>
   <div class="well wellul">
     <ul>
-      <li>{% trans "PH" %} : {{object.classph}}</li>
-      <li>{% trans "Humidity" %} : {{object.classhumid}}</li>
-      <li>{% trans "Profondeur" %} : {{object.classprof}}</li>
-      <li>{% trans "Texture" %} : {{object.texture}}</li>
+      <li>{% trans "PH" %} : {{object.classph|default:''}}</li>
+      <li>{% trans "Humidity" %} : {{object.classhumid|default:''}}</li>
+      <li>{% trans "Profondeur" %} : {{object.classprof|default:''}}</li>
+      <li>{% trans "Texture" %} : {{object.texture|default:''}}</li>
     </ul>
   </div>
 
@@ -45,6 +47,9 @@
 </div>
 
 <div class="col-md-7">
+
+  <div>{{object.prod_veg_an}}</div>
+  
     <table class="table table-condensed">
     <thead>
       <tr>
@@ -55,7 +60,11 @@
       {% for amg in amgs %}
       <tr>
         <td>
-          <span class="badge">{{obs.author}}</span> {{amg.name}}
+          <span>{{amg.name}}</span>
+          <span class="badge">{{amg.localisation}}</span>
+          <span class="badge">{{amg.quality}}</span>
+          <span class="badge">{{amg.proportion}}</span>
+          
         </td>
       </tr>
       {% endfor %}
@@ -81,7 +90,19 @@
 </div>
 
 <div class="col-md-2">
+
   <div>
+    {% if perms.parc.edit_block %}
+    <p>
+    <a href="{% url 'block_edit' pk=object.id %}" class="btn btn-primary btn-block">{% trans "Edit block" %}</a>
+    </p>
+    {% endif %}
+  </div>
+
+
+  
+<div>
+  
     <table class="table table-striped">
       <thead>
         <tr>

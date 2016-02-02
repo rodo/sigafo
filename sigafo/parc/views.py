@@ -82,8 +82,11 @@ class BlockList(ProtectedMixin, ListView):
         if not self.request.user.is_staff:
             blocks = Block.objects.filter(projets__users__in=[self.request.user.id]).only('name').distinct()
         else:
-            blocks = Block.objects.all().only('name')
-        return blocks
+            blocks = Block.objects.all()
+        return blocks.select_related('parcel__site',
+                                     'parcel').order_by('parcel__site__name',
+                                                        'parcel__name',
+                                                        'name')
 
 
 class BlockDetail(DetailProtected):
