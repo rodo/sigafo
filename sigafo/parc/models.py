@@ -16,22 +16,22 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+from random import random
+import json
 from django.db import transaction
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models
-from django_hstore import hstore
-from django.core.urlresolvers import reverse
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.gis.geos.point import Point
+from django.core.urlresolvers import reverse
+from django_hstore import hstore
+from django_pgjson.fields import JsonField
 from sigafo.contact.models import Contact
 from sigafo.osmboundary.models import Departement
 from sigafo.ressources.models import Url
 from sigafo.referentiel import models as refs
 from sigafo.projet.models import Projet
 from sigafo.utils.models import GeoHStoreManager
-from random import random
-import reversion
-from django_pgjson.fields import JsonField
-import json
 
 # Site
 
@@ -44,7 +44,13 @@ class Site(models.Model):
     commune = models.TextField(blank=True,
                                null=True)
 
-    owner = models.ForeignKey(Contact, related_name='owner', blank=True, null=True)
+    referent = models.ForeignKey(Contact,
+                                 related_name='referent',
+                                 blank=True, null=True)
+
+    owner = models.ForeignKey(Contact,
+                              related_name='owner',
+                              blank=True, null=True)
 
     exploitant = models.ForeignKey(Contact,
                                    related_name='exploitant',
@@ -147,7 +153,7 @@ class Parcel(models.Model):
     # in ha
     surface = models.FloatField(blank=True, null=True)
 
-    #
+    # Type de systeme agricole
     systemprod = models.ForeignKey(refs.SystemProd,
                                    blank=True,
                                    null=True)
@@ -266,10 +272,16 @@ class Block(models.Model):
     date_debut = models.DateField(blank=True, null=True)
     date_fin = models.DateField(blank=True, null=True)
 
+    # maps
+    map_ids = ArrayField(models.IntegerField(),
+                         blank=True,
+                         null=True)
+
     # usage
     # referentiel
     usage = models.CharField(max_length=300, blank=True)
 
+    # projets
     projets = models.ManyToManyField(Projet, blank=True)
 
     urls = models.ManyToManyField(Url,
@@ -299,6 +311,10 @@ class Block(models.Model):
     # Production animale
     prod_animal = models.TextField(blank=True,
                                    null=True)
+
+    # Nature
+    nature = models.ManyToManyField(refs.NatureBlock,
+                                    blank=True)
 
     # Façon culturale
     tillages = models.ManyToManyField(refs.Tillage,
@@ -359,11 +375,6 @@ class Block(models.Model):
     def get_observations(self):
         return Observation.objects.filter(block=self).order_by('-date_observation')
 
-    # def save(self, *args, **kwargs):
-    #     #check if the row with this hash already exists.
-    #     with transaction.atomic(), reversion.create_revision():
-    #         super(Block, self).save(*args, **kwargs)
-
 
 class Observation(models.Model):
     """Observation
@@ -394,8 +405,3 @@ class Observation(models.Model):
         We display the related block
         """
         return reverse('block_detail', args=[self.block.id])
-
-
-
-#reversion.register(Parcel)
-#reversion.register(Block)

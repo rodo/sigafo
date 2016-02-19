@@ -151,8 +151,11 @@ def iline(row, i, projet_id, project_code):
     cprojs = [f.strip() for f in projs]
     for proj in cprojs:
         try:
-            projet_id = Projet.objects.get(code=proj)
-            projets.append(projet_id.id)
+            if len(proj):
+                (projet_id, created) = Projet.objects.get_or_create(name=proj,
+                                                                    code=proj,
+                                                                    taxon=1)
+                projets.append(projet_id.id)
         except:
             pass
 
@@ -161,6 +164,7 @@ def iline(row, i, projet_id, project_code):
                                             lastname=lastname)
         email = objcontact[0].email
     except:
+        objcontact = None
         email=""
 
     town = row[4].strip()
@@ -204,6 +208,7 @@ def iline(row, i, projet_id, project_code):
 
     field = row[35].strip()
 
+    # AT
     #image = "http://www.agforward.eu/%s" % (row[45].strip())
     image = row[45].strip()
 
@@ -228,6 +233,10 @@ def iline(row, i, projet_id, project_code):
 
     if len(commune):
         site.commune = commune
+
+    # Site referent
+    if objcontact is not None:
+        site.referent = objcontact[0]
     
     if created:        
         site.properties=proper
@@ -319,8 +328,6 @@ def iline(row, i, projet_id, project_code):
     # Bloc
     #
     # V 21 Nom
-    # W 22
-    # X 23
     bloc_nom = row[21].strip()
 
     if bloc_nom == "":
@@ -329,6 +336,16 @@ def iline(row, i, projet_id, project_code):
     (bloc, created) = Block.objects.get_or_create(name=bloc_nom,
                                                   parcel=parcel
                                                   )
+    # W 22 Nature du block
+    natures = [e.strip() for e in (row[22].strip()).split(';')]
+    for nat in natures:
+        if len(nat):
+            (nature, created) = refs.NatureBlock.objects.get_or_create(name=nat.capitalize())
+            bloc.nature.add(nature)
+
+    # X 23
+    # Y 24
+    # Z 25
 
     try:
         coord = row[25].strip()
@@ -390,6 +407,7 @@ def iline(row, i, projet_id, project_code):
             bloc.tillages.add(tillage)
     #
 
+    # AP 41
     # Mode de conduites
     conduites = [e.strip() for e in (row[41].strip()).split(';')]
     for tilg in conduites:
@@ -397,6 +415,11 @@ def iline(row, i, projet_id, project_code):
             (conduite, created) = refs.ModeConduite.objects.get_or_create(name=tilg.capitalize())
             bloc.conduites.add(conduite)
     #
+
+    # AQ 42
+    # AR 43
+    # AS 44
+    # AT 45
 
     bloc.properties = properties
     bloc.save()

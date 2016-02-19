@@ -22,6 +22,10 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django_hstore import hstore
 from sigafo.utils.models import GeoHStoreManager
+from django_pgjson.fields import JsonField
+from sigafo.parc.models import Block
+from sigafo.parc.models import Parcel
+from sigafo.parc.models import Site
 
 
 class ModelProperty(models.Model):
@@ -75,7 +79,6 @@ class Map(models.Model):
     # who create the map
     creator = models.ForeignKey(User)
 
-
     objects = GeoHStoreManager()
 
     def __unicode__(self):
@@ -96,3 +99,33 @@ class Map(models.Model):
     @property
     def center_lon(self):
         return self.center.x
+
+
+class ParcelMap(models.Model):
+    """
+    Un parcel est un emplacement geographique avec une activité
+    """
+    map = models.ForeignKey(Map)
+    parcel = models.ForeignKey(Parcel)
+
+    map_public_info = JsonField(blank=True, null=True)
+
+
+class SiteMap(models.Model):
+    """
+    Un site est un emplacement geographique avec une activité
+    """
+    map = models.ForeignKey(Map)
+    site = models.ForeignKey(Site)
+
+    map_public_info = JsonField(blank=True, null=True)
+
+
+class BlockMap(models.Model):
+    """
+    Un block est un emplacement geographique avec une activité
+    """
+    map = models.ForeignKey(Map)
+    block = models.ForeignKey(Block)
+
+    map_public_info = JsonField(blank=True, null=True)

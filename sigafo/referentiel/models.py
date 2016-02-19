@@ -27,6 +27,7 @@ class refModel(models.Model):
     comment = models.TextField(blank=True, null=True)
     # technical field
     active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now_add=True, blank=True)
 
     class Meta:
         abstract = True
@@ -84,13 +85,18 @@ class ExperimentalDevice(refModel):
     """
     """
 
+
 class ClassePH(refModel):
     """
+    Classe de PU
     """
+
 
 class ClasseProfondeur(refModel):
     """
+    Classe de profondeur
     """
+
 
 class ClasseHumidity(refModel):
     """
