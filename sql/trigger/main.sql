@@ -41,7 +41,7 @@ $BODY$ LANGUAGE plpgsql;
 --
 -- Declaration des triggers
 --
-DROP TRIGGER map_map_projets_all_trigger ON map_map_projets;
+DROP TRIGGER IF EXISTS map_map_projets_all_trigger ON map_map_projets;
 CREATE TRIGGER map_map_projets_all_trigger
     AFTER INSERT OR DELETE ON map_map_projets
     FOR EACH ROW
@@ -67,7 +67,7 @@ RETURN NULL; -- result is ignored since this is an AFTER trigger
 END;
 $BODY$ LANGUAGE plpgsql;
 
-DROP TRIGGER parc_parcel_all_trigger ON parc_parcel;
+DROP TRIGGER IF EXISTS parc_parcel_all_trigger ON parc_parcel;
 CREATE TRIGGER parc_parcel_all_trigger
     AFTER INSERT OR UPDATE OR DELETE ON parc_parcel
     FOR EACH ROW
@@ -88,7 +88,7 @@ RETURN NULL; -- result is ignored since this is an AFTER trigger
 END;
 $BODY$ LANGUAGE plpgsql;
 
-DROP TRIGGER parc_block_all_trigger ON parc_block;
+DROP TRIGGER IF EXISTS parc_block_all_trigger ON parc_block;
 CREATE TRIGGER parc_block_all_trigger
     AFTER INSERT OR UPDATE OR DELETE ON parc_block
     FOR EACH ROW

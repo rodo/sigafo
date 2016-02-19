@@ -5,6 +5,13 @@ CREATE OR REPLACE FUNCTION parc_parcel_json()
     RETURNS trigger AS $parc_parcel_json$
 BEGIN
 
+
+DELETE FROM map_parcelmap WHERE parcel_id = NEW.id;
+
+INSERT INTO map_parcelmap (parcel_id, map_id, map_public_info) VALUES
+(NEW.id, 1, (SELECT map_public_info FROM v_map_1_parcel WHERE id=NEW.id) );
+
+
 NEW.properties =
 json_build_object(
     'name', NEW.name,

@@ -1,16 +1,20 @@
 --
--- TODO 
+-- Trigger de construction des JSON pour les cartes
 --
-CREATE OR REPLACE FUNCTION parc_block_json()
-    RETURNS trigger AS $parc_block_json$
-BEGIN
-
 
 --NEW.properties =
 --json_build_object(
 --    'surface', NEW.surface,
 --   'date_start', NEW.date_debut
 --    );
+
+
+CREATE OR REPLACE FUNCTION parc_block_json()
+    RETURNS trigger AS $parc_block_json$
+BEGIN
+
+DELETE FROM map_blockmap WHERE block_id = NEW.id;
+
 
     NEW.map_public_info = json_append(
         ('{"parcel":' || (SELECT map_public_info FROM parc_parcel WHERE id=NEW.parcel_id) || '}')::json,
@@ -21,7 +25,6 @@ BEGIN
             (SELECT array_to_json(array_agg(map_public_info))
             FROM agrof_amenagement WHERE block_id=NEW.id) || '}')::json,
         NEW.map_public_info);
-
 
   RETURN NEW;
 END;

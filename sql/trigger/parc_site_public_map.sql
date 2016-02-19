@@ -5,6 +5,11 @@ CREATE OR REPLACE FUNCTION parc_site_public_map()
     RETURNS trigger AS $parc_site_public_map$
 BEGIN
 
+DELETE FROM map_sitemap WHERE site_id = NEW.id;
+
+INSERT INTO map_sitemap (site_id, map_id, map_public_info) VALUES
+(NEW.id, 1, (SELECT map_public_info FROM v_map_1_site WHERE id=NEW.id) );
+
 NEW.map_public_info =
 json_build_object(
     'name', NEW.name,
@@ -53,3 +58,6 @@ CREATE TRIGGER parc_block_amg
     AFTER INSERT OR UPDATE OR DELETE ON agrof_amenagement
     FOR EACH ROW
        EXECUTE PROCEDURE parc_block_nb_amg();
+
+
+
