@@ -17,7 +17,7 @@ SELECT id, block_id, json_build_object(
             SELECT e.name
             FROM referentiel_amessence e, agrof_amenagement_essences aae
             WHERE aae.amenagement_id=agrof_amenagement.id
-                AND aae.amessence_id=e.id))
+                AND aae.amessence_id=e.id ))
         )::jsonb as map_public_info
 
 FROM agrof_amenagement;
@@ -55,9 +55,8 @@ SELECT id, parcel_id, json_build_object(
         'image_url', map_public_info->'image_url',
         'amenagements', (SELECT ARRAY(
             SELECT v_map_2_amenagement.map_public_info
-            FROM v_map_2_amenagement, parc_block
-            WHERE parc_block.parcel_id = parcel_id
-                AND v_map_2_amenagement.block_id= parc_block.id
+            FROM v_map_2_amenagement
+            WHERE v_map_2_amenagement.block_id=parc_block.id
                 )
             )
         )::jsonb AS map_public_info
