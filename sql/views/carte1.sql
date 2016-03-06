@@ -14,11 +14,25 @@ CREATE VIEW v_map_1_block AS
 
 SELECT id, json_build_object(
         'name', name,
-        'start_year', date_debut,
-        'projets', (SELECT ARRAY(select p.name FROM parc_block_projets bp, projet_projet p where p.id=bp.projet_id AND block_id=parc_block.id)),
-        'natures', (SELECT ARRAY(select nb.name FROM referentiel_natureblock nb, parc_block_nature bn where bn.natureblock_id = nb.id AND bn.block_id=parc_block.id)),
-        'mode_conduites', (SELECT ARRAY(select nb.name FROM referentiel_modeconduite nb, parc_block_conduites bn where bn.modeconduite_id = nb.id AND bn.block_id=parc_block.id))
-        ) as map_public_info
+        'uuid', uuid,
+        'start_year', year_start,
+        'projets', (SELECT ARRAY(
+            SELECT p.name
+            FROM parc_block_projets bp, projet_projet p
+            WHERE p.id=bp.projet_id
+                AND block_id=parc_block.id)),
+        'natures', (SELECT ARRAY(
+            select nb.name
+            FROM referentiel_natureblock nb, parc_block_nature bn
+            WHERE bn.natureblock_id = nb.id
+                AND bn.block_id=parc_block.id)),
+        'mode_conduites', (SELECT ARRAY(
+            SELECT nb.name
+            FROM referentiel_modeconduite nb, parc_block_conduites bn
+            WHERE bn.modeconduite_id = nb.id
+                AND bn.block_id=parc_block.id)),
+        'image_url', map_public_info->'image_url'
+        )::jsonb AS map_public_info
 
 FROM parc_block;
 
