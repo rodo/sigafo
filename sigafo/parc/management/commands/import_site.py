@@ -322,8 +322,10 @@ def iline(row, i, projet_id, project_code):
     except:
         pass
 
-    parcel.save()
+    parcer = {'icon_url': icon_url}
+    parcel.properties = parcer
 
+    parcel.save()
     #
     # Bloc
     #
