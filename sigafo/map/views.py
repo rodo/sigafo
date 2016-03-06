@@ -77,7 +77,10 @@ class MapDetail(GeoJSONLayerView):
             data['features'][i]['properties'] = nprop
 
         # set new data
-        response.content = json.dumps(data)
+        try:
+            response.content = '%s(%s);' % (self.request.GET['callback'], json.dumps(data))
+        except:        
+            response.content = json.dumps(data)
         return response
 
     def get_queryset(self):
@@ -207,8 +210,12 @@ def map_jsonp(request, pk):
     if map.model == 'Site':
         view = MapDetail(model=Site,kwargs={'pk': pk})
 
-    resp = view.render_to_response(context={})
-    content = resp.content
+    view = MapDetail(model=Map,kwargs={'pk': pk})
+
+    view = MapDetail.as_view()
+
+    #resp = view.render_to_response(context={})
+    content = view.content
     try:
         data = '%s(%s);' % (request.REQUEST['callback'], content)
     except:

@@ -25,7 +25,7 @@ from sigafo.referentiel import serializers as ref_ser
 from rest_framework import routers, serializers, viewsets
 from rest_framework import permissions
 
-    
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 
@@ -44,27 +44,27 @@ urlpatterns = patterns(
     '',
     url(r'^api/v1/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', HomepageView.as_view()),
     url(r'^search/', include('haystack.urls')),
-    
+
     url(r'^site/$',
         parcviews.SiteList.as_view(model=Site,
                                    paginate_by=10
                                    ),
         name='site_list'),
-    
+
     url(r'^site/(?P<pk>\d+)$',
         DetailProtected.as_view(model=Site),
         name='site_detail'),
-    
+
     url(r'^contact/$',
         contactviews.ContactList.as_view(model=Contact,
                                          paginate_by=10
                                          ),
         name='contact_list'),
-    
+
     url(r'^contact/(?P<pk>\d+)$',
         DetailProtected.as_view(model=Contact),
         name='contact_detail'),
@@ -83,8 +83,9 @@ urlpatterns = patterns(
     url(r'^map/(?P<pk>\d+)/json$', mapviews.map_json, name='map_json'),
     url(r'^map/(?P<pk>\d+)/kml21$', mapviews.map_kml, name='map_kml21'),
     url(r'^map/(?P<pk>\d+)/geojson$', mapviews.MapDetail.as_view(), name='map_geojson'),
-    url(r'^map/(?P<pk>\d+)/geojsonp$', mapviews.map_jsonp, name='map_geojsonp'),
-    
+    url(r'^map/(?P<pk>\d+)/geojsonp$', mapviews.MapDetail.as_view(), name='map_geojsonp'),
+    #url(r'^map/(?P<pk>\d+)/geojsonpo$', mapviews.map_jsonp, name='map_geojsonp'),
+
     url(r'^parcel/(?P<pk>\d+)$', DetailProtected.as_view(model=Parcel), name='parcel_detail'),
 
     url(r'^parcel/new$',
@@ -95,12 +96,12 @@ urlpatterns = patterns(
         parcviews.ParcelList.as_view(model=Parcel,
                                      paginate_by=10),
         name='parcel_list'),
-    
+
     url(r'^parcel/json/$', parcviews.ParcelJSONList.as_view(), name='parcel_json'),
     url(r'^parcel/geojson$', GeoJSONLayerView.as_view(model=Parcel,
                                                       properties=['title'],
                                                       geometry_field='approx_center'), name='parcel_geojson'),
-    
+
     url(r'^block/$', parcviews.BlockList.as_view(model=Block), name='block_list'),
     url(r'^block/(?P<pk>\d+)$', parcviews.BlockDetail.as_view(), name='block_detail'),
     url(r'^block/(?P<pk>\d+)/import$', DetailProtected.as_view(model=Block,
@@ -109,11 +110,11 @@ urlpatterns = patterns(
     url(r'^block/new$', ListProtected.as_view(model=Block), name='block_new'),
     url(r'^block/geojson$', GeoJSONLayerView.as_view(model=Block,
                                                      geometry_field='approx_center'), name='block_geojson'),
-    
+
     url(r'^project/$', views.ProjetListView.as_view(), name='projet_list'),
     url(r'^project/(?P<pk>\d+)$', views.ProjetDetailView.as_view(), name='projet_detail'),
     url(r'^project/new$', ListProtected.as_view(model=Projet), name='projet_new'),
     url(r'^accounts/profile/$', 'sigafo.users.views.profile', name='profile'),
     url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'^i18n/', include('django.conf.urls.i18n')),    
+    url(r'^i18n/', include('django.conf.urls.i18n')),
 )
