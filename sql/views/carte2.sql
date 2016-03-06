@@ -77,6 +77,10 @@ SELECT id, json_build_object(
         'referent', (
         SELECT firstname || ' ' || lastname
         FROM contact_contact
+        WHERE id = parc_site.referent_id),
+        'organisme', (
+        SELECT properties->'organism'
+        FROM contact_contact
         WHERE id = parc_site.referent_id)
         ) as map_public_info
 
