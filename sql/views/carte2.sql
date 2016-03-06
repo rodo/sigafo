@@ -77,6 +77,7 @@ SELECT id, json_build_object(
         FROM referentiel_systemprod
         WHERE id = parc_parcel.systemprod_id),
         'center', center,
+        'icon_url', icon_url,
         'blocks', (SELECT ARRAY(
             SELECT map_public_info
             FROM v_map_2_block
