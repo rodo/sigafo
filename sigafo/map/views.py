@@ -202,7 +202,7 @@ def map_jsonp(request, pk):
 
     if map.model == 'Parcel':
         view = MapDetail(model=Parcel,kwargs={'pk': pk})
-        view.object_list = [Parcel.objects.get(pk=pk)]
+        #view.object_list = [Parcel.objects.get(pk=pk)]
 
     if map.model == 'Site':
         view = MapDetail(model=Site,kwargs={'pk': pk})
