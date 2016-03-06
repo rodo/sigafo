@@ -65,27 +65,7 @@ SELECT id, parcel_id, json_build_object(
 FROM parc_block
 WHERE map_ids @> ARRAY[2];
 
---
--- Parcelle
---
-CREATE VIEW v_map_2_parcel AS
 
-SELECT id, json_build_object(
-        'name', name,
-        'surface', surface,
-        'system', (SELECT name
-        FROM referentiel_systemprod
-        WHERE id = parc_parcel.systemprod_id),
-        'center', center,
-        'icon_url', icon_url,
-        'blocks', (SELECT ARRAY(
-            SELECT map_public_info
-            FROM v_map_2_block
-            WHERE v_map_2_block.parcel_id = parc_parcel.id)
-            )
-        ) as map_public_info
-
-FROM parc_parcel;
 
 --
 -- Site
@@ -102,5 +82,31 @@ SELECT id, json_build_object(
         ) as map_public_info
 
 FROM parc_site;
+
+
+--
+-- Parcelle
+--
+CREATE VIEW v_map_2_parcel AS
+
+SELECT id, json_build_object(
+        'site', (SELECT map_public_info FROM v_map_2_site
+        WHERE v_map_2_site.id = parc_parcel.site_id),
+        'name', name,
+        'surface', surface,
+        'system', (SELECT name
+        FROM referentiel_systemprod
+        WHERE id = parc_parcel.systemprod_id),
+        'center', center,
+        'icon_url', icon_url,
+        'blocks', (SELECT ARRAY(
+            SELECT map_public_info
+            FROM v_map_2_block
+            WHERE v_map_2_block.parcel_id = parc_parcel.id)
+            )
+        ) as map_public_info
+
+FROM parc_parcel;
+
 
 
