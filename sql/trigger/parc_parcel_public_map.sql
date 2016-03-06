@@ -17,7 +17,8 @@ json_build_object(
     'name', NEW.name,
     'center', ('{"geometry":' || ST_AsGeoJSON(NEW.center) || '}')::json,
     'experimental', NEW.experimental,
-    'surface', NEW.surface
+    'surface', NEW.surface,
+    'icon_url', NEW.icon_url
    );
 
 NEW.map_public_info = json_append(

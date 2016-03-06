@@ -188,6 +188,8 @@ class Parcel(models.Model):
     # public info to display set on the map
     map_public_info = JsonField(blank=True, null=True)
 
+    # icon_url
+    icon_url = models.TextField(blank=True, null=True)    
 
     # who create the map
     creator = models.ForeignKey(User)
