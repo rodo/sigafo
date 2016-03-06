@@ -26,6 +26,7 @@ from django.contrib.gis.geos.point import Point
 from django.core.urlresolvers import reverse
 from django_hstore import hstore
 from django_pgjson.fields import JsonField
+from uuidfield import UUIDField
 from sigafo.contact.models import Contact
 from sigafo.osmboundary.models import Departement
 from sigafo.ressources.models import Url
@@ -207,7 +208,6 @@ class Parcel(models.Model):
         """
         return Departement.objects.filter(polygon__contains=self.center)
 
-
     @property
     def title(self):
         """The title
@@ -260,6 +260,7 @@ class Block(models.Model):
     """
     Un block est un emplacement geographique avec une activité
     """
+    uuid = UUIDField(auto=True)
     parcel = models.ForeignKey(Parcel,
                                on_delete=models.PROTECT)
 
@@ -271,6 +272,9 @@ class Block(models.Model):
 
     date_debut = models.DateField(blank=True, null=True)
     date_fin = models.DateField(blank=True, null=True)
+
+    year_start = models.PositiveSmallIntegerField(blank=True, null=True)
+    year_stop = models.PositiveSmallIntegerField(blank=True, null=True)
 
     # maps
     map_ids = ArrayField(models.IntegerField(),

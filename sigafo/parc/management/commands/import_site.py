@@ -375,6 +375,24 @@ def iline(row, i, projet_id, project_code):
                   'icon_url': row[47].strip(), # AV
                   }
 
+    # AA annee de debut
+    if len(row[26]):
+        try:            
+            bloc.year_start = int(row[26])
+        except:
+            pass
+    # AB annee de fin
+    if len(row[27]):
+        try:
+            bloc.year_start = int(row[27])
+        except:
+            pass
+    
+    # AC topography
+
+    # AD texture
+
+
     # AE
     classe_ph = row[30].strip()
     if len(classe_ph):

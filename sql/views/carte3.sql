@@ -2,12 +2,12 @@
 --
 -- Amenagement
 --
-DROP VIEW IF EXISTS v_map_1_site;
-DROP VIEW IF EXISTS v_map_1_parcel;
-DROP VIEW IF EXISTS v_map_1_block;
-DROP VIEW IF EXISTS v_map_1_amenagement;
+DROP VIEW IF EXISTS v_map_2_site;
+DROP VIEW IF EXISTS v_map_2_parcel;
+DROP VIEW IF EXISTS v_map_2_block;
+DROP VIEW IF EXISTS v_map_2_amenagement;
 
-CREATE VIEW v_map_1_amenagement AS
+CREATE VIEW v_map_2_amenagement AS
 
 SELECT id, block_id, json_build_object(
         'nature', (SELECT name FROM referentiel_natureblock WHERE id=nature_id),
@@ -31,7 +31,7 @@ FROM agrof_amenagement;
 -- Projets
 -- Lien Image
 --
-CREATE VIEW v_map_1_block AS
+CREATE VIEW v_map_2_block AS
 
 SELECT id, parcel_id, json_build_object(
         'name', name,
@@ -54,21 +54,21 @@ SELECT id, parcel_id, json_build_object(
                 AND bn.block_id=parc_block.id)),
         'image_url', map_public_info->'image_url',
         'amenagements', (SELECT ARRAY(
-            SELECT v_map_1_amenagement.map_public_info
-            FROM v_map_1_amenagement, parc_block
+            SELECT v_map_2_amenagement.map_public_info
+            FROM v_map_2_amenagement, parc_block
             WHERE parc_block.parcel_id = parcel_id
-                AND v_map_1_amenagement.block_id= parc_block.id
+                AND v_map_2_amenagement.block_id= parc_block.id
                 )
             )
         )::jsonb AS map_public_info
 
 FROM parc_block
-WHERE map_ids @> ARRAY[1];
+WHERE map_ids @> ARRAY[2];
 
 --
 -- Parcelle
 --
-CREATE VIEW v_map_1_parcel AS
+CREATE VIEW v_map_2_parcel AS
 
 SELECT id, json_build_object(
         'name', name,
@@ -79,8 +79,8 @@ SELECT id, json_build_object(
         'center', center,
         'blocks', (SELECT ARRAY(
             SELECT map_public_info
-            FROM v_map_1_block
-            WHERE v_map_1_block.parcel_id = parc_parcel.id)
+            FROM v_map_2_block
+            WHERE v_map_2_block.parcel_id = parc_parcel.id)
             )
         ) as map_public_info
 
@@ -89,9 +89,7 @@ FROM parc_parcel;
 --
 -- Site
 --
-
-
-CREATE VIEW v_map_1_site AS
+CREATE VIEW v_map_2_site AS
 
 SELECT id, json_build_object(
         'name', name,

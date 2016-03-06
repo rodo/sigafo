@@ -22,7 +22,7 @@ from uuidfield import UUIDField
 
 class refModel(models.Model):
 
-    uuid = UUIDField(auto=True)    
+    uuid = UUIDField(auto=True)
     name = models.CharField(max_length=300)
     comment = models.TextField(blank=True, null=True)
     # technical field

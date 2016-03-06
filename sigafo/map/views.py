@@ -20,6 +20,7 @@
 # Sigafo map views
 #
 #
+from django.db import connection
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView
@@ -47,10 +48,37 @@ class JSONResponse(HttpResponse):
         super(JSONResponse, self).__init__(content, **kwargs)
 
 
+
+def parcel_sql(map_id, parcel_id):
+    cursor = connection.cursor()
+
+    table = "v_map_%s_parcel" % map_id
+    qry = "SELECT map_public_info FROM {0} WHERE id = %s".format(table)
+    cursor.execute(qry, [parcel_id])
+    row = cursor.fetchone()
+    parcel = row[0]
+    return parcel
+
+
 class MapDetail(GeoJSONLayerView):
     model = Map
     geometry_field = 'approx_center'
     properties = ['title']
+
+    def dispatch(self, *args, **kwargs):
+        response = super(GeoJSONLayerView, self).dispatch(*args, **kwargs)
+        data = json.loads(response.content)
+        # lookup for additionnal properties
+        for i in range(0, len(data['features'])):
+            prop = data['features'][i]['properties']
+            nprop = parcel_sql(self.kwargs['pk'],
+                               data['features'][i]['id'])
+
+            data['features'][i]['properties'] = nprop
+
+        # set new data
+        response.content = json.dumps(data)
+        return response
 
     def get_queryset(self):
         super(MapDetail, self).get_queryset()
@@ -71,7 +99,11 @@ class MapDetail(GeoJSONLayerView):
             features = Block.objects.filter(pk__in=ids)
 
         if qsp.model == 'Parcel':
-            sql = """WITH projets AS (
+            """
+            Selection de toutes les parcelles dont au moins un bloc est dans le projet
+            """
+            sql = """
+            WITH projets AS (
             SELECT projet_id FROM map_map_projets
             WHERE map_id = {0}
             )
@@ -181,4 +213,5 @@ def map_jsonp(request, pk):
         data = '%s(%s);' % (request.REQUEST['callback'], content)
     except:
         data = '%s(%s);' % (request.REQUEST['callback'], content.decode('utf-8'))
+
     return HttpResponse(data, "text/javascript")

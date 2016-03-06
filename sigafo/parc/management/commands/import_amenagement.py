@@ -89,7 +89,7 @@ class Command(BaseCommand):
 
         print "%s on %s lines imported" % (ok, i)
 
-        for model in [Map, Block, Parcel, Site, Amenagement]:
+        for model in [Map, Block, Parcel, Site, Amenagement, refs.AmEssence]:
             print "%s %d" % (model, model.objects.all().count())
 
 # def clean_all():
@@ -145,12 +145,20 @@ def iline(row, i):
     # K - 10
     essences = [e.strip() for e in (row[10].strip()).split(';')]
     for ess in essences:
-        if len(ess):
-            (essence, created) = refs.AmEssence.objects.get_or_create(name=ess.capitalize())
+        essc = unicode(ess,"UTF-8")
+        essc = essc.replace(u"\xc2\xa0", " ")
+        essc = essc.strip()
+        if len(essc):
+            (essence, created) = refs.AmEssence.objects.get_or_create(
+                name=essc.capitalize())
+            if created:
+                essence.comment = ess
+                essence.save()
+                print ess
             am.essences.add(essence)
 
 
-    # J - 11
+    # L - 11
     conduites = [e.strip() for e in (row[11].strip()).split(';')]
     for cond in conduites:
         if len(cond):
@@ -158,7 +166,25 @@ def iline(row, i):
             am.conduites.add(conduite)
     #
 
+    # M 12
+    # N 13
+    # O 14
+    # P 15 : density
+    try:
+        am.density = float(row[15])
+    except:
+        pass
+    # Q 16
+    # R 17
+    try:
+        am.dist_inter_line = float(row[17])
+    except:
+        pass
+    
+
     am.nature = nat_id
     am.save()
+
+
 
     return res
