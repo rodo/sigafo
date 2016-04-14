@@ -100,7 +100,7 @@ urlpatterns = patterns(
     url(r'^parcel/json/$', parcviews.ParcelJSONList.as_view(), name='parcel_json'),
     url(r'^parcel/geojson$', GeoJSONLayerView.as_view(model=Parcel,
                                                       properties=['title'],
-                                                      geometry_field='approx_center'), name='parcel_geojson'),
+                                                      geometry_field='center'), name='parcel_geojson'),
 
     url(r'^block/$', parcviews.BlockList.as_view(model=Block), name='block_list'),
     url(r'^block/(?P<pk>\d+)$', parcviews.BlockDetail.as_view(), name='block_detail'),
@@ -109,7 +109,7 @@ urlpatterns = patterns(
     url(r'^block/(?P<pk>\d+)/edit$', parcviews.BlockEdit.as_view(), name='block_edit'),
     url(r'^block/new$', ListProtected.as_view(model=Block), name='block_new'),
     url(r'^block/geojson$', GeoJSONLayerView.as_view(model=Block,
-                                                     geometry_field='approx_center'), name='block_geojson'),
+                                                     geometry_field='center'), name='block_geojson'),
 
     url(r'^project/$', views.ProjetListView.as_view(), name='projet_list'),
     url(r'^project/(?P<pk>\d+)$', views.ProjetDetailView.as_view(), name='projet_detail'),

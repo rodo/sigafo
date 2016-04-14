@@ -62,7 +62,8 @@ def parcel_sql(map_id, parcel_id):
 
 class MapDetail(GeoJSONLayerView):
     model = Map
-    geometry_field = 'approx_center'
+    #geometry_field = 'approx_center'
+    geometry_field = 'center'
     properties = ['title']
 
     def dispatch(self, *args, **kwargs):
