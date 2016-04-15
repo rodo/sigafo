@@ -10,7 +10,7 @@ DROP VIEW IF EXISTS v_map_1_amenagement;
 CREATE VIEW v_map_1_amenagement AS
 
 SELECT id, block_id, json_build_object(
-        'nature', (SELECT name FROM referentiel_natureblock WHERE id=nature_id),
+        'nature', (SELECT name FROM referentiel_amnature WHERE id=nature_id),
         'density', density,
         'dist_inter_line', dist_inter_line,
         'essences', (SELECT ARRAY(
