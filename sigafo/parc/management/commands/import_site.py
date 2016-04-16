@@ -295,15 +295,8 @@ def iline(row, i, projet_id, project_code):
             (expedev, created) = refs.ExperimentalDevice.objects.get_or_create(name=tilg.capitalize())
             parcel.experimental_devices.add(expedev)
     #
-
-
     # T 19
     # U 20
-
-    parcel_system_prod = row[11].strip()
-    if len(parcel_system_prod) > 0:
-        (sp, created) = refs.SystemProd.objects.get_or_create(name=parcel_system_prod)
-        parcel.systemprod = sp
 
     # surface colonne K
     try:
@@ -355,6 +348,11 @@ def iline(row, i, projet_id, project_code):
         bloc.center = Point(lon, lat)
     except:
         pass
+    
+    # sometimes bloc has no coords
+    if bloc.center is None:
+        bloc.center = parcel.center
+
 
     properties = {'surface': row[24].strip(),
                   'topography': row[28].strip(),
