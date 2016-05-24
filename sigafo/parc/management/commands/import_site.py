@@ -237,8 +237,8 @@ def iline(row, i, projet_id, project_code):
     # Site referent
     if objcontact is not None:
         site.referent = objcontact[0]
-    
-    if created:        
+
+    if created:
         site.properties=proper
         site.save()
 
@@ -264,7 +264,10 @@ def iline(row, i, projet_id, project_code):
     # L 11 System Prod
     systemprod = row[11].strip()
     # M 12
+    workgroup = row[12].strip()
     # N 13
+    workgroup_url = row[13].strip()
+
     # O 14 - Coord GPS
     coord = row[14].strip()
     slat = unicode(coord.split(',')[0],"UTF-8")
@@ -284,6 +287,11 @@ def iline(row, i, projet_id, project_code):
         (obj, created) = refs.SystemProd.objects.get_or_create(name=systemprod.capitalize())
         parcel.systemprod = obj
 
+    if len(workgroup):
+        parcel.workgroup = workgroup
+
+    if len(workgroup_url):
+        parcel.workgroup_url = workgroup_url
 
     # P 15
     # Q 16 - Expe
@@ -348,7 +356,7 @@ def iline(row, i, projet_id, project_code):
         bloc.center = Point(lon, lat)
     except:
         pass
-    
+
     # sometimes bloc has no coords
     if bloc.center is None:
         bloc.center = parcel.center
@@ -364,7 +372,7 @@ def iline(row, i, projet_id, project_code):
                   'irrigation': row[34].strip(),
                   'prod_veg_an': row[35].strip(),
                   'prod_veg_per': row[36].strip(),
-                  'prod_animal': row[37].strip(), 
+                  'prod_animal': row[37].strip(),
                   'facon_culturale': row[38].strip(), # AM
                   'fertilisation': row[39].strip(), # AN
                   'traitement_phyto': row[40].strip(), # AO
@@ -376,7 +384,7 @@ def iline(row, i, projet_id, project_code):
 
     # AA annee de debut
     if len(row[26]):
-        try:            
+        try:
             bloc.year_start = int(row[26])
         except:
             pass
@@ -386,11 +394,9 @@ def iline(row, i, projet_id, project_code):
             bloc.year_start = int(row[27])
         except:
             pass
-    
+
     # AC topography
-
     # AD texture
-
 
     # AE
     classe_ph = row[30].strip()
@@ -398,7 +404,7 @@ def iline(row, i, projet_id, project_code):
         if (classe_ph != 'NR'):
             (PH, created) = refs.ClassePH.objects.get_or_create(name=classe_ph)
             bloc.classeph = PH
-    
+
     classe_prof = row[31].strip()
     if len(classe_prof):
         if (classe_prof != 'NR'):
